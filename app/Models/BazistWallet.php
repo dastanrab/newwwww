@@ -1,0 +1,45 @@
+<?php
+
+namespace App\Models;
+
+use App\RecordsActivity;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class BazistWallet extends Model
+{
+    use HasFactory;
+    use RecordsActivity;
+
+    // type: model name, type_id: model id, method: واریز / برداشت
+    protected $fillable = [
+        'city_id', 'user_id', 'wallet_id', 'type', 'type_id', 'amount', /*rial*/  'wallet_balance', /*rial*/  'method', 'details'
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function wallet()
+    {
+        return $this->belongsTo(Wallet::class);
+    }
+
+    public static function create($city_id, $user_id, $wallet_id, $type, $type_id, $amount, $wallet_balance, $method, $details)
+    {
+        $withdraw = new BazistWallet;
+        $withdraw->city_id = $city_id;
+        $withdraw->user_id = $user_id;
+        $withdraw->wallet_id = $wallet_id;
+        $withdraw->type = $type;
+        $withdraw->type_id = $type_id;
+        $withdraw->amount = $amount;
+        $withdraw->wallet_balance = $wallet_balance;
+        $withdraw->method = $method;
+        $withdraw->details = $details;
+        $withdraw->save();
+        return $withdraw;
+    }
+
+}
