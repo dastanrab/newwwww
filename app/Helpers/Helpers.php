@@ -1211,3 +1211,16 @@ function weight_drivers_prices($recycable_id)
 //    }
 //
 //}
+function transformPaginated($paginator)
+{
+    return collect([
+        'data' => $paginator->items(),
+        'pagination' => [
+            'total' => $paginator->total(),
+            'per_page' => $paginator->perPage(),
+            'current_page' => $paginator->currentPage(),
+            'last_page' => $paginator->lastPage(),
+            'has_more' => $paginator->hasMorePages(),
+        ],
+    ]);
+}

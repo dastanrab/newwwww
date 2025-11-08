@@ -41,5 +41,32 @@ class BazistWallet extends Model
         $withdraw->save();
         return $withdraw;
     }
+    function createWalletRecord(
+        $city_id,
+        $user_id,
+        $wallet_id,
+        $method,      // 'deposit' یا 'withdraw'
+        $relatedId,   // شناسه رکورد مرتبط
+        $amount,
+        $wallet_balance,
+        $details
+    ) {
+        // پیدا کردن کد مالی مرتبط
+        $financialCode = financialCode::where('type', $method)->first();
+
+        $withdraw = new BazistWallet;
+        $withdraw->city_id = $city_id;
+        $withdraw->user_id = $user_id;
+        $withdraw->wallet_id = $wallet_id;
+        $withdraw->method = $method;                // نوع تراکنش واقعی
+        $withdraw->type = $financialCode->id ?? null; // کد مالی
+        $withdraw->type_id = $relatedId;           // شناسه جدول مربوطه
+        $withdraw->amount = $amount;
+        $withdraw->wallet_balance = $wallet_balance;
+        $withdraw->details = $details;
+        $withdraw->save();
+
+        return $withdraw;
+    }
 
 }
