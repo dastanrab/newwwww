@@ -6,8 +6,10 @@ use App\Models\ArchiveApp;
 use App\Models\ArchiveLegal;
 use App\Models\ArchiveNotLegal;
 use App\Models\ArchivePhone;
+use App\Models\BazistWallet;
 use App\Models\Cache;
 use App\Models\Car;
+use App\Models\Cashout;
 use App\Models\Day;
 use App\Models\Driver;
 use App\Models\DriversSalaryDetails;
@@ -1223,4 +1225,18 @@ function transformPaginated($paginator)
             'has_more' => $paginator->hasMorePages(),
         ],
     ]);
+}
+function walletTransaction($city_id=1,$user_id,$wallet_id,$type,$type_id,$amount,$new_balance,$method,$description)
+{
+    $wallet = new BazistWallet;
+    $wallet->city_id = $city_id;
+    $wallet->user_id = $user_id;
+    $wallet->wallet_id = $wallet_id;
+    $wallet->type = $type;
+    $wallet->type_id = $type_id;
+    $wallet->amount = $amount;
+    $wallet->wallet_balance = $new_balance;
+    $wallet->method = $method;
+    $wallet->details = $description;
+    $wallet->save();
 }

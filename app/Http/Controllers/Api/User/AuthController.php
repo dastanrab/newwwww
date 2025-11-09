@@ -65,7 +65,6 @@ class AuthController extends Controller
         }
 
         $user = User::where('mobile', $request->mob)->first();
-
         if (!$user) {
             $user = User::create([
                 'mobile' => $request->mob,
