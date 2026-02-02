@@ -9,7 +9,7 @@ use App\Models\ArchiveLegal;
 use App\Models\ArchiveNotLegal;
 use App\Models\ArchivePhone;
 use App\Models\AsanPardakht;
-use App\Models\BazistWallet;
+use App\Models\WalletDetails;
 use App\Models\Car;
 use App\Models\Cashout;
 use App\Models\Driver;
@@ -49,7 +49,7 @@ class RequestController extends Controller
             }])->get();
         $filtered = [];
         foreach ($submitsPending as $item) {
-            if(in_array(bazistDistrict([$item->address->lat,$item->address->lon]),$polygons)){
+            if(in_array(xDistrict([$item->address->lat,$item->address->lon]),$polygons)){
                 $filtered[] = $item;
             }
         }

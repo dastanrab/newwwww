@@ -287,7 +287,9 @@ class RequestSuggestionV2
 //            $query->where('start_at', '<=', now()->subHours(2))
 //                ->orWhere('in_regions', 0);
 //        })
-            ->whereIn('status',[1,2])->orderByDesc('id')->first();
+//            ->whereIn('status',[1,2])->orderByDesc('id')->first();
+            ->whereIn('status',[0,1,2])->orderByDesc('id')->first();
+
         if ($latest)
         {
             return $latest;
@@ -700,7 +702,8 @@ class RequestSuggestionV2
         $current_suggested=$this->suggest_model::query()->where('driver_id',$this->driver_id)->whereDate('start_at',now())->where(function ($query) {
             $query->where('start_at', '<=', now()->subHours(2))
                 ->orWhere('in_regions', 0);
-        })->whereIn('status',[1])->orderBy('id')->get();
+//        })->whereIn('status',[1])->orderBy('id')->get();
+        })->whereIn('status',[0,1])->orderBy('id')->get();
         if ($current_suggested->count() > 0)
         {
             return $current_suggested->pluck('submit_id')->toArray();

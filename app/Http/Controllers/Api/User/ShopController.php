@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\AsanPardakht;
-use App\Models\BazistWallet;
+use App\Models\WalletDetails;
 use App\Models\Cache;
 use App\Models\City;
 use App\Models\Firebase;
@@ -232,7 +232,6 @@ class ShopController extends Controller
         if($validator->fails()){
             return sendJson('error',$validator->errors()->first());
         }
-
         $amount = $request->amount; //toman
         $city_id = $user->city->id;
         if ($request->payMethod == 'aap') {
@@ -251,15 +250,14 @@ class ShopController extends Controller
             $wallet = Wallet::where('user_id', $user->id)->first();
             $balance = $wallet->wallet;
         }
-
         if($balance < $amount){
             return sendJson('error', 'موجودی شما کافی نمی باشد');
         }
-
-
         $method = 'topup';
         $chargeType = 'normal';
         $orderId = Inax::addChargeRecord($user->id,$request->amount,$request->operator,$request->mobile,$method,$request->payMethod,$chargeType);
+        dump('order_id');
+        dump($orderId);
         if($orderId > 0){
             $inax = Inax::where('order_id',$orderId)->first();
             if ($request->payMethod == 'aap') {
@@ -302,7 +300,7 @@ class ShopController extends Controller
                     $wallet->wallet -= $amount;
                     $wallet->save();
                     $inax->update(['status' => 'pendingSubmitRecordDb']);
-                    $bazistWallet = BazistWallet::create($city_id, $user->id, $wallet->id, 'sharj_mobile', $inax->id, $amount * 10, ($wallet->wallet)*10,'برداشت','شارژ موبایل');
+                    $bazistWallet = WalletDetails::create($city_id, $user->id, $wallet->id, 'sharj_mobile', $inax->id, $amount * 10, ($wallet->wallet)*10,'برداشت','شارژ موبایل');
                     if ($bazistWallet) {
                         $inax->update(['status' => 'done']);
                     } else {
@@ -318,20 +316,20 @@ class ShopController extends Controller
 //                        $inax->update(['status' => 'done']);
 //                    }
             }
-
-            $result = Inax::buyCharge($method,$request->operator,$request->amount,$request->mobile,$chargeType,$orderId);
+//            $result = Inax::buyCharge($method,$request->operator,$request->amount,$request->mobile,$chargeType,$orderId);
             // {"code":1,"trans_id":"2062909","ref_code":"148171913"}
-            /*$result = [
+            $result = [
                 'code' => 1,
                 'trans_id' => rand(1321,454354),
                 'ref_code' => rand(4233242,543543345),
                 'msg' => 'با موفقیت انجام شد',
-            ];*/
+            ];
             if($result['code'] === 1){
+                dump('ok');
+
                 $inax = Inax::where('order_id',$orderId)->first();
 //                $inax->update(['status' => 'pendingDecreaseCredit', 'ref_code' => $result['ref_code'], 'trans_id' => $result['trans_id']]);
                  $inax->update(['ref_code' => $result['ref_code'], 'trans_id' => $result['trans_id']]);
-
                 $data = [
                     'transId' => $result['trans_id'],
                     'orderId' => $orderId,
@@ -340,10 +338,11 @@ class ShopController extends Controller
                         'aap'    => AsanPardakht::balance($user->mobile),
                     ]
                 ];
+                dump($data);
                 return sendJson('success','خرید شارژ با موفقیت انجام شد', $data);
             }
             else{
-
+                 dump('fail');
                 Inax::where('order_id',$orderId)->update(['status' => 'cancel', 'description' => $result['msg']]);
                 $data = [
                     'transId' => null,
@@ -351,7 +350,7 @@ class ShopController extends Controller
                 ];
                 DB::transaction(function () use ($amount, $user, $city_id) {
                     $wallet = Wallet::where('user_id', $user->id)->lockForUpdate()->first();
-                    BazistWallet::create(
+                    WalletDetails::create(
                         $city_id,
                         $user->id,
                         $wallet->id,
@@ -472,7 +471,7 @@ class ShopController extends Controller
                     $wallet->wallet -= $amount;
                     $wallet->save();
                     $inax->update(['status' => 'pendingSubmitRecordDb']);
-                    $bazistWallet = BazistWallet::create($city_id, $user->id, $wallet->id, 'sharj_internet', $inax->id, $amount * 10, ($wallet->wallet)*10, 'برداشت', 'شارژ اینترنت');
+                    $bazistWallet = WalletDetails::create($city_id, $user->id, $wallet->id, 'sharj_internet', $inax->id, $amount * 10, ($wallet->wallet)*10, 'برداشت', 'شارژ اینترنت');
                     if($bazistWallet){
                         $inax->update(['status' => 'done']);
                     }
@@ -511,7 +510,7 @@ class ShopController extends Controller
                 ];
                 DB::transaction(function () use ($amount, $user, $city_id) {
                     $wallet = Wallet::where('user_id', $user->id)->lockForUpdate()->first();
-                    BazistWallet::create(
+                    WalletDetails::create(
                         $city_id,
                         $user->id,
                         $wallet->id,

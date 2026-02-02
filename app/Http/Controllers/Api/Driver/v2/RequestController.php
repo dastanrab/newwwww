@@ -46,7 +46,7 @@ class RequestController extends Controller
             }])->get();
         $filtered = [];
         foreach ($submitsPending as $item) {
-            if(in_array(bazistDistrict([$item->address->lat,$item->address->lon]),$polygons)){
+            if(in_array(xDistrict([$item->address->lat,$item->address->lon]),$polygons)){
                 $filtered[] = $item;
             }
         }

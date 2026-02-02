@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\AsanPardakht;
-use App\Models\BazistWallet;
+use App\Models\WalletDetails;
 use App\Models\Car;
 use App\Models\Fava;
 use App\Models\Firebase;

@@ -116,7 +116,6 @@ class AsanPardakht extends Model
         }
         $ap_apikey = env('AP_APIKEY');
         $data = "{\"hi\":2408,\"htran\":" . hexdec(uniqid()) . ",\"htime\":" . time() . ",\"hop\":310,\"hkey\":\"$ap_apikey\",\"mo\":\"$mobile\",\"walet\":5,\"caurl\":\"$callback\"}";
-
         try {
             $response = Http::post(env('AP_BASE_URL'), [
                 "hreq" => $data,

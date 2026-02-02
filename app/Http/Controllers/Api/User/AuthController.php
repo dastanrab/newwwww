@@ -239,7 +239,7 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         $user = auth()->user();
-        $user->firebases()->where('token',$request->fcmToken)->delete();
+//        $user->firebases()->where('token',$request->fcmToken)->delete();
         $user->currentAccessToken()->delete();
         return sendJson('success','شما از نرم افزار خارج شدید');
     }

@@ -21,6 +21,6 @@ class Wallet extends Model
 
     public function bazistWallet()
     {
-        return $this->hasMany(BazistWallet::class);
+        return $this->hasMany(WalletDetails::class);
     }
 }

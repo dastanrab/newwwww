@@ -238,6 +238,28 @@ class RequestController extends Controller
         if($user->id != $submit->user->id){
             return sendJson('error','امکان ثبت نظر را ندارید');
         }
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'comment' => 'required|string',
+                'rate'    => 'required|numeric',
+
+                'tipValues' => 'required|array',
+
+                'tipValues.good' => 'required|array',
+                'tipValues.bad'  => 'required|array',
+            ],
+            [
+                'comment.required' => 'لطفا نظر خود را وارد کنید.',
+                'rate.required'    => 'لطفا امتیاز را انتخاب کنید.',
+                'tipValues.good.required' => 'لطفا موارد مثبت را مشخص کنید.',
+                'tipValues.bad.required'  => 'لطفا موارد منفی را مشخص کنید.',
+            ]
+        );
+
+        if($validator->fails()){
+            return sendJson('error',$validator->errors()->first());
+        }
 
         $submit->comment = $request->comment;
         $submit->survey = 1;

@@ -6,7 +6,7 @@ use App\Models\ArchiveApp;
 use App\Models\ArchiveLegal;
 use App\Models\ArchiveNotLegal;
 use App\Models\ArchivePhone;
-use App\Models\BazistWallet;
+use App\Models\WalletDetails;
 use App\Models\Cache;
 use App\Models\Car;
 use App\Models\Cashout;
@@ -28,6 +28,8 @@ use App\Models\Submit;
 use App\Models\User;
 use Carbon\Carbon;
 use Hekmatinasser\Verta\Verta;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
@@ -204,7 +206,7 @@ function toGregorian($date = '',$separator = '-',$separateTo = '-', $showHour = 
 
 }
 
-function bazistDistrict($point, $polygon = null)
+function xDistrict($point, $polygon = null)
 {
     if($polygon === null) {
         $polygon = Polygon::all();
@@ -528,7 +530,7 @@ function getDriverRegionSubmits($polygones)
         }])->get();
     $filtered = [];
     foreach ($submitsPending as $item) {
-        if(in_array(bazistDistrict([$item->address->lat,$item->address->lon]),$polygons)){
+        if(in_array(xDistrict([$item->address->lat,$item->address->lon]),$polygons)){
             $filtered[] = $item;
         }
     }
@@ -1007,12 +1009,12 @@ function get_waste_amount($date)
 }
 function get_bazist_total_vaariz_amount($date)
 {
-    $total= App\Models\BazistWallet::whereDate('created_at', $date)->where('method','واریز')->sum('amount');
+    $total= App\Models\WalletDetails::whereDate('created_at', $date)->where('method','واریز')->sum('amount');
     return $total>0?$total/10:0;
 }
 function get_bazist_total_bardaasht_amount($date)
 {
-    $total=App\Models\BazistWallet::whereDate('created_at', $date)->where('method','برداشت')->sum('amount');
+    $total=App\Models\WalletDetails::whereDate('created_at', $date)->where('method','برداشت')->sum('amount');
     return $total>0?$total/10:0;
 }
 function isValidDateFormat($date)
@@ -1033,7 +1035,7 @@ function today_prices($date)
 }
 function schedule($lat,$lng,$date=null)
 {
-    $district = bazistDistrict([$lat,$lng]);
+    $district = xDistrict([$lat,$lng]);
     $polygonDayHours = PolygonDayHour::all();
     $polygon = Polygon::where('region',$district)->first();
     if(!$polygon){
@@ -1228,7 +1230,7 @@ function transformPaginated($paginator)
 }
 function walletTransaction($city_id=1,$user_id,$wallet_id,$type,$type_id,$amount,$new_balance,$method,$description)
 {
-    $wallet = new BazistWallet;
+    $wallet = new WalletDetails;
     $wallet->city_id = $city_id;
     $wallet->user_id = $user_id;
     $wallet->wallet_id = $wallet_id;
@@ -1239,4 +1241,38 @@ function walletTransaction($city_id=1,$user_id,$wallet_id,$type,$type_id,$amount
     $wallet->method = $method;
     $wallet->details = $description;
     $wallet->save();
+}
+
+ function success_response($data = null, $message = 'success', $status = 200)
+{
+    // اگر پاسخ صفحه‌بندی بود (paginate or simplePaginate)
+    if ($data instanceof LengthAwarePaginator || $data instanceof Paginator) {
+        return response()->json([
+            'status'  => true,
+            'message' => $message,
+            'pagination' => [
+                'current_page' => $data->currentPage(),
+                'per_page'     => $data->perPage(),
+                'total'        => method_exists($data, 'total') ? $data->total() : null,
+                'last_page'    => method_exists($data, 'lastPage') ? $data->lastPage() : null,
+            ],
+            'data' => $data->items(),
+        ], $status);
+    }
+
+    // اگر صفحه‌بندی نبود:
+    return response()->json([
+        'status'  => true,
+        'message' => $message,
+        'data'    => $data
+    ], $status);
+}
+
+ function error_response($message = 'error', $status = 400, $errors = null)
+{
+    return response()->json([
+        'status'  => false,
+        'message' => $message,
+        'errors'  => $errors
+    ], $status);
 }

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\Driver;
 use App\Events\ActivityEvent;
 use App\Http\Controllers\Controller;
 use App\Models\AsanPardakht;
-use App\Models\BazistWallet;
+use App\Models\WalletDetails;
 use App\Models\Cashout;
 use App\Models\City;
 use App\Models\Iban;
@@ -25,7 +25,7 @@ class WalletController extends Controller
         $user = auth()->user();
         $paginate = 10;
         $data = ['list' => [], 'limit' => $paginate];
-        $transactions = BazistWallet::where('user_id', $user->id)->latest()->paginate($paginate);
+        $transactions = WalletDetails::where('user_id', $user->id)->latest()->paginate($paginate);
         foreach ($transactions as $transaction){
             $data['list'][] = [
                 'id'       => $transaction->id,
@@ -96,7 +96,7 @@ class WalletController extends Controller
                         $save = $wallet->save();
                         if($save) {
                             $withdrawRecord = AsanPardakht::withdrawRecord($user->id, $withdrawHresp, $city_id);
-                            BazistWallet::create($city_id, $user->id, $wallet->id, 'cashout_to_aap', $withdrawRecord->id, $amountRial, $wallet->wallet * 10, 'برداشت', 'انتقال به کیف پول آپ');
+                            WalletDetails::create($city_id, $user->id, $wallet->id, 'cashout_to_aap', $withdrawRecord->id, $amountRial, $wallet->wallet * 10, 'برداشت', 'انتقال به کیف پول آپ');
                         }
                         else{
                             event(new ActivityEvent('انتقال به کیف پول انجام شد ولی از کیف پول کسر نشد', 'AsanPardakhtNotDecreaseBazistWallet', false));
@@ -186,7 +186,7 @@ class WalletController extends Controller
                 $cashout->operator_id = null;
                 $cashout->status = 'waiting';
                 $cashout->save();
-                BazistWallet::create($city_id, $user->id, $wallet->id, 'cashout', $cashout->id, $amountToman * 10, $walletBalance, 'برداشت', 'واریز به حساب بانکی');
+                WalletDetails::create($city_id, $user->id, $wallet->id, 'cashout', $cashout->id, $amountToman * 10, $walletBalance, 'برداشت', 'واریز به حساب بانکی');
 //                BazistWallet::create($city_id, $user->id, $wallet->id, 'cashout', $cashout->id, $taxRial, $walletBalanceTax, 'برداشت', 'کارمزد واریز به حساب بانکی');
                 $data = [
                     'balance' => floor($wallet->wallet)

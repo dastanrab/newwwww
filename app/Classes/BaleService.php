@@ -88,7 +88,7 @@ public function sendMessage($message)
  }
     private  function formatException( $exception)
     {
-        return "*🚨 Bazist Exception Report* \n\n" .
+        return "*🚨 X Exception Report* \n\n" .
             "*📌 Exception:* `" . $exception['class_name'] . "`\n" .
             "*📜 Message:* `" . $exception['message'] . "`\n" .
             "*📂 File:* `" . $exception['file'] . "`\n" .

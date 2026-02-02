@@ -105,7 +105,7 @@ class UserController extends Controller
         if($validator->fails()){
             return sendJson('error',$validator->errors()->first());
         }
-        $district = bazistDistrict([$request->lat,$request->lng]);
+        $district = xDistrict([$request->lat,$request->lng]);
         $polygon = Polygon::where('region',$district)->first();
         if(!$polygon){
             return sendJson('error','شما خارج از محدوده هستید');

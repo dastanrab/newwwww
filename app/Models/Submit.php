@@ -193,7 +193,7 @@ class Submit extends Model
         $dayOfWeek = Day::find(verta()->parse($day)->format('w')+1);
         $hourOfDay = Hour::where('start_at',$hour)->first();
         $address = Address::find($addressId);
-        $district = bazistDistrict([$address->lat,$address->lon]);
+        $district = xDistrict([$address->lat,$address->lon]);
         $polygon = Polygon::where('region',$district)->first();
         $polygonDayHours = PolygonDayHour::where('city_id',$user->city_id)->where('polygon_id',$polygon->id)->where('day_id',$dayOfWeek->id)->where('hour_id',$hourOfDay->id)->first();
         if(!$polygonDayHours->status){
@@ -360,15 +360,15 @@ class Submit extends Model
                         $cashout->status = 'waiting';
                         $cashout->save();
                         $final_amount = $submit->total_amount;
-                        BazistWallet::create($submit->city_id, $user->id, $wallet->id, $type, $driver->id, $submit->total_amount * 10, ($wallet->wallet+$submit->total_amount) * 10, 'واریز', 'تحویل پسماند');
-                        BazistWallet::create($submit->city_id, $user->id, $wallet->id, $type, $driver->id, $final_amount * 10, ($wallet->wallet+$submit->total_amount-$final_amount)*10, 'برداشت', 'واریز به حساب بانکی');
+                        WalletDetails::create($submit->city_id, $user->id, $wallet->id, $type, $driver->id, $submit->total_amount * 10, ($wallet->wallet+$submit->total_amount) * 10, 'واریز', 'تحویل پسماند');
+                        WalletDetails::create($submit->city_id, $user->id, $wallet->id, $type, $driver->id, $final_amount * 10, ($wallet->wallet+$submit->total_amount-$final_amount)*10, 'برداشت', 'واریز به حساب بانکی');
 //                        BazistWallet::create($submit->city_id, $user->id, $wallet->id, 'cashout', $driver->id, wageRial(), ($wallet->wallet+$submit->total_amount-$final_amount-wageToman())*10 , 'برداشت', 'کارمزد واریز به حساب بانکی');
                     }
                     else{
                         //todo add transaction
                         $wallet->wallet = $wallet->wallet + $submit->total_amount;
                         $wallet->save();
-                        BazistWallet::create($submit->city_id, $user->id, $wallet->id, $type, $driver->id, $submit->total_amount * 10, $wallet->wallet * 10, 'واریز', 'تحویل پسماند');
+                        WalletDetails::create($submit->city_id, $user->id, $wallet->id, $type, $driver->id, $submit->total_amount * 10, $wallet->wallet * 10, 'واریز', 'تحویل پسماند');
                     }
                 });
             }
@@ -412,7 +412,7 @@ class Submit extends Model
                     $wallet->wallet = $wallet->wallet + $submit->total_amount;
                     $wallet->save();
                     //todo add transaction
-                    BazistWallet::create($submit->city_id, $user->id, $wallet->id, $type, $driver->id, $submit->total_amount * 10, $wallet->wallet * 10, 'واریز', 'تحویل پسماند');
+                    WalletDetails::create($submit->city_id, $user->id, $wallet->id, $type, $driver->id, $submit->total_amount * 10, $wallet->wallet * 10, 'واریز', 'تحویل پسماند');
                     create_transaction(0,$submit->user->id,$submit->total_amount,TransactionService::BAZIST_TYPE,TransactionService::BAZIST_TYPE,TransactionService::WASTE_RREASON,$submit->id);
                 });
             }
@@ -461,7 +461,7 @@ class Submit extends Model
                 $wallet = Wallet::where('user_id', $submit->user->id)->first();
                 $wallet->wallet = $wallet->wallet + userRewardToman();
                 $wallet->save();
-                BazistWallet::create($submit->city_id, $submit->user->id, $wallet->id, 'first_submit_user', $submit->driver->id, userRewardRial(), $wallet->wallet * 10, 'واریز', 'پاداش اولین درخواست موفق');
+                WalletDetails::create($submit->city_id, $submit->user->id, $wallet->id, 'first_submit_user', $submit->driver->id, userRewardRial(), $wallet->wallet * 10, 'واریز', 'پاداش اولین درخواست موفق');
             }
         });
     }
@@ -483,7 +483,7 @@ class Submit extends Model
                                 $walletRef->wallet = $walletRef->wallet + referrerRewardToman();
                                 $save = $walletRef->save();
                                 if($save) {
-                                    BazistWallet::create($submit->city_id, $user_ref->id, $walletRef->id, 'submit_user_ref', $submit->driver->id, referrerRewardRial(), $walletRef->wallet * 10, 'واریز', 'پاداش معرف');
+                                    WalletDetails::create($submit->city_id, $user_ref->id, $walletRef->id, 'submit_user_ref', $submit->driver->id, referrerRewardRial(), $walletRef->wallet * 10, 'واریز', 'پاداش معرف');
                                 }
                             }
                             if ($sum_weight >= 50) {
@@ -493,7 +493,7 @@ class Submit extends Model
                                     $walletRef->wallet = $walletRef->wallet + referrerRewardAbove50KiloToman();
                                     $save = $walletRef->save();
                                     if($save) {
-                                        BazistWallet::create($submit->city_id, $user_ref->id, $walletRef->id, 'submit_user_ref', $submit->driver->id, referrerRewardAbove50KiloRial(), $walletRef->wallet * 10, 'واریز', 'پاداش معرف');
+                                        WalletDetails::create($submit->city_id, $user_ref->id, $walletRef->id, 'submit_user_ref', $submit->driver->id, referrerRewardAbove50KiloRial(), $walletRef->wallet * 10, 'واریز', 'پاداش معرف');
                                     }
                                 }
                             }
@@ -527,7 +527,7 @@ class Submit extends Model
 
     public static function schedule($user,$address)
     {
-        $district = bazistDistrict([$address->lat,$address->lon]);
+        $district = xDistrict([$address->lat,$address->lon]);
 
         $polygonDayHours = PolygonDayHour::all();
         $polygon = Polygon::where('region',$district)->first();

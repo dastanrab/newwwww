@@ -6,7 +6,7 @@ use App\RecordsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class BazistWallet extends Model
+class WalletDetails extends Model
 {
     use HasFactory;
     use RecordsActivity;
@@ -28,7 +28,7 @@ class BazistWallet extends Model
 
     public static function create($city_id, $user_id, $wallet_id, $type, $type_id, $amount, $wallet_balance, $method, $details)
     {
-        $withdraw = new BazistWallet;
+        $withdraw = new WalletDetails;
         $withdraw->city_id = $city_id;
         $withdraw->user_id = $user_id;
         $withdraw->wallet_id = $wallet_id;
@@ -54,7 +54,7 @@ class BazistWallet extends Model
         // پیدا کردن کد مالی مرتبط
         $financialCode = financialCode::where('type', $method)->first();
 
-        $withdraw = new BazistWallet;
+        $withdraw = new WalletDetails;
         $withdraw->city_id = $city_id;
         $withdraw->user_id = $user_id;
         $withdraw->wallet_id = $wallet_id;
