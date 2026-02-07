@@ -34,12 +34,12 @@ class AuthController extends Controller
         $expire = now()->addMinutes($expireTime)->toDateTimeString();
 
         try {
-            if (env('APP_ENV') == 'production' /*&& $request->mob != '09153105583'*/) {
-                $code = mt_rand(10000, 99999);
-                Kavenegar::VerifyLookup($request->mob, $code, '', '', "otp", "sms");
-            } else {
+       //     if (env('APP_ENV') == 'production' /*&& $request->mob != '09153105583'*/) {
+//                $code = mt_rand(10000, 99999);
+//                Kavenegar::VerifyLookup($request->mob, $code, '', '', "otp", "sms");
+//            } else {
                 $code = 12345;
-            }
+//            }
             if ($oldOtp = Otp::where('mobile', $request->mob)->first()) {
                 $oldOtp->update(['code' => $code, 'expired_at' => $expire]);
             } else {
@@ -49,7 +49,7 @@ class AuthController extends Controller
             return sendJson('success', 'کد یکبار مصرف به شماره شما ارسال شد');
 
         } catch (Exeption $e) {
-            event(new UserEvent($e->getMessage(), false));
+           // event(new UserEvent($e->getMessage(), false));
             return sendJson('success', 'هنگام ارسال کد یکبار مصرف خطایی پیش آمد لطفا دوباره امتحان کنید');
         }
 
