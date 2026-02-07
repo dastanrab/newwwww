@@ -14,10 +14,6 @@ use Livewire\Component;
 
 class Login extends Component
 {
-    public function boot()
-    {
-        dd('aa');
-    }
     public
     $type = 'mobile',
     $mobile,
