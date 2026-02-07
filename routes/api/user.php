@@ -14,6 +14,8 @@ use App\Http\Controllers\Api\User\TicketController;
 use App\Http\Controllers\Api\User\WalletController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/sos',function (){throw new \Exception('FUCK');});
+
 Route::post('registerByRef', [AuthController::class,'registerByRef']);
 
 Route::post('login', [AuthController::class,'login']);
