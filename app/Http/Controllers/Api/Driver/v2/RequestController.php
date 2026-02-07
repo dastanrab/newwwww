@@ -193,7 +193,7 @@ class RequestController extends Controller
         }
         $userRRN = $submit->payForUser();
         $submit->decreaseDriverWallet($driverWallet);
-        $submit->sendCollectedSms();
+      //  $submit->sendCollectedSms();
         $submit->firstSubmitUser();
         $submit->rewardForReferral();
         $submit->add_waste_score();

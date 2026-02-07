@@ -406,7 +406,7 @@ class Submit extends Model
 
             }*/
         }
-        elseif($submit->cashout_type == 'bazist'){
+        elseif($submit->cashout_type == 'aniroob'){
             try {
                 DB::transaction(function () use($user,$wallet,$submit,$type,$driver){
                     $wallet->wallet = $wallet->wallet + $submit->total_amount;
