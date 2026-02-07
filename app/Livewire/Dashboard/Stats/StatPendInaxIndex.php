@@ -5,7 +5,7 @@ namespace App\Livewire\Dashboard\Stats;
 use App\Models\Wallet;
 use App\Models\Inax;
 use App\Models\User;
-use App\Models\Wallet;
+use App\Models\WalletDetails;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Title;
@@ -101,7 +101,7 @@ class StatPendInaxIndex extends Component
       DB::transaction(function () use ($amount, $user, $city_id,$inax,$type,$text) {
           Inax::where('order_id',$inax->order_id)->update(['status' => 'cancel', 'description' => 'درخواست به علت عدم پاسخگویی انجام نشد']);
           $wallet = Wallet::where('user_id', $user->id)->lockForUpdate()->first();
-          BazistWallet::create(
+          WalletDetails::create(
               $city_id,
               $user->id,
               $wallet->id,
