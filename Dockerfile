@@ -14,6 +14,7 @@ WORKDIR /var/www
 
 # فقط فایل‌های composer رو کپی می‌کنیم برای build vendor
 COPY composer.json composer.lock ./
+COPY app/Helpers/Helpers.php ./
 
 # composer install روی مسیر کاری داخل کانتینر
 RUN composer install --no-dev --optimize-autoloader \
