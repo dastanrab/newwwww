@@ -13,10 +13,7 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www
 
 # فقط فایل‌های composer + app رو کپی می‌کنیم برای build vendor
-COPY composer.json composer.lock ./
-COPY artisan ./
-COPY app ./app
-COPY bootstrap ./bootstrap
+COPY . ./
 
 # composer install
 RUN composer install --no-dev --optimize-autoloader \
