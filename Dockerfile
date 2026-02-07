@@ -16,7 +16,7 @@ WORKDIR /var/www
 COPY . ./
 
 # composer install
-RUN composer install --no-dev --optimize-autoloader \
+RUN composer install  --optimize-autoloader \
     && chown -R www-data:www-data /var/www
 
 # حالا پروژه کامل رو کپی می‌کنیم بدون overwrite vendor
