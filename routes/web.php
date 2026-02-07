@@ -94,7 +94,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
-Route::get('pa/login', Login::class)->middleware([])->name('d.login');
+Route::get('pa/login', Login::class)->name('d.login');
 
 Route::group(['prefix' => 'pa', 'as' => 'd.', 'middleware' => [\App\Http\Middleware\IsAdmin::class]],function () {
 

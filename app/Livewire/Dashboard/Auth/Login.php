@@ -22,6 +22,7 @@ class Login extends Component
     $btnText = 'ارسال کد به شماره همراه';
     public function render()
     {
+        dd('aa');
         return view('livewire.dashboard.auth.login');
     }
     public function login()
