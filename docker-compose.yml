@@ -6,7 +6,7 @@ services:
     container_name: laravel_app
     restart: always
     volumes:
-      - .:/var/www:cached
+      - .:/var/www
       - laravel_vendor:/var/www/vendor
     env_file:
       - .env
