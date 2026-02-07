@@ -14,6 +14,7 @@ WORKDIR /var/www
 
 # فقط فایل‌های composer + app رو کپی می‌کنیم برای build vendor
 COPY composer.json composer.lock ./
+COPY artisan ./
 COPY app ./app
 
 # composer install
