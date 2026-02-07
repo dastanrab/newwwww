@@ -1,6 +1,5 @@
-FROM php:8.3-cli
+FROM php:8.3-fpm
 
-# System deps + PHP extensions + Redis extension
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -12,9 +11,9 @@ RUN apt-get update && apt-get install -y \
     && pecl install redis \
     && docker-php-ext-enable redis \
     && docker-php-ext-install \
-        zip \
         pdo \
         pdo_mysql \
+        zip \
         bcmath \
         gd \
     && apt-get clean \
@@ -30,8 +29,9 @@ COPY . .
 RUN composer install --no-dev --optimize-autoloader
 RUN chown -R www-data:www-data storage bootstrap/cache
 
-EXPOSE 8000
+EXPOSE 9000
 
+# Supervisor برای queueها
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 CMD ["/usr/bin/supervisord", "-n"]
