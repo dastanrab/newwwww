@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bazist_wallets', function (Blueprint $table) {
+        Schema::create('wallet_details', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('city_id')->nullable()->default(1);
             $table->unsignedBigInteger('user_id')->nullable();
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bazist_wallets');
+        Schema::dropIfExists('wallet_details');
     }
 };

@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('bazist_wallets', function (Blueprint $table) {
+        Schema::table('wallet_details', function (Blueprint $table) {
             $table->foreign(['operator_id'])->references(['id'])->on('users')->onUpdate('no action')->onDelete('no action');
         });
     }
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('bazist_wallets', function (Blueprint $table) {
-            $table->dropForeign('bazist_wallets_operator_id_foreign');
+        Schema::table('wallet_details', function (Blueprint $table) {
+            $table->dropForeign('wallet_details_operator_id_foreign');
         });
     }
 };

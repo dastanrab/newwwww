@@ -4,14 +4,14 @@ namespace App\Models;
 
 use App\Events\UserEvent;
 use App\Models\Driver;
-use App\RecordsActivity;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Car extends Model
 {
     use HasFactory;
-    use RecordsActivity;
+
 
     protected $fillable = ['fava_id', 'user_id', 'plaque', 'plaque_1', 'plaque_2', 'plaque_3', 'plaque_4', 'type', 'type_id', 'is_active', 'rollcall_status', 'ip'];
 

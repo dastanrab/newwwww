@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Events\ActivityEvent;
-use App\RecordsActivity;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Http;
@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Http;
 class Inax extends Model
 {
     use HasFactory;
-    use RecordsActivity;
+
 
     protected $fillable = ['user_id', 'amount', 'operator', 'mobile', 'method', 'pay_method', 'type', 'order_id', 'ref_code', 'trans_id', 'description', 'status'];
 
@@ -129,7 +129,7 @@ class Inax extends Model
                 $value= $response->json()['credit']??10000;
                 \Illuminate\Support\Facades\Cache::set('inax_remain_balance',$value,100);
                 return $value;
-            }catch (Exception $exception)
+            }catch (\Exception $exception)
             {
                 return 0;
             }

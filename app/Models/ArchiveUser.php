@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use App\RecordsActivity;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class ArchiveUser extends Model
 {
     use HasFactory;
-    use RecordsActivity;
+
     protected $fillable = ['total', 'legal', 'not_legal', 'phone', 'app'];
 
     public static function newArchive($city_id, $legal, $not_legal, $phone, $app)

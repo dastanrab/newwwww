@@ -40,9 +40,9 @@ return Application::configure(basePath: dirname(__DIR__))
 
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->append(ForceJsonRequestHeader::class);
+      //  $middleware->append(ForceJsonRequestHeader::class);
         $middleware->append(\App\Http\Middleware\AllowOnlySpecificIPs::class);
-        $middleware->append(\App\Http\Middleware\EnsureJsonRequest::class);
+   //     $middleware->append(\App\Http\Middleware\EnsureJsonRequest::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->renderable(function (AuthenticationException $e, Request $request) {

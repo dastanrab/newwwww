@@ -820,14 +820,14 @@ function today_fin($date)
     UNION ALL
 
     SELECT CONCAT_WS('_', 'bazist_deposite', type) as type , sum(amount) as amount
-    FROM bazist_wallets
+    FROM wallet_details
     WHERE DATE(created_at) = ? AND method = 'واریز'
     GROUP BY type
 
     UNION ALL
 
     SELECT CONCAT_WS('_', 'bazist_withdraw', type) as type , sum(amount) as amount
-    FROM bazist_wallets
+    FROM wallet_details
     WHERE DATE(created_at) = ? AND method = 'برداشت'
     GROUP BY type
 ", [$date, $date, $date, $date, $date, $date]);

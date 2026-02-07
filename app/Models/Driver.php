@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Notifications\UserNotification;
-use App\RecordsActivity;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Notification;
@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Notification;
 class Driver extends Model
 {
     use HasFactory;
-    use RecordsActivity;
+
 
     protected $fillable = [
         'user_id', 'submit_id', 'car_id', 'fava_id', 'status', 'weights', 'user_bank_code', 'fava_bank_code', 'collected_at', 'city_id'

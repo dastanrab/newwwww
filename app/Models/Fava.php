@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Classes\BaleService;
 use App\Events\ActivityEvent;
-use App\RecordsActivity;
+
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,7 +16,7 @@ use SoapClient;
 class Fava extends Model
 {
     use HasFactory;
-    use RecordsActivity;
+
 
     public static function guzzle_http($url, $method, $parameters)
     {

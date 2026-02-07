@@ -127,8 +127,8 @@ class ShopController extends Controller
                 ],
                 "payMethods" => [
                     [
-                        'value' => 'bazist',
-                        'label' => 'کیف پول بازیست',
+                        'value' => 'aniroob',
+                        'label' => 'کیف پول آنیروب',
                     ]
 //                    ,
 //                    [
@@ -141,8 +141,8 @@ class ShopController extends Controller
                 'packages' => Cache::internetPackage(),
                 "payMethods" => [
                     [
-                        'value' => 'bazist',
-                        'label' => 'کیف پول بازیست',
+                        'value' => 'aniroob',
+                        'label' => 'کیف پول آنیروب',
                     ]
 //                    ,
 //                    [
@@ -193,15 +193,15 @@ class ShopController extends Controller
                     'to' => 10000000,
                 ],
                 "payMethods" => [
-                    [
-                        'value' => 'aap',
-                        'label' => 'کیف پول آپ',
-                    ]
+//                    [
+//                        'value' => 'aap',
+//                        'label' => 'کیف پول آپ',
+//                    ]
                 ],
             ],
-            'aapLink' => $apUrl,
-            'bazistBalance' => floor($bazistWallet->wallet),
-            'aapBalance' => $apUrl ? -1 : $apBalance
+//            'aapLink' => $apUrl,
+            'AniRoobBalance' => floor($bazistWallet->wallet),
+//            'aapBalance' => $apUrl ? -1 : $apBalance
         ];
         return $data;
     }

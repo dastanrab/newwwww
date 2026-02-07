@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Events\ActivityEvent;
-use App\RecordsActivity;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Http;
@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Http;
 class AsanPardakht extends Model
 {
     use HasFactory;
-    use RecordsActivity;
+
     // type: model name, type_id: model id, host_id: const, rrn: ref code
     protected $fillable = ['fava_id', 'user_id ', 'type', 'type_id', 'host_id',
         'host_tran_id', 'host_req_time', 'host_opcode', 'status_code',

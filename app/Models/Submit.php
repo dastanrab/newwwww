@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Classes\BaleService;
 use App\Classes\TransactionService;
 use App\Events\ActivityEvent;
-use App\RecordsActivity;
+
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,7 +16,7 @@ use Kavenegar\KavenegarApi;
 class Submit extends Model
 {
     use HasFactory;
-    use RecordsActivity;
+
     protected $fillable = [
         'fava_id', 'start_deadline', 'end_deadline', 'status', 'recyclables', 'total_amount'/*Toman*/ , 'final_amount', /*Toman*/ 'star', 'comment', 'survey', 'cancel', 'submit_phone', 'cashout_type', 'cashout_instant', 'canceled_at', 'canceller_id', 'registrant_id','region_id'
     ];

@@ -7,6 +7,10 @@ use Illuminate\Auth\Access\Response;
 
 class UserPolicy
 {
+    public function stat_submit_division_excel(User $user): bool
+    {
+        return $user->getPermissions()->contains('stat_submit_division_excel');
+    }
     public function user_driver_index(User $user): bool
     {
         return $user->getPermissions()->contains('user_driver_index');

@@ -58,7 +58,7 @@ class RequestController extends Controller
             [
                 'addressId' => 'required|exists:addresses,id,user_id,'.$user->id,
                 'cardId'    => $request->payMethod == 'card' ? 'required|exists:ibans,id,user_id,'.$user->id : 'nullable',
-                //'payMethod' => 'required|in:bazist,aap',
+                'payMethod' => 'required|in:bazist,card',
                 'scheduling.day' => $request->scheduling == 'immediate' ? 'nullable' : 'required',
                 'scheduling.hour' => $request->scheduling == 'immediate' ? 'nullable' : 'required',
             ],

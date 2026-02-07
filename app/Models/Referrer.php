@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use App\RecordsActivity;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Referrer extends Model
 {
     use HasFactory;
-    use RecordsActivity;
+
     protected $fillable = [
         'referrer_id', 'referrer_amount', 'rewarded_at'
     ];

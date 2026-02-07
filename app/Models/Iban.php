@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Events\ActivityEvent;
-use App\RecordsActivity;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Http;
 class Iban extends Model
 {
     use HasFactory;
-    use RecordsActivity;
+
     use SoftDeletes;
 
     // status: 02==active

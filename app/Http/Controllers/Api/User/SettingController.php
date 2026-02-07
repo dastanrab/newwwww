@@ -215,14 +215,14 @@ class SettingController extends Controller
                         "wage" => $wage, //کارمزد
                         "minAmount" => $minAmountCard, //حداقل مبلغ قابل برداشت
                     ],
-                    'aap' => [
-                        "hintItems" => [
-                            'حداقل مبلغ برای برداشت، '.tomanFormat($minAmountAap).' می باشد.',
-                            'این مبلغ در سریع ترین زمان ممکن برای شما واریز می شود',
-                        ],
-                        "wage" => $wage, //کارمزد
-                        "minAmount" => $minAmountAap, //حداقل مبلغ قابل برداشت
-                    ],
+//                    'aap' => [
+//                        "hintItems" => [
+//                            'حداقل مبلغ برای برداشت، '.tomanFormat($minAmountAap).' می باشد.',
+//                            'این مبلغ در سریع ترین زمان ممکن برای شما واریز می شود',
+//                        ],
+//                        "wage" => $wage, //کارمزد
+//                        "minAmount" => $minAmountAap, //حداقل مبلغ قابل برداشت
+//                    ],
                     'amountList' => [
                         [
                             'label' => number_format(5000),
@@ -299,7 +299,7 @@ class SettingController extends Controller
                         ]
                     ]
                 ],
-                'supportPhone' => '05138722223'
+                'supportPhone' => '-'
             ],
             'versioning' => self::versioning(),
             'updateServiceTTL' => env('APP_ENV') == 'local' ? 10 :  20,

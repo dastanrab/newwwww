@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-use App\RecordsActivity;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Role extends Model
 {
-    use RecordsActivity;
+
     use HasFactory;
 
     protected $fillable = [

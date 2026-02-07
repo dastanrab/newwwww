@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\RecordsActivity;
+
 use Hekmatinasser\Verta\Verta;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

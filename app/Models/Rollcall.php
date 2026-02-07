@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\RecordsActivity;
+
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class Rollcall extends Model
 {
     use HasFactory;
-    use RecordsActivity;
+
 
     protected $fillable = ['user_id', 'start_lat', 'start_lon', 'end_lat', 'end_lon', 'start_at', 'end_at'];
 

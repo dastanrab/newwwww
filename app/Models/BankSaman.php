@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\RecordsActivity;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Http;
@@ -11,7 +11,7 @@ use App\Events\ActivityEvent;
 class BankSaman extends Model
 {
     use HasFactory;
-    use RecordsActivity;
+
 
     public static function token()
     {

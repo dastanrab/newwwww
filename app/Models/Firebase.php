@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Events\ActivityEvent;
-use App\RecordsActivity;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Kreait\Firebase\Factory;
@@ -12,7 +12,7 @@ use Kreait\Firebase\Messaging\CloudMessage;
 class Firebase extends Model
 {
     use HasFactory;
-    use RecordsActivity;
+
     protected $fillable = ['user_id', 'platform', 'token'];
 
     public $factory;

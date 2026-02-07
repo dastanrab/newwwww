@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\RecordsActivity;
+
 use App\Models\Submit;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 class ArchiveApp extends Model
 {
     use HasFactory;
-    use RecordsActivity;
+
 
     protected $fillable = [
         'city_id', 'receive_archive_id', 'date', 'type', 'submit_count', 'submit_done', 'submit_first', 'submit_cancel',

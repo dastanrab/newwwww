@@ -2,19 +2,20 @@
 
 namespace App\Models;
 
-use App\RecordsActivity;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class WalletDetails extends Model
 {
     use HasFactory;
-    use RecordsActivity;
+
 
     // type: model name, type_id: model id, method: واریز / برداشت
     protected $fillable = [
         'city_id', 'user_id', 'wallet_id', 'type', 'type_id', 'amount', /*rial*/  'wallet_balance', /*rial*/  'method', 'details'
     ];
+    protected $table = 'wallet_details';
 
     public function user()
     {
