@@ -16,6 +16,7 @@ WORKDIR /var/www
 COPY composer.json composer.lock ./
 COPY artisan ./
 COPY app ./app
+COPY bootstrap ./bootstrap
 
 # composer install
 RUN composer install --no-dev --optimize-autoloader \
