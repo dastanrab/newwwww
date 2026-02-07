@@ -36,7 +36,7 @@ services:
       - appnet
 
   db:
-    image: mysql:8
+    image: mysql:5.7
     container_name: db
     restart: always
     environment:
