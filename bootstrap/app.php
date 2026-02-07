@@ -78,20 +78,20 @@ return Application::configure(basePath: dirname(__DIR__))
                 ], 500);
             }
         });
-//        $exceptions->report(function (\Throwable $e) {
-//            try {
-//                \App\Jobs\SendErrorLog::dispatch([
-//                    'class_name' => get_class($e),
-//                    'message' => $e->getMessage(),
-//                    'file' => $e->getFile(),
-//                    'line' => $e->getLine(),
-//                    'trace' => substr($e->getTraceAsString(), 0, 100)
-//                ])->onConnection('redis-queue')->onQueue('redis-queue');
-//            } catch (\Throwable $ex) {
-//                // اگر خود Job خطا داد، اینجا می‌توانی لاگ بزنی یا نادیده بگیری
-////                dd('SendErrorLog failed: ' . $ex->getMessage());
-//            }
-//        });
+        $exceptions->report(function (\Throwable $e) {
+            try {
+                \App\Jobs\SendErrorLog::dispatch([
+                    'class_name' => get_class($e),
+                    'message' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => substr($e->getTraceAsString(), 0, 100)
+                ])->onConnection('redis-queue')->onQueue('redis-queue');
+            } catch (\Throwable $ex) {
+                // اگر خود Job خطا داد، اینجا می‌توانی لاگ بزنی یا نادیده بگیری
+//                dd('SendErrorLog failed: ' . $ex->getMessage());
+            }
+        });
 
     })
     ->create();
