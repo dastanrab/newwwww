@@ -94,6 +94,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/sos',function (){dd('ssss');});
 Route::get('pa/login', Login::class)->name('d.login');
 
 Route::group(['prefix' => 'pa', 'as' => 'd.', 'middleware' => [\App\Http\Middleware\IsAdmin::class]],function () {
