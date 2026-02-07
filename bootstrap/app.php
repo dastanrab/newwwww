@@ -45,7 +45,6 @@ return Application::configure(basePath: dirname(__DIR__))
    //     $middleware->append(\App\Http\Middleware\EnsureJsonRequest::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        dd($exceptions);
         $exceptions->renderable(function (AuthenticationException $e, Request $request) {
             if ($request->expectsJson()) {
                 return response()->json([
@@ -72,7 +71,7 @@ return Application::configure(basePath: dirname(__DIR__))
                     'permission' => 'You do not have permission to perform this action'
                 ]);
             }
-            if ($request->expectsJson()) {
+            if (true || $request->expectsJson()) {
                 return response()->json([
                     'message' => $e->getMessage() ?: 'Server Error',
                     'error' => 'Something went wrong'
