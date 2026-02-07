@@ -23,6 +23,7 @@ RUN composer install  --optimize-autoloader \
 COPY . ./
 # permissions مهم
 RUN chown -R www-data:www-data /var/www \
+    && chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
 
