@@ -220,7 +220,7 @@ class ShopController extends Controller
                 'operator'  => 'required|string',
                 'mobile'    => 'required|regex:/(09)[0-9]{9}/|digits:11|numeric',
                 'amount'    => 'required|numeric|min:1000',
-                'payMethod' => 'required|in:aap,bazist',
+                'payMethod' => 'required|in:aniroob',
             ],
             [
                 'operator' => 'اپراتور را انتخاب کنید',
@@ -246,13 +246,14 @@ class ShopController extends Controller
                 $balance = $apBalance;
             }
 
-        } elseif ($request->payMethod == 'bazist') {
+        } elseif ($request->payMethod == 'aniroob') {
             $wallet = Wallet::where('user_id', $user->id)->first();
             $balance = $wallet->wallet;
         }
         if($balance < $amount){
             return sendJson('error', 'موجودی شما کافی نمی باشد');
         }
+        $request->payMethod='aniroob';
         $method = 'topup';
         $chargeType = 'normal';
         $orderId = Inax::addChargeRecord($user->id,$request->amount,$request->operator,$request->mobile,$method,$request->payMethod,$chargeType);
@@ -288,7 +289,7 @@ class ShopController extends Controller
                     return sendJson('error', 'خطایی پیش آمد لطفا بعدا امتحان کنید');
                 }
             }
-            else { // bazist wallet
+            else {
                 DB::transaction(function () use ($amount, $inax, $user, $city_id) {
                     $wallet = Wallet::where('user_id', $user->id)->lockForUpdate()->first();
                     if (!$wallet) {
@@ -308,13 +309,13 @@ class ShopController extends Controller
                     }
                 });
 
-//                    $wallet->wallet -= $amount;
-//                    $wallet->save();
-//                    $inax->update(['status' => 'pendingSubmitRecordDb']);
-//                    $bazistWallet = BazistWallet::create($city_id, $user->id, $wallet->id, 'sharj_mobile', $inax->id, $amount * 10, ($wallet->wallet)*10,'برداشت','شارژ موبایل');
-//                    if($bazistWallet){
-//                        $inax->update(['status' => 'done']);
-//                    }
+                    $wallet->wallet -= $amount;
+                    $wallet->save();
+                    $inax->update(['status' => 'pendingSubmitRecordDb']);
+                    $Wallet = WalletDetails::create($city_id, $user->id, $wallet->id, 'sharj_mobile', $inax->id, $amount * 10, ($wallet->wallet)*10,'برداشت','شارژ موبایل');
+                    if($Wallet){
+                        $inax->update(['status' => 'done']);
+                    }
             }
 //            $result = Inax::buyCharge($method,$request->operator,$request->amount,$request->mobile,$chargeType,$orderId);
             // {"code":1,"trans_id":"2062909","ref_code":"148171913"}
@@ -325,7 +326,7 @@ class ShopController extends Controller
                 'msg' => 'با موفقیت انجام شد',
             ];
             if($result['code'] === 1){
-                dump('ok');
+//                dump('ok');
 
                 $inax = Inax::where('order_id',$orderId)->first();
 //                $inax->update(['status' => 'pendingDecreaseCredit', 'ref_code' => $result['ref_code'], 'trans_id' => $result['trans_id']]);
@@ -334,15 +335,15 @@ class ShopController extends Controller
                     'transId' => $result['trans_id'],
                     'orderId' => $orderId,
                     'balance' => [
-                        'bazist' => $wallet->wallet,
-                        'aap'    => AsanPardakht::balance($user->mobile),
+                        'aniroob' => $wallet->wallet,
+//                        'aap'    => AsanPardakht::balance($user->mobile),
                     ]
                 ];
-                dump($data);
+//                dump($data);
                 return sendJson('success','خرید شارژ با موفقیت انجام شد', $data);
             }
             else{
-                 dump('fail');
+//                 dump('fail');
                 Inax::where('order_id',$orderId)->update(['status' => 'cancel', 'description' => $result['msg']]);
                 $data = [
                     'transId' => null,
@@ -395,7 +396,7 @@ class ShopController extends Controller
                 'mobile'       => 'required|regex:/(09)[0-9]{9}/|digits:11|numeric',
                 'internetType' => 'required',
                 'simType'      => 'required',
-                'payMethod'    => 'required|in:aap,bazist',
+                'payMethod'    => 'required|in:aniroob',
             ],
             [
                 'productId'    => 'اینترنت درخواستی پیدا نشد',
@@ -414,6 +415,7 @@ class ShopController extends Controller
         if(!$findPackage){
             return sendJson('error', 'اینترنت مطابق با درخواست شما یافت نشد');
         }
+        $request->payMethod == 'aniroob';
         $amount = $findPackage['amount']['value']; //toman
         $city_id = $user->city->id;
         if ($request->payMethod == 'aap') {
@@ -427,7 +429,7 @@ class ShopController extends Controller
             else{
                 $balance = $apBalance;
             }
-        } elseif ($request->payMethod == 'bazist') {
+        } elseif ($request->payMethod == 'aniroob') {
             $wallet = Wallet::where('user_id', $user->id)->first();
             $balance = $wallet->wallet;
         }
@@ -454,7 +456,7 @@ class ShopController extends Controller
                             }
                         }
                     }
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                     return sendJson('error', 'خطایی پیش آمد لطفا بعدا امتحان کنید');
                 }
             }
@@ -481,14 +483,14 @@ class ShopController extends Controller
                 });
 
             }
-            $result = Inax::buyInternet($request->productId,$request->operator,$request->mobile,$request->internetType,$request->simType,$orderId);
+//            $result = Inax::buyInternet($request->productId,$request->operator,$request->mobile,$request->internetType,$request->simType,$orderId);
             // {"code":1,"trans_id":"2062909","ref_code":"148171913"}
-            /*$result = [
+            $result = [
                 'code' => 1,
                 'trans_id' => rand(1321,454354),
                 'ref_code' => rand(4233242,543543345),
                 'msg' => 'با موفقیت انجام شد',
-            ];*/
+            ];
             if($result['code'] === 1){
                 $inax = Inax::where('order_id',$orderId)->first();
                 $inax->update(['ref_code' => $result['ref_code'], 'trans_id' => $result['trans_id']]);
@@ -496,8 +498,8 @@ class ShopController extends Controller
                     'transId' => $result['trans_id'],
                     'orderId' => $orderId,
                     'balance' => [
-                        'bazist' => $wallet->wallet,
-                        'aap'    => AsanPardakht::balance($user->mobile),
+                        'aniroob' => $wallet->wallet,
+                       // 'aap'    => AsanPardakht::balance($user->mobile),
                     ]
                 ];
                 return sendJson('success','خرید اینترنت با موفقیت انجام شد', $data);
@@ -565,7 +567,7 @@ class ShopController extends Controller
         if($validator->fails()){
             return sendJson('error',$validator->errors()->first());
         }
-
+        $request->payMethod='aniroob';
         $amount = $request->amount; //toman
         $charity = $request->charity;
         $city_id = $user->city->id;
