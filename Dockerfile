@@ -23,7 +23,7 @@ RUN composer install  --optimize-autoloader \
 COPY . ./
 
 
-EXPOSE 9000
+EXPOSE 8000
 
 # Supervisor برای queue
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
