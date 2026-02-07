@@ -35,7 +35,7 @@ services:
       - appnet
 
   db:
-    image: mariadb:10.11
+    image: mysql:5.7
     container_name: db
     restart: always
     environment:
