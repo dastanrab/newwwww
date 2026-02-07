@@ -258,25 +258,25 @@ class AuthController extends Controller
         if($validator->fails()){
             return sendJson('error',$validator->errors()->first());
         }
-        $appFirebase = $user->firebases()->where('platform','user-app')->first();
-        if($appFirebase){
-            $appFirebase->update(['token' => $request->token]);
-
-        }
-        else{
-            $user->firebases()->create([
-                'platform' => 'user-app',
-                'token' => $request->token,
-            ]);
-        }
-        $topics = ['all', 'allApp'];
-        if($user->gender) {
-            $topics[] = $user->gender == 1 ? 'male' : 'female';
-        }
-        if($user->city) {
-            $topics[] = $user->city->name;
-        }
-        ProcessTopicFirebase::dispatch($topics,$request->token);
+//        $appFirebase = $user->firebases()->where('platform','user-app')->first();
+//        if($appFirebase){
+//            $appFirebase->update(['token' => $request->token]);
+//
+//        }
+//        else{
+//            $user->firebases()->create([
+//                'platform' => 'user-app',
+//                'token' => $request->token,
+//            ]);
+//        }
+//        $topics = ['all', 'allApp'];
+//        if($user->gender) {
+//            $topics[] = $user->gender == 1 ? 'male' : 'female';
+//        }
+//        if($user->city) {
+//            $topics[] = $user->city->name;
+//        }
+       // ProcessTopicFirebase::dispatch($topics,$request->token);
         return sendJson('success','توکن fcm ذخیره شد');
     }
 }
