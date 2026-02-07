@@ -50,7 +50,7 @@ return [
     |
     */
 
-    'lazy_placeholder' => 'livewire.panel.layouts.spinner',
+    'lazy_placeholder' => 'livewire.dashboard.layouts.spinner',
 
     /*
     |---------------------------------------------------------------------------
