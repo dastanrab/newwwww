@@ -41,9 +41,9 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE=aniroob
-      MYSQL_USER=aniroobDbUser
-      MYSQL_PASSWORD=rjDxF05vj3tHOjXV2eXu
+      MYSQL_DATABASE: aniroob
+      MYSQL_USER: aniroobDbUser
+      MYSQL_PASSWORD: rjDxF05vj3tHOjXV2eXu
     ports:
       - "3306:3306"
     volumes:
