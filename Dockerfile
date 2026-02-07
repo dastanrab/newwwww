@@ -12,16 +12,17 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
-# فقط فایل‌های composer رو کپی می‌کنیم برای build vendor
+# فقط فایل‌های composer + app رو کپی می‌کنیم برای build vendor
 COPY composer.json composer.lock ./
-COPY app/Helpers/Helpers.php ./
+COPY app ./app
 
-# composer install روی مسیر کاری داخل کانتینر
+# composer install
 RUN composer install --no-dev --optimize-autoloader \
     && chown -R www-data:www-data /var/www
 
-# حالا پروژه رو کپی می‌کنیم بدون overwrite vendor
+# حالا پروژه کامل رو کپی می‌کنیم بدون overwrite vendor
 COPY . ./
+
 
 EXPOSE 9000
 
