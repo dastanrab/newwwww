@@ -15,6 +15,7 @@ class BankSaman extends Model
 
     public static function token()
     {
+        return false;
         try {
             $response = Http::post('https://b2bapi.sb24.ir:8443/api/v1/auth/token', [
                 "client_id" => env('SB24_CLIENT_ID'),
@@ -87,6 +88,7 @@ class BankSaman extends Model
 
     public static function confirm($amounts, $number, $amount, $iban, $name)
     {
+        return false;
         $time = time();
         $token = self::token();
         $init = self::init($token, $time, $amounts, $number);

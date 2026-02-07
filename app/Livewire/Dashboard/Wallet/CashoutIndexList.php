@@ -111,6 +111,7 @@ class CashoutIndexList extends Component
     #[On('send-to-bank')]
     public function sendToBank(Cashout $cashout)
     {
+        return sendToast(0,'فعلا مقدور نیست');
         if ($cashout->bank || $cashout->trace_code) {
             sendToast(0,'قبلا به بانک ارسال شده');
         } else {
