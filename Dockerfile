@@ -21,6 +21,9 @@ RUN composer install  --optimize-autoloader \
 
 # حالا پروژه کامل رو کپی می‌کنیم بدون overwrite vendor
 COPY . ./
+# permissions مهم
+RUN chown -R www-data:www-data /var/www \
+    && chmod -R 775 storage bootstrap/cache
 
 
 EXPOSE 8000
