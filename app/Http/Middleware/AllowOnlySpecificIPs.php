@@ -12,12 +12,14 @@ class AllowOnlySpecificIPs
         '127.0.0.1',
         '192.168.1.50',
         '10.0.0.12',
+        '185.255.88.111',
+        '172.18.0.5'
     ];
 
     public function handle(Request $request, Closure $next)
     {
+        $realIp = @$request->header('x-real-ip');
         $ip = $request->ip();
-        dd($request->ip(),$request->headers,$request);
         if (!in_array($ip, $this->allowed)) {
             return response()->json([
                 'message' => 'Your IP is not allowed to access this resource.'
