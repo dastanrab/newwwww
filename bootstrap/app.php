@@ -71,7 +71,7 @@ return Application::configure(basePath: dirname(__DIR__))
                     'permission' => 'You do not have permission to perform this action'
                 ]);
             }
-            if (true || $request->expectsJson()) {
+            if ( $request->expectsJson()) {
                 return response()->json([
                     'message' => $e->getMessage() ?: 'Server Error',
                     'error' => 'Something went wrong'
