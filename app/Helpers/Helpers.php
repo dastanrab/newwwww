@@ -1228,10 +1228,10 @@ function transformPaginated($paginator)
         ],
     ]);
 }
-function walletTransaction($city_id=1,$user_id,$wallet_id,$type,$type_id,$amount,$new_balance,$method,$description)
+function walletTransaction($city_id,$user_id,$wallet_id,$type,$type_id,$amount,$new_balance,$method,$description)
 {
     $wallet = new WalletDetails;
-    $wallet->city_id = $city_id;
+    $wallet->city_id = $city_id??1;
     $wallet->user_id = $user_id;
     $wallet->wallet_id = $wallet_id;
     $wallet->type = $type;

@@ -17,7 +17,7 @@ class AllowOnlySpecificIPs
     public function handle(Request $request, Closure $next)
     {
         $ip = $request->ip();
-
+        dd($request->ip(),$request->headers,$request);
         if (!in_array($ip, $this->allowed)) {
             return response()->json([
                 'message' => 'Your IP is not allowed to access this resource.'
