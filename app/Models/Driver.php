@@ -48,7 +48,7 @@ class Driver extends Model
         $saveDriver = $driver->save();
         if($saveDriver){
             $submit->update(['status' => 2]);
-            Fava::updateRequest($submit->fava_id, 2);
+//            Fava::updateRequest($submit->fava_id, 2);
             /*$$requester = User::find($submit->user_id);
             data = [
                 'title' => 'درخواست شما تایید شد',

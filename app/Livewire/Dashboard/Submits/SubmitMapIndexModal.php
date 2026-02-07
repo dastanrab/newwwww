@@ -74,7 +74,7 @@ class SubmitMapIndexModal extends Component
 
         if ($submit->city_id == 1)
         {
-            Fava::updateRequest($submit->fava_id, 2);
+            //Fava::updateRequest($submit->fava_id, 2);
         }
 
 

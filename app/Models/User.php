@@ -289,16 +289,16 @@ class User extends Authenticatable
             }
             ArchiveUser::newArchive($data['cityId'], $data['userType'], $data['userType'] == 1 ? 0 : 1, 0, 1);
 
-            $user->fava_id = Fava::createUser([
-                'userId' => $user->id,
-                'guildId' => $data['guildId'],
-                'isLegal' => $data['userType'],
-                'name' => $data['name'],
-                'lastname' => $data['lastname'],
-                'guildTitle' => $data['guildTitle'],
-                'cityId' => $data['cityId'],
-                'mobile' => $data['mobile'],
-            ]);
+//            $user->fava_id = Fava::createUser([
+//                'userId' => $user->id,
+//                'guildId' => $data['guildId'],
+//                'isLegal' => $data['userType'],
+//                'name' => $data['name'],
+//                'lastname' => $data['lastname'],
+//                'guildTitle' => $data['guildTitle'],
+//                'cityId' => $data['cityId'],
+//                'mobile' => $data['mobile'],
+//            ]);
             $user->save();
             return $user;
         }

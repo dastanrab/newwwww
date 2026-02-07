@@ -221,7 +221,7 @@ class SubmitAllIndexList extends Component
             Storage::put('driver-submitAll.txt', date('Y-m-d H:i:s').'-'.$this->toDriver);
         }
         if ($submit->city_id == 1) {
-            Fava::updateRequest($submit->fava_id, 2);
+          //  Fava::updateRequest($submit->fava_id, 2);
         }
 
         /*$data = [
@@ -296,7 +296,7 @@ class SubmitAllIndexList extends Component
         $suggest->cancelDriversSubmit($submit->id);
         if ($submit->city_id == 1)
         {
-            Fava::updateRequest($submit->fava_id, 5, 4);
+         //   Fava::updateRequest($submit->fava_id, 5, 4);
         }
 
         if(0) {
