@@ -6,7 +6,7 @@ services:
     container_name: laravel_app
     restart: always
     volumes:
-      - .:/var/www
+      - .:/var/www:cached      # پروژه mount می‌شه ولی vendor داخل کانتینر امن باقی می‌مونه
     env_file:
       - .env
     depends_on:
@@ -17,7 +17,6 @@ services:
     command: >
       sh -c "
         php artisan migrate --force &&
-        php artisan db:seed --force &&
         /usr/bin/supervisord -n
       "
 
@@ -29,14 +28,14 @@ services:
       - "8000:80"
     volumes:
       - .:/var/www
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - app
     networks:
       - appnet
 
   db:
-    image: mysql:5.7
+    image: mariadb:10.11
     container_name: db
     restart: always
     environment:
