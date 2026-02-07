@@ -83,14 +83,14 @@ class ClubItemController extends Controller
             // -------------------------
             $imgFile = $request->file('image');
             $imagePath = now()->format('Y/m/d') . '/' . Str::random(10) . '-' . $imgFile->getClientOriginalName();
-            $image = $imgFile->storeAs('', $imagePath, 'bazist');
+            $image = $imgFile->storeAs('', $imagePath, 'aniroob');
 
             // -------------------------
             //  آپلود برند آیکون
             // -------------------------
             $brandFile = $request->file('brandIcon');
             $brandPath = now()->format('Y/m/d') . '/' . Str::random(10) . '-' . $brandFile->getClientOriginalName();
-            $brandIcon = $brandFile->storeAs('', $brandPath, 'bazist');
+            $brandIcon = $brandFile->storeAs('', $brandPath, 'aniroob');
 
             // -------------------------
             //  ثبت در دیتابیس
@@ -162,7 +162,7 @@ class ClubItemController extends Controller
             if ($request->hasFile('image')) {
                 $file = $request->file('image');
                 $path = now()->format('Y/m/d') . '/' . str()->random(10) . '-' . $file->getClientOriginalName();
-                $stored = $file->storeAs('', $path, 'bazist');
+                $stored = $file->storeAs('', $path, 'aniroob');
                 $club->image = 'uploads/' . $stored;
             }
 
@@ -170,7 +170,7 @@ class ClubItemController extends Controller
             if ($request->hasFile('brandIcon')) {
                 $file = $request->file('brandIcon');
                 $path = now()->format('Y/m/d') . '/' . str()->random(10) . '-' . $file->getClientOriginalName();
-                $stored = $file->storeAs('', $path, 'bazist');
+                $stored = $file->storeAs('', $path, 'aniroob');
                 $club->brand_icon = 'uploads/' . $stored;
             }
 

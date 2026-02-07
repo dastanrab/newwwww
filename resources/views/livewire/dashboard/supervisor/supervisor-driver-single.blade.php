@@ -124,7 +124,7 @@
                                                             </li>
                                                             <li>
                                                                 <i class="bx bxs-map-pin"></i>
-                                                                <span>{{ bazistDistrict([$submit->address->lat, $submit->address->lon]) }}</span>
+                                                                <span>{{ xDistrict([$submit->address->lat, $submit->address->lon]) }}</span>
                                                             </li>
                                                         </ul>
                                                     </div>

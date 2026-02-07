@@ -63,9 +63,6 @@ class CalculateDriverDistance implements ShouldQueue
      */
     public function handle(): void
     {
-        $log = fopen("/home/laravel/la.bazistco.com/storage/logs/DriverSalaryLog.txt", "a+") or die("Unable to open file!");
-        $t = 'res|'.json_encode($this->driver->id)."\n";
-        fwrite($log, $t);
         if (count($this->submits)>0)
         {
             $start=null;

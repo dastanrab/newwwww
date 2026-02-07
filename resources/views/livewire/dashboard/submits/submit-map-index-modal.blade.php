@@ -54,7 +54,7 @@
                                         class="col-10 dir-ltr">{{ \Verta::instance($submit->created_at)->format('Y/m/d H:i') }}</div>
                                     <div class="col-2 text-end"><i class='bx bx-current-location'></i>منطقه</div>
                                     <div
-                                        class="col-10">{{ bazistDistrict([$submit->address->lat, $submit->address->lon]) }}</div>
+                                        class="col-10">{{ xDistrict([$submit->address->lat, $submit->address->lon]) }}</div>
                                     <div class="col-2 text-end"><i class='bx bx-location-plus'></i>آدرس</div>
                                     <div class="col-10">{{ $submit->address->address }}</div>
                                     @if(in_array($name,['active', 'done']) && $submit->drivers->first())

@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Dashboard\Stats;
 
-use App\Models\BazistWallet;
+use App\Models\Wallet;
 use App\Models\Inax;
 use App\Models\User;
 use App\Models\Wallet;

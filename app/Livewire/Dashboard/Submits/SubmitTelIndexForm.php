@@ -131,7 +131,7 @@ class SubmitTelIndexForm extends Component
         ]);
         $city_id = User::cityId();
         $address = Address::find($this->address);
-        /*$findRegion = bazistDistrict([$address->lat, $address->lon]);
+        /*$findRegion = xDistrict([$address->lat, $address->lon]);
         if(!$findRegion){
             sendToast(0,'متاسفانه فعلا در این آدرس فعال نیستیم');
             return;

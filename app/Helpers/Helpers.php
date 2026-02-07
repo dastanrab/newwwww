@@ -345,9 +345,6 @@ function neshanGetDistance($distances)
         ])->get("https://api.neshan.org/v1/distance-matrix/no-traffic?type=car&origins=$from&destinations=$to");
         if($response->status() == 200){
             $result= $response->json();
-            $log = fopen("/home/laravel/la.bazistco.com/storage/logs/DistanceNeshanLog.txt", "a+") or die("Unable to open file!");
-            $t = 'res|'.json_encode($result)."\n";
-            fwrite($log, $t);
             if (!isset($result['rows'][0]['elements']))
             {
                 return ['status'=>false,'index'=>null];
@@ -394,9 +391,6 @@ function getDistanceHopper($points)
 {
     $response = Http::get('https://graphhopper.com/api/1/route?'.$points.'&vehicle=car&key=ba38c972-229a-4e03-b1eb-ed2a9b483bdf');
     $route = $response->json();
-    $log = fopen("/home/laravel/la.bazistco.com/storage/logs/DistanceHopperLog.txt", "a+") or die("Unable to open file!");
-    $t = 'res|'.json_encode($route)."\n";
-    fwrite($log, $t);
     if (isset($route['paths']))
     {
         return $route['paths'][0]['distance']??0;
@@ -737,9 +731,6 @@ function getOptimizedRouteWithOSRM($locations, $osrmUrl)
         curl_close($ch);
         return 0;
     }
-    $log = fopen("/home/laravel/la.bazistco.com/storage/logs/DistanceOSRMLog.txt", "a+") or die("Unable to open file!");
-    $t = 'res|'.$response."\n";
-    fwrite($log, $t);
     $data= json_decode($response, true);
     if (isset($data['trips'][0]['distance']))
     {
@@ -1128,7 +1119,7 @@ function schedule($lat,$lng,$date=null)
 
 function add_request($registrantId,$user,$request,$address_id)
 {
-    $payMethod ='bazist';
+    $payMethod ='';
 
     if($request->scheduling == 'immediate'){
         $start_deadline = now()->format('Y-m-d H:i:s');

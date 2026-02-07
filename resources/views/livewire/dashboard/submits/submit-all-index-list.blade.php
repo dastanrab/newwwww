@@ -66,7 +66,7 @@ $gateCancelSubmit = Gate::allows('submit_all_index_list_cancel_submit', Submit::
                                             <i class="bx bxs-time"></i>
                                             <span> {{ \Verta::instance($submit->start_deadline)->format('H:i') }} الی {{ \Verta::instance($submit->end_deadline)->format('H:i')}}</span>
                                         </li>
-                                        @if($district = bazistDistrict([$submit->address->lat, $submit->address->lon],$polygons))
+                                        @if($district = xDistrict([$submit->address->lat, $submit->address->lon],$polygons))
                                             <li>
                                                 <i class="bx bxs-map-pin"></i>
                                                 <span>{{ $district }}</span>

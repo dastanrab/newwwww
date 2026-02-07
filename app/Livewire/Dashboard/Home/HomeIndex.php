@@ -29,7 +29,7 @@ class HomeIndex extends Component
     public $diskFreeSpace;
     public $diskTotalSpace;
     public $asanpardakht;
-    public $bazistWallet;
+    public $aniroobWallet;
     public $inaxBalance;
     public $kavehnegarBalance;
     public $warehouseAzadiToday;
@@ -58,7 +58,7 @@ class HomeIndex extends Component
 
         $wallets_sum = Wallet::where('wallet', '!=', 0)->pluck('wallet')->sum();
         $cashout_sum = Cashout::whereIn('status', ['waiting', 'depositing'])->pluck('amount')->sum();
-        $this->bazistWallet = $wallets_sum+$cashout_sum;
+        $this->aniroobWallet = $wallets_sum+$cashout_sum;
 
 //        $this->inaxBalance = \Illuminate\Support\Facades\Cache::get('inax_balance');
         $this->inaxBalance = Inax::balance();

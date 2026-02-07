@@ -37,7 +37,7 @@
                                     </div>
                                 </div>
                                 <div class="cr-amount" style="height: 42px">
-                                    <strong>{{number_format($bazistWallet)}}</strong>
+                                    <strong>{{number_format($aniroobWallet)}}</strong>
                                     <span>تومان</span>
                                 </div>
                             </div>

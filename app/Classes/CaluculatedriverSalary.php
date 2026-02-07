@@ -92,9 +92,9 @@ class CaluculatedriverSalary
                             }catch (\Exception $exception)
                             {
                                 DB::rollBack();
-                                $log = fopen("/home/laravel/la.bazistco.com/storage/logs/InsertSalaryErrorLog.txt", "a+") or die("Unable to open file!");
-                                $t = 'res|'.json_encode($exception->getMessage())."\n";
-                                fwrite($log, $t);
+                              ////  $log = fopen("/home/laravel/la.bazistco.com/storage/logs/InsertSalaryErrorLog.txt", "a+") or die("Unable to open file!");
+                               // $t = 'res|'.json_encode($exception->getMessage())."\n";
+                                //fwrite($log, $t);
                                 QueueFails::query()->create(['queue'=>class_basename($this),'data'=>['driver_id'=>$this->driver->id,'date'=>$this->date,'error'=>$exception->getMessage()]]);
 
                             }

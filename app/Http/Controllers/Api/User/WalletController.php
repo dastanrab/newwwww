@@ -113,7 +113,7 @@ class WalletController extends Controller
 
                 $data = [
                     'aapBalance' => AsanPardakht::balance($user->mobile),
-                    'bazistBalance' => $user->wallet->wallet,
+                    'aniroobBalance' => $user->wallet->wallet,
                 ];
                 return $data;
             });

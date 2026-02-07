@@ -76,7 +76,7 @@ class SubmitAddressEdit extends Component
         if(isset($this->lng)){
             $this->address->lon = $this->lng;
         }
-        $district = bazistDistrict([$this->address->lat,$this->address->lon]);
+        $district = xDistrict([$this->address->lat,$this->address->lon]);
         $polygon = Polygon::where('region',$district)->first();
         if (!isset($polygon->city_id))
         {

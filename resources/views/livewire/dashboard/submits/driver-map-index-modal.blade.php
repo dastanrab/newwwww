@@ -29,7 +29,7 @@
                                     class="col-10 dir-ltr">{{ \Verta::instance($driverinfo['created_at'])->format('Y/m/d H:i') }}</div>
                                 <div class="col-2 text-end"><i class='bx bx-current-location'></i>منطقه</div>
                                 <div
-                                    class="col-10">{{ bazistDistrict([$driverinfo['lat'], $driverinfo['lon']]) }}</div>
+                                    class="col-10">{{ xDistrict([$driverinfo['lat'], $driverinfo['lon']]) }}</div>
                             </div>
                         </div>
                     </div>

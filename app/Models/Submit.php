@@ -678,7 +678,7 @@ class Submit extends Model
 
     public static function add($registrantId,$user,$request)
     {
-        $payMethod = !isset($request->payMethod) ? 'bazist' : null;
+        $payMethod = !isset($request->payMethod) ? 'aniroob' : null;
 
         if($request->scheduling == 'immediate'){
             $start_deadline = now()->format('Y-m-d H:i:s');

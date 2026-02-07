@@ -25,7 +25,7 @@ class ShopController extends Controller
     public function data()
     {
         $user = auth()->user();
-        $bazistWallet = Wallet::where('user_id', $user->id)->first();
+        $aniroobWallet = Wallet::where('user_id', $user->id)->first();
         $apUrl = null;
         $apBalance = 0;
         $ap = AsanPardakht::check($user->mobile);
@@ -200,7 +200,7 @@ class ShopController extends Controller
                 ],
             ],
 //            'aapLink' => $apUrl,
-            'AniRoobBalance' => floor($bazistWallet->wallet),
+            'AniRoobBalance' => floor($aniroobWallet->wallet),
 //            'aapBalance' => $apUrl ? -1 : $apBalance
         ];
         return $data;
@@ -582,7 +582,7 @@ class ShopController extends Controller
             else{
                 $balance = $apBalance;
             }
-        } elseif ($request->payMethod == 'bazist') {
+        } elseif ($request->payMethod == 'aniroob') {
             $wallet = Wallet::where('user_id', $user->id)->first();
             $balance = $wallet->wallet;
         }
@@ -619,7 +619,7 @@ class ShopController extends Controller
                         'transId' => $decrease_hresp->rrn,
                         'orderId' => $order->id,
                         'balance' => [
-                            'bazist' => $bazistWallet->wallet,
+                            'aniroob' => $bazistWallet->wallet,
                             'aap'    => AsanPardakht::balance($user->mobile),
                         ]
                     ];

@@ -40,11 +40,11 @@ class StatAreaIndexList extends Component
         }
         $drivers = Driver::with(['submit.address','submit.user'])->whereDate('collected_at',$date)->where('status',3)->orderByDesc('collected_at')->get();
         foreach ($drivers as $driver){
-            if(bazistDistrict([$driver->submit->address->lat,$driver->submit->address->lon])) {
+            if(xDistrict([$driver->submit->address->lat,$driver->submit->address->lon])) {
                 if ($driver->submit->user->legal == 1) {
-                    $data[bazistDistrict([$driver->submit->address->lat, $driver->submit->address->lon])]['legal'] += 1;
+                    $data[xDistrict([$driver->submit->address->lat, $driver->submit->address->lon])]['legal'] += 1;
                 } else {
-                    $data[bazistDistrict([$driver->submit->address->lat, $driver->submit->address->lon])]['notLegal'] += 1;
+                    $data[xDistrict([$driver->submit->address->lat, $driver->submit->address->lon])]['notLegal'] += 1;
                 }
             }
             else{

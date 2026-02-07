@@ -19,7 +19,6 @@ class FinancialCode extends Model
         'title',
     ];
 
-    // رابطه با BazistWallet
     public function walletTransactions()
     {
         return $this->hasMany(WalletDetails::class, 'type', 'id');

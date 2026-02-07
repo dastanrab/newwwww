@@ -14,7 +14,7 @@ class DbBackup
         $dbHost = '127.0.0.1';
         $dbUser = 'root';
         $dbPass = '@Sosmost666';
-        $dbName = 'bazist';
+        $dbName = 'aniroob';
         $outputDir = __DIR__ . '/backups';
         if (!file_exists($outputDir)) {
             mkdir($outputDir, 0777, true);

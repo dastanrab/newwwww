@@ -91,7 +91,7 @@ class SubmitIndexAddAddress extends Component
         $city_id = User::cityId();
 
         $addressValue = $this->address_text ?? $this->address;
-        $district = bazistDistrict([$this->lat,$this->lng]);
+        $district = xDistrict([$this->lat,$this->lng]);
         $polygon = Polygon::where('region',$district)->first();
         if (!isset($polygon->city_id))
         {

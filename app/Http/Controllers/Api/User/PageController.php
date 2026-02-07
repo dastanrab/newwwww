@@ -55,7 +55,7 @@ class PageController extends Controller
 	<br>
 	۶) اطلاعات تماس شرکت:<br>
 	مشهد – قاسم‌آباد - حجاب ۸۵/۲ - بلوک ۹ <br>
-	ایمیل: bazistco@gmail.com</p>
+	ایمیل: aniroob@gmail.com</p>
 ';
         }
         return sendJson('success','',['content' => $content]);

@@ -255,7 +255,7 @@ class HooshmapController extends Controller
         $dayOfWeek = Day::find(verta()->parse($day)->format('w')+1);
         $hourOfDay = Hour::where('start_at',$hour)->first();
         $address = Address::find($addressId);
-        $district = bazistDistrict([$address->lat,$address->lon]);
+        $district = xDistrict([$address->lat,$address->lon]);
         $polygon = Polygon::where('region',$district)->first();
         if (!isset($polygon->id))
         {

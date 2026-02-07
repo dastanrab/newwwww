@@ -46,7 +46,7 @@ class ClubCategoriesController extends Controller
                 $file = $request->file('icon');
                 $path = now()->format('Y/m/d').'/'.strRandom('10').'-'.$file->getClientOriginalName();
 
-                $upload = $file->storeAs('', $path, 'bazist');
+                $upload = $file->storeAs('', $path, 'aniroob');
 
                 $clubCategory->icon = 'uploads/'.$upload;
             }
@@ -90,7 +90,7 @@ class ClubCategoriesController extends Controller
             $path = now()->format('Y/m/d') . '/' . Str::random(10) . '-' . $file->getClientOriginalName();
 
             // ذخیره‌سازی
-            $upload = $file->storeAs('', $path, 'bazist');
+            $upload = $file->storeAs('', $path, 'aniroob');
 
             // ایجاد رکورد
             $create = ClubCategory::create([
