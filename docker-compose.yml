@@ -35,10 +35,10 @@ services:
     container_name: db
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: 8uAjiys7mpx7s2rib8ZhgAPQMfMvmwB4VivQj3yEeMDXgvcW9jBu4oaZk8P1nsiEZZAM8
       MYSQL_DATABASE: aniroob
-      MYSQL_USER: aniroobDbUser
-      MYSQL_PASSWORD: rjDxF05vj3tHOjXV2eXu
+      MYSQL_USER: Gr0PPoybmkbQvYyMKAiRNiD4gMGYz8K2miZoUv3z3
+      MYSQL_PASSWORD: 8uAjiys7mpx7s2rib8ZhgAPQMfMvmwB4VivQj3yEeMDXgvcW9jBu4oaZk8P1nsiEZZAM8
     ports:
       - "3306:3306"
     volumes:
