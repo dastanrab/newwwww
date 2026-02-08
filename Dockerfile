@@ -13,8 +13,6 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
-# فقط composer files اول (برای cache بهتر)
-COPY composer.json composer.lock ./
 COPY . .
 
 RUN composer install \
