@@ -21,6 +21,27 @@ use function Symfony\Component\Translation\t;
 
 class AuthController extends Controller
 {
+
+    /**
+     * ارسال کد یکبار مصرف
+     *
+     * این API برای ورود کاربران با شماره موبایل استفاده می‌شود.
+     * در صورت معتبر بودن شماره، کد OTP ارسال می‌گردد.
+     *
+     * @group Auth
+     *
+     * @bodyParam mob string required شماره موبایل کاربر Example: 09123456789
+     *
+     * @response 200 {
+     *   "status": "success",
+     *   "message": "کد یکبار مصرف به شماره شما ارسال شد"
+     * }
+     *
+     * @response 400 {
+     *   "status": "error",
+     *   "message": "شماره همراه معتبر وارد نمایید"
+     * }
+     */
     public function login(Request $request)
     {
         if (!isMob($request->mob)) {
@@ -55,6 +76,30 @@ class AuthController extends Controller
 
     }
 
+    /**
+     * تایید کد یکبار مصرف
+     *
+     * با وارد کردن کد OTP، کاربر وارد سیستم شده
+     * و توکن دسترسی دریافت می‌کند.
+     *
+     * @group Auth
+     *
+     * @bodyParam mob string required شماره موبایل Example: 09123456789
+     * @bodyParam code string required کد تایید Example: 12345
+     *
+     * @response 200 {
+     *   "status": "success",
+     *   "message": "با موفقیت وارد شدید",
+     *   "data": {
+     *     "accessToken": "token_here"
+     *   }
+     * }
+     *
+     * @response 400 {
+     *   "status": "error",
+     *   "message": "کد تایید اشتباه وارد شده است."
+     * }
+     */
     public function verify(Request $request)
     {
         $result = Otp::where([['mobile', $request->mob], ['code', $request->code]])->first();
@@ -90,6 +135,29 @@ class AuthController extends Controller
         return sendJson('success', 'با موفقیت وارد شدید', $data);
     }
 
+    /**
+     * تکمیل ثبت نام کاربر
+     *
+     * این API بعد از ورود اولیه استفاده می‌شود
+     * و اطلاعات کاربر را ثبت می‌کند.
+     *
+     * @group Auth
+     * @authenticated
+     *
+     * @bodyParam userType string required نوع کاربر Example: citizen|guild
+     * @bodyParam guildMarket integer شناسه صنف (برای guild)
+     * @bodyParam guildTitle string نام کسب و کار
+     * @bodyParam gender string required جنسیت Example: male|female
+     * @bodyParam firstName string required نام Example: علی
+     * @bodyParam lastName string required نام خانوادگی Example: رضایی
+     * @bodyParam birthDate string تاریخ تولد
+     * @bodyParam email string ایمیل
+     *
+     * @response 200 {
+     *   "status": "success",
+     *   "message": "ثبت نام با موفقیت تکمیل شد"
+     * }
+     */
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(),
@@ -168,6 +236,22 @@ class AuthController extends Controller
 
     }
 
+    /**
+     * ثبت نام با کد معرف
+     *
+     * این API برای ثبت نام اولیه کاربران با لینک معرف استفاده می‌شود.
+     *
+     * @group Auth
+     *
+     * @bodyParam mob string required شماره موبایل
+     * @bodyParam refCode integer required کد معرف
+     * @bodyParam token string required توکن امنیتی
+     *
+     * @response 200 {
+     *   "status": "success",
+     *   "message": "ثبت نام اولیه با موفقیت انجام شد"
+     * }
+     */
     public function registerByRef(Request $request)
     {
         $user = User::where('mobile', $request->mob)->first();
@@ -198,6 +282,25 @@ class AuthController extends Controller
         }
     }
 
+    /**
+     * ویرایش پروفایل کاربر
+     *
+     * اطلاعات پروفایل کاربر لاگین‌شده را بروزرسانی می‌کند.
+     *
+     * @group User
+     * @authenticated
+     *
+     * @bodyParam firstName string required
+     * @bodyParam lastName string required
+     * @bodyParam email string ایمیل
+     * @bodyParam gender string male|female
+     * @bodyParam birthDate string تاریخ تولد
+     *
+     * @response 200 {
+     *   "status": "success",
+     *   "message": "پروفایل ذخیره شد"
+     * }
+     */
     public function profile(Request $request)
     {
         $user = auth()->user();
@@ -236,7 +339,21 @@ class AuthController extends Controller
 
     }
 
+    /**
+     * خروج از حساب کاربری
+     *
+     * توکن کاربر فعلی را حذف می‌کند.
+     *
+     * @group Auth
+     * @authenticated
+     *
+     * @response 200 {
+     *   "status": "success",
+     *   "message": "شما از نرم افزار خارج شدید"
+     * }
+     */
     public function logout(Request $request)
+
     {
         $user = auth()->user();
 //        $user->firebases()->where('token',$request->fcmToken)->delete();

@@ -12,6 +12,29 @@ use Illuminate\Support\Facades\Validator;
 
 class AddressController extends Controller
 {
+    /**
+     * لیست آدرس‌های کاربر
+     *
+     * تمام آدرس‌های فعال (status=1) کاربر لاگین‌شده را برمی‌گرداند.
+     *
+     * @group Address
+     * @authenticated
+     *
+     * @response 200 {
+     *   "status": "success",
+     *   "message": "",
+     *   "data": [
+     *     {
+     *       "id": 1,
+     *       "title": "خانه",
+     *       "address": "مشهد، بلوار وکیل آباد",
+     *       "city": 1,
+     *       "lat": 36.297,
+     *       "lng": 59.606
+     *     }
+     *   ]
+     * }
+     */
     public function index()
     {
         $user = auth()->user();
@@ -30,6 +53,39 @@ class AddressController extends Controller
         return sendJson('success','', $data);
     }
 
+    /**
+     * ثبت آدرس جدید
+     *
+     * آدرس کاربر را بر اساس موقعیت جغرافیایی ثبت می‌کند.
+     * در صورت خارج بودن از محدوده، خطا برمی‌گرداند.
+     *
+     * @group Address
+     * @authenticated
+     *
+     * @bodyParam title string عنوان آدرس Example: محل کار
+     * @bodyParam address string required آدرس کامل Example: مشهد، احمدآباد، پلاک ۱۲
+     * @bodyParam lat number required عرض جغرافیایی Example: 36.295
+     * @bodyParam lng number required طول جغرافیایی Example: 59.607
+     * @bodyParam isFavorite boolean ذخیره به عنوان آدرس اصلی Example: true
+     *
+     * @response 200 {
+     *   "status": "success",
+     *   "message": "آدرس ذخیره شد",
+     *   "data": {
+     *     "id": 10,
+     *     "title": "خانه",
+     *     "address": "مشهد، احمدآباد",
+     *     "city": 1,
+     *     "lat": 36.295,
+     *     "lng": 59.607
+     *   }
+     * }
+     *
+     * @response 400 {
+     *   "status": "error",
+     *   "message": "شما خارج از محدوده هستید"
+     * }
+     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(),
@@ -82,6 +138,26 @@ class AddressController extends Controller
         return sendJson('error', 'ثبت آدرس با اشکال روبرو شد');
     }
 
+    /**
+     * حذف آدرس
+     *
+     * آدرس انتخاب‌شده کاربر را حذف می‌کند.
+     *
+     * @group Address
+     * @authenticated
+     *
+     * @urlParam address integer required شناسه آدرس Example: 12
+     *
+     * @response 200 {
+     *   "status": "success",
+     *   "message": "با موفقیت حذف شد"
+     * }
+     *
+     * @response 400 {
+     *   "status": "error",
+     *   "message": "حذف با اشکال روبرو شد"
+     * }
+     */
     public function destroy(Address $address)
     {
         $delete = $address->delete();

@@ -10,11 +10,36 @@
       0 => 'Hekmatinasser\\Verta\\Laravel\\VertaServiceProvider',
     ),
   ),
+  'kavenegar/laravel' => 
+  array (
+    'aliases' => 
+    array (
+      'Kavenegar' => 'Kavenegar\\Laravel\\Facade',
+    ),
+    'providers' => 
+    array (
+      0 => 'Kavenegar\\Laravel\\ServiceProvider',
+    ),
+  ),
   'kitloong/laravel-migrations-generator' => 
   array (
     'providers' => 
     array (
       0 => 'KitLoong\\MigrationsGenerator\\MigrationsGeneratorServiceProvider',
+    ),
+  ),
+  'knuckleswtf/scribe' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Knuckles\\Scribe\\ScribeServiceProvider',
+    ),
+  ),
+  'laravel-notification-channels/webpush' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'NotificationChannels\\WebPush\\WebPushServiceProvider',
     ),
   ),
   'laravel/pail' => 
