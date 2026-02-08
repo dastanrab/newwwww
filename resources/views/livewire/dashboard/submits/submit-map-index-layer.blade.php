@@ -50,7 +50,7 @@
 
     let buildMap = function(){
         let map = new L.Map("cr-map-section", {
-            key: 'web.JzFjMmsUHWRA9y2ZGlhRiyBSrO1PUnbEXRXKeqEW',
+            key: 'web.3dd03927cf104d018a4ce3cd6ec3c962',
             maptype: 'dreamy',
             center: [36.2966309, 59.6029849],
             zoom: 11,
