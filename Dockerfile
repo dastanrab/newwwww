@@ -1,5 +1,6 @@
 FROM php:8.3-fpm
 
+# System deps
 RUN apt-get update && apt-get install -y \
     git unzip libzip-dev libpng-dev libonig-dev curl supervisor \
     && pecl install redis \
@@ -12,24 +13,30 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
-# فقط فایل‌های composer + app رو کپی می‌کنیم برای build vendor
-COPY . ./
+# فقط composer files اول (برای cache بهتر)
+COPY composer.json composer.lock ./
 
-# composer install
-RUN composer install  --optimize-autoloader \
-    && chown -R www-data:www-data /var/www
+RUN composer install \
+    --no-dev \
+    --optimize-autoloader \
+    --no-interaction \
+    --prefer-dist
 
-# حالا پروژه کامل رو کپی می‌کنیم بدون overwrite vendor
-COPY . ./
-# permissions مهم
+# حالا کل پروژه
+COPY . .
+
+# Publish اگر لازم بود
+RUN php artisan storage:link || true \
+    && php artisan optimize || true \
+    && php artisan vendor:publish --all --force || true
+
+# Permissions
 RUN chown -R www-data:www-data /var/www \
-    && chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
+# Supervisor
+COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 EXPOSE 8000
-
-# Supervisor برای queue
-COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 CMD ["/usr/bin/supervisord", "-n"]
