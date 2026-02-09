@@ -96,7 +96,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/sos',function (){throw new \Exception('FUCK');});
 Route::get('pa/login', Login::class)->name('d.login');
-
+Route::middleware(['auth'])->group(function () {
+    Route::get('/docs', function () {
+        return view('scribe.index');
+    })->name('docs');
+});
 Route::group(['prefix' => 'pa', 'as' => 'd.', 'middleware' => [\App\Http\Middleware\IsAdmin::class]],function () {
 
 //    Route::post('/fcm', [FcmController::class,'store'])->name('fcm');
