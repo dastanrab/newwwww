@@ -94,7 +94,9 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/sos',function (){throw new \Exception('FUCK');});
+Route::get('/sos',function (){
+    dd(request()->server,request()->headers,request()->all(),request()->ip());
+});
 Route::get('pa/login', Login::class)->name('d.login');
 Route::middleware([\App\Http\Middleware\IsAdmin::class])->group(function () {
     Route::get('/docs', function () {

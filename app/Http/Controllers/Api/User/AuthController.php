@@ -102,6 +102,18 @@ class AuthController extends Controller
      */
     public function verify(Request $request)
     {
+        $validator = Validator::make($request->all(),
+            [
+                'mob'     => 'required',
+                'code'  => 'required|max:5',
+            ],
+            [
+                'mob'    => 'شماره همراه وارد نمایید',
+                'code' => 'کد وارد نمایید',
+            ]);
+        if($validator->fails()){
+            return sendJson('error',$validator->errors()->first());
+        }
         $result = Otp::where([['mobile', $request->mob], ['code', $request->code]])->first();
         if (!$result) {
             return sendJson('error', 'کد تایید اشتباه وارد شده است.');
