@@ -96,7 +96,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/sos',function (){throw new \Exception('FUCK');});
 Route::get('pa/login', Login::class)->name('d.login');
-Route::middleware(['auth'])->group(function () {
+Route::middleware([\App\Http\Middleware\IsAdmin::class])->group(function () {
     Route::get('/docs', function () {
         return view('scribe.index');
     })->name('docs');
