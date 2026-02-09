@@ -43,7 +43,6 @@ class SettingPolicy
 
     public function setting_area_edit(User $user): bool
     {
-        dd($user,'sss');
         return $user->getPermissions()->contains('setting_area_edit');
     }
 
