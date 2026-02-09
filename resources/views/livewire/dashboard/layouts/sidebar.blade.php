@@ -16,7 +16,7 @@
                 <div class="cr-menu">
                     <nav>
                         <div class="cr-title">
-                            <span>پنل مدیریت بازیست</span>
+                            <span>پنل مدیریت آنیروب</span>
                         </div>
                         @if($can_see) <div class="cr-primary">
                             <div class="cr-title">

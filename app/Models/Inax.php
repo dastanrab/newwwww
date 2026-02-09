@@ -121,6 +121,7 @@ class Inax extends Model
             return \Illuminate\Support\Facades\Cache::get('inax_remain_balance');
         }else{
             try {
+                return 0;
                 $response = Http::withBody(json_encode([
                     "method" => "credit",
                     "username" => '2842d49f2725c02b42ca71959360b9ed',
