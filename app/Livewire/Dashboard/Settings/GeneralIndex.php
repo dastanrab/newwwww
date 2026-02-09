@@ -28,7 +28,7 @@ class GeneralIndex extends Component
             //$k = new KavenegarApi(env('KAVENEGAR_API_KEY'));
             //$r = $k->Send('2000500666', $this->mobileSendApp, 'این پیامک تست می باشد');
 
-            Kavenegar::VerifyLookup($this->mobileSendApp, 'بازیستی', '', '', "sendApp", "sms");
+            Kavenegar::VerifyLookup($this->mobileSendApp, 'آنیروبی', '', '', "sendApp", "sms");
             $this->reset('mobileSendApp');
             return sendToast(1,'پیامک ارسال شد');
         }

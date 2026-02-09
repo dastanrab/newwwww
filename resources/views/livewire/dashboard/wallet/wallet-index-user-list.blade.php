@@ -95,10 +95,10 @@
                                                                                     <option value="miss_ref">واریز حق معرف</option>
                                                                                     @endif
                                                                                     @if(Gate::allows('wallet_all_deposit_bazist_wallet', Wallet::class))
-                                                                                        <option value="deposit">واریز به کیف پول بازیست</option>
+                                                                                        <option value="deposit">واریز به کیف پول آنیروب</option>
                                                                                     @endif
                                                                                     @if(Gate::allows('wallet_all_withdraw_bazist_wallet', Wallet::class))
-                                                                                    <option value="withdraw">برداشت از موجودی کیف پول بازیست</option>
+                                                                                    <option value="withdraw">برداشت از موجودی کیف پول آنیروب</option>
                                                                                     @endif
                                                                                 </select>
                                                                             </p>

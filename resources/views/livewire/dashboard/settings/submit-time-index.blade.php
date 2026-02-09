@@ -10,7 +10,7 @@
                 <div class="cr-card-header">
                     <div class="cr-title">
                         <div>
-                            <strong>مناطق بازیست</strong>
+                            <strong>مناطق آنیروب</strong>
                         </div>
                     </div>
                 </div>

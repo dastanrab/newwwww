@@ -38,77 +38,77 @@ class ExportController extends Controller
     public function statCharity()
     {
 
-        $filename = 'بازیست  - ' .  verta()->format('d-m-Y') . ' .xlsx';
+        $filename = 'آنیروب  - ' .  verta()->format('d-m-Y') . ' .xlsx';
 
         return Excel::download(new StatisticsCharityExport(), $filename);
     }
     public function statFavaMiss()
     {
 
-        $filename = 'بازیست فاوا - ' .  verta()->format('d-m-Y') . ' .xlsx';
+        $filename = 'آنیروب فاوا - ' .  verta()->format('d-m-Y') . ' .xlsx';
 
         return Excel::download(new StatisticsFavaMiss(), $filename);
     }
     public function statFavaSum()
     {
 
-        $filename = 'بازیست فاوا - ' .  verta()->format('d-m-Y') . ' .xlsx';
+        $filename = 'آنیروب فاوا - ' .  verta()->format('d-m-Y') . ' .xlsx';
 
         return Excel::download(new StatisticsFavaSum(), $filename);
     }
     public function statAdminDeposit()
     {
 
-        $filename = 'بازیست فاوا - ' .  verta()->format('d-m-Y') . ' .xlsx';
+        $filename = 'آنیروب فاوا - ' .  verta()->format('d-m-Y') . ' .xlsx';
 
         return Excel::download(new StatisticsAdminDeposite(), $filename);
     }
     public function statInax()
     {
 
-        $filename = 'بازیست آینکس فاوا - ' .  verta()->format('d-m-Y') . ' .xlsx';
+        $filename = 'آنیروب آینکس فاوا - ' .  verta()->format('d-m-Y') . ' .xlsx';
 
         return Excel::download(new StatisticsInax(), $filename);
     }
     public function statFavaSubmits()
     {
 
-        $filename = 'بازیست درخواست های ارسال شده فاوا - ' .  verta()->format('d-m-Y') . ' .xlsx';
+        $filename = 'آنیروب درخواست های ارسال شده فاوا - ' .  verta()->format('d-m-Y') . ' .xlsx';
 
         return Excel::download(new StatisticsFavaSubmits(), $filename);
     }
     public function statReward()
     {
 
-        $filename = 'بازیست پاداش - ' .  verta()->format('d-m-Y') . ' .xlsx';
+        $filename = 'آنیروب پاداش - ' .  verta()->format('d-m-Y') . ' .xlsx';
 
         return Excel::download(new StatisticsReward(), $filename);
     }
     public function statHotels()
     {
 
-        $filename = 'بازیست پاداش - ' .  verta()->format('d-m-Y') . ' .xlsx';
+        $filename = 'آنیروب پاداش - ' .  verta()->format('d-m-Y') . ' .xlsx';
 
         return Excel::download(new StatisticsHotels(), $filename);
     }
     public function statSchools()
     {
 
-        $filename = 'بازیست آمار مدارس - ' .  verta()->format('d-m-Y') . ' .xlsx';
+        $filename = 'آنیروب آمار مدارس - ' .  verta()->format('d-m-Y') . ' .xlsx';
 
         return Excel::download(new StatisticsSchools(), $filename);
     }
     public function statSamanUnTrace()
     {
 
-        $filename = 'بازیست بلاتکلیف سامان - ' .  verta()->format('d-m-Y') . ' .xlsx';
+        $filename = 'آنیروب بلاتکلیف سامان - ' .  verta()->format('d-m-Y') . ' .xlsx';
 
         return Excel::download(new StatisticsSamanUnTrace(), $filename);
     }
     public function statDailySubmits(Request $request)
     {
 
-        $filename = 'بازیست آمار روزانه - ' .  verta()->format('d-m-Y') . ' .xlsx';
+        $filename = 'آنیروب آمار روزانه - ' .  verta()->format('d-m-Y') . ' .xlsx';
         if(isset($request->date) and $request->date != 'undefined'){
             $start_month = Verta::parse($request->date);
             $start_date = Carbon::instance($start_month->datetime());
@@ -125,7 +125,7 @@ class ExportController extends Controller
     }
     public function statDaily(Request $request)
     {
-        $filename = 'بازیست - آمار کلی - ' .  verta()->format('d-m-Y') . ' .xlsx';
+        $filename = 'آنیروب - آمار کلی - ' .  verta()->format('d-m-Y') . ' .xlsx';
         $dateFrom = '';
         $dateTo = '';
         $status = $request->status;
@@ -142,7 +142,7 @@ class ExportController extends Controller
     }
     public function statDailyDivision(Request $request)
     {
-        $filename = 'بازیست - آمار کلی - ' .  verta()->format('d-m-Y') . ' .xlsx';
+        $filename = 'آنیروب - آمار کلی - ' .  verta()->format('d-m-Y') . ' .xlsx';
         $dateFrom = '';
         $dateTo = '';
         $status = $request->status;
@@ -157,7 +157,7 @@ class ExportController extends Controller
         return Excel::download(new StatisticsDivisionIndexExport($dateFrom, $dateTo,$status,$driver_id,$search,$type), $filename);}
     public function warehouseDriver(Request $request)
     {
-        $filename = 'بازیست - آمار بار رانندگان - ' .  verta()->format('d-m-Y') . ' .xlsx';
+        $filename = 'آنیروب - آمار بار رانندگان - ' .  verta()->format('d-m-Y') . ' .xlsx';
         if(isset($request->date) and $request->date != 'undefined'){
             $date= Verta::parse($request->date)->toCarbon()->format('Y-m-d 00:00:00');
         }
@@ -173,7 +173,7 @@ class ExportController extends Controller
     }
     public function warehouseDriverDetail(Request $request)
     {
-        $filename = 'بازیست - آمار بار رانندگان - ' .  verta()->format('d-m-Y') . ' .xlsx';
+        $filename = 'آنیروب - آمار بار رانندگان - ' .  verta()->format('d-m-Y') . ' .xlsx';
         if(isset($request->date) and $request->date != 'undefined'){
             $date= Verta::parse($request->date)->toCarbon()->format('Y-m-d 00:00:00');
         }
@@ -185,7 +185,7 @@ class ExportController extends Controller
 
     public function driverRollCall(Request $request)
     {
-        $filename = 'بازیست - آمار حضور غیاب - ' .  verta()->format('d-m-Y') . ' .xlsx';
+        $filename = 'آنیروب - آمار حضور غیاب - ' .  verta()->format('d-m-Y') . ' .xlsx';
         if($request->dateFrom && $request->dateTo && $request->user_id){
             $dateFrom = Verta::parse($request->dateFrom)->toCarbon()->format('Y-m-d 00:00:00');
             $dateTo = Verta::parse($request->dateTo)->toCarbon()->format('Y-m-d 23:59:59');
@@ -194,7 +194,7 @@ class ExportController extends Controller
     }
     public function driverSalary(Request $request)
     {
-        $filename = 'بازیست - آمار حقوق رانندگان - ' .  verta()->format('d-m-Y') . ' .xlsx';
+        $filename = 'آنیروب - آمار حقوق رانندگان - ' .  verta()->format('d-m-Y') . ' .xlsx';
         if($request->dateFrom && $request->dateFrom != 'undefined'){
             $dateFrom = Verta::parse($request->dateFrom)->toCarbon()->format('Y-m-d 00:00:00');
             return Excel::download(new StatisticsDriverSalaryExport($dateFrom), $filename);

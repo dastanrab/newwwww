@@ -4,7 +4,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-6 col-12">
-                    <p>تمامی حقوق مادی و معنوی برای بازیست محفوظ است.</p>
+                    <p>تمامی حقوق مادی و معنوی برای آنیروب محفوظ است.</p>
                 </div>
                 <div class="col-lg-6 col-12">
                     <ul>

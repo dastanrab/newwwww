@@ -37,7 +37,7 @@ class ShopController extends Controller
             }
         }
         $data = [
-            'notice' => 'با استفاده از کیف پول بازیست و آپ می توانید شارژ و اینترنت بخرید و یا به بنیادهای خیریه کمک کنید.',
+            'notice' => 'با استفاده از کیف پول آنیروب و آپ می توانید شارژ و اینترنت بخرید و یا به بنیادهای خیریه کمک کنید.',
             'operators' => [
                 [
                     'value' => 'MTN',
@@ -240,7 +240,7 @@ class ShopController extends Controller
                 return sendJson('error', 'در حین اتصال به آپ اشکالی به وجود آمد لطفا دوباره امتحان کنید');
             }
             elseif ($apBalance === -1){
-                return sendJson('error', 'لطفا کیف پول آپ خود را به بازیست وصل کنید');
+                return sendJson('error', 'لطفا کیف پول آپ خود را به آنیروب وصل کنید');
             }
             else{
                 $balance = $apBalance;
@@ -424,7 +424,7 @@ class ShopController extends Controller
                 return sendJson('error', 'در حین اتصال به آپ اشکالی به وجود آمد لطفا دوباره امتحان کنید');
             }
             elseif ($apBalance === -1){
-                return sendJson('error', 'لطفا کیف پول آپ خود را به بازیست وصل کنید');
+                return sendJson('error', 'لطفا کیف پول آپ خود را به آنیروب وصل کنید');
             }
             else{
                 $balance = $apBalance;
@@ -577,7 +577,7 @@ class ShopController extends Controller
                 return sendJson('error', 'در حین اتصال به آپ اشکالی به وجود آمد لطفا دوباره امتحان کنید');
             }
             elseif ($apBalance === -1){
-                return sendJson('error', 'لطفا کیف پول آپ خود را به بازیست وصل کنید');
+                return sendJson('error', 'لطفا کیف پول آپ خود را به آنیروب وصل کنید');
             }
             else{
                 $balance = $apBalance;

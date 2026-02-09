@@ -4,7 +4,7 @@
             <ul class="nav" role="tablist">
                 <li>
                     <a href="{{route('d.settings.area')}}" >
-                        <span>مناطق بازیست</span>
+                        <span>مناطق آنیروب</span>
                     </a>
                 </li>
                 <li>

@@ -10,19 +10,19 @@ class PageController extends Controller
     {
 
         $logo = asset('/assets/img/bazist-logo-2.png');
-        $textBtn = "برگرد به بازیست";
+        $textBtn = "برگرد به آنیروب";
         $description = '';
         $link = '';
         $icon = '';
         $alertClass = 'alert-info';
         if(isset($_GET['ReqResult']) && $_GET['ReqResult'] == 'AllowedAccessWallet') {
-            $description = 'دسترسی بازیست به آسان پرداخت (آپ) فعال شد.';
+            $description = 'دسترسی آنیروب به آسان پرداخت (آپ) فعال شد.';
             $alertClass = 'success';
             $icon = 'bx bx-log-in-circle';
             $jsonMessage = 'مجوز آپ با موفقیت اعمال شد';
         }
         elseif(isset($_GET['ReqResult']) && $_GET['ReqResult'] == 'NotAllowedAccessWallet') {
-            $description = 'دسترسی بازیست به آسان پرداخت (آپ) فعال نشد.';
+            $description = 'دسترسی آنیروب به آسان پرداخت (آپ) فعال نشد.';
             $alertClass = 'danger';
             $icon = 'bx bx-log-in-circle';
             $jsonMessage = 'مجوز آپ توسط شما رد شد';

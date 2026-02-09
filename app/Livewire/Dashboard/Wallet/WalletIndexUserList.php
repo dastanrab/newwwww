@@ -213,7 +213,7 @@ class WalletIndexUserList extends Component
                     $wallet->save();
                     BazistWallet::create($user->city->id, $user->id, $wallet->id, 'deposit', $user->id, $data->amount * 10, $wallet->wallet * 10, 'واریز', $data->description);
                 });
-                sendToast(1, "مبلغ {$this->amount} تومان کیف پول بازیست کاربر واریز شد.");
+                sendToast(1, "مبلغ {$this->amount} تومان کیف پول آنیروب کاربر واریز شد.");
             }
             catch (Exception $e){
                 sendToast(0, $e->getMessage());

@@ -98,7 +98,7 @@ class CashoutIndexList extends Component
                 $amount * 10, // Rial
                 $wallet->wallet + $amount,
                 'واریز',
-                'برگشت از درخواست واریز به کیف پول بازیست'
+                'برگشت از درخواست واریز به کیف پول آنیروب'
             );
             $wallet->wallet += $amount; // Toman
             $wallet->save();

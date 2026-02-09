@@ -88,7 +88,7 @@
                             <li>
                                 <a href="{{env('SITE_URL')}}" target="_blank">
                                     <i class="bx bx-recycle"></i>
-                                    <span>وب سایت بازیست</span>
+                                    <span>وب سایت آنیروب</span>
                                 </a>
                             </li>
                             <li>

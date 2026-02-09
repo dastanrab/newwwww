@@ -62,7 +62,7 @@ class ProcessPayment implements ShouldQueue
         ]);
 
         /*$data = [
-            'title' => 'بازیست - جمع آوری درخواست',
+            'title' => 'آنیروب - جمع آوری درخواست',
             'message' => $user->name.' عزیز، درخواست شما با موفقیت جمع آوری شد',
         ];
         Notification::send($user, new UserNotification(Firebase::dataFormat($data)));*/

@@ -393,7 +393,7 @@ class Sidebar extends Component
                         'permission' => 'settings-recyclables-menu',
                     ],
                     [
-                        'title' => 'مناطق بازیست',
+                        'title' => 'مناطق آنیروب',
                         'icon' => 'bx bxs-area',
                         'route' => route('d.settings.area'),
                         'name' => 'area',

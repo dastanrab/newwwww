@@ -149,7 +149,7 @@ class StatSalaryDriverIndexList extends Component
                 BazistWallet::create($user->city->id, $user->id, $wallet->id, 'driver_reward',  $salary_WITHDRAWAL->id, $amount * 10, $wallet->wallet * 10, 'واریز', $description);
                 create_transaction(0,$user->id,$amount,TransactionService::BAZIST_TYPE,TransactionService::BAZIST_TYPE,TransactionService::WASTE_RREASON,$salary_WITHDRAWAL->id);
                 DB::commit();
-                sendToast(1, "مبلغ {$amount} تومان کیف پول بازیست راننده واریز شد.");
+                sendToast(1, "مبلغ {$amount} تومان کیف پول آنیروب راننده واریز شد.");
             }
             catch (Exception $e){
                 DB::rollBack();

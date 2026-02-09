@@ -15,7 +15,7 @@
                             <select wire:model.live="filter">
                                 <option value="">همه</option>
                                 <option value="asanpardakht">آپ</option>
-                                <option value="bazist">بازیست</option>
+                                <option value="bazist">آنیروب</option>
                                 <option value="cashouts">واریز به کارت</option>
                                 <option value="charge_internet">شارژ و اینترنت (آینکس)</option>
                             </select>
@@ -200,7 +200,7 @@
             <div class="cr-card-header">
                 <div class="cr-title">
                     <div>
-                        <strong>درخواست های (کیف پول بازیست - نقدی) ثبت نشده</strong>
+                        <strong>درخواست های (کیف پول آنیروب - نقدی) ثبت نشده</strong>
                     </div>
                 </div>
             </div>
@@ -230,7 +230,7 @@
                                         <td>
                                                 <span>جمع آوری شده</span>
                                         </td>
-                                        <td>{{ $item->cashout_type=='bazist'?'کیف پول بازیست':'پرداخت به کارت' }}</td>
+                                        <td>{{ $item->cashout_type=='bazist'?'کیف پول آنیروب':'پرداخت به کارت' }}</td>
                                         <td class="dir-ltr">{{\Verta::instance($item->start_deadline)->format('Y/m/d H:i')}}</td>
                                         <td>
                                             <div class="cr-actions">
@@ -323,7 +323,7 @@
             <div class="cr-card-header">
                 <div class="cr-title">
                     <div>
-                        <strong>بازیست</strong>
+                        <strong>آنیروب</strong>
                     </div>
                 </div>
             </div>

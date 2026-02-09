@@ -33,7 +33,7 @@
                             <thead>
                             <tr>
                                 <th>راننده</th>
-                                <th>مناطق بازیست</th>
+                                <th>مناطق آنیروب</th>
                             </tr>
                             </thead>
                             <tbody>

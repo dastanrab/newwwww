@@ -136,7 +136,7 @@
                             <label for="cashout">نوع واریزی</label>
                             <select id="cashout" wire:model="cashout" class="select">
                                 <option value="card">کارت به کارت</option>
-                                <option value="bazist">کیف پول بازیست</option>
+                                <option value="bazist">کیف پول آنیروب</option>
                                 {{--<option value="aap">کیف پول آپ</option>--}}
                             </select>
                         </div>

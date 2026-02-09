@@ -20,8 +20,8 @@ class AreaIndex extends Component
     public $search;
     public $polygons;
     public $drivers;
-    public $breadCrumb = [['مناطق بازیست','d.settings.area']];
-    #[Title('مناطق بازیست')]
+    public $breadCrumb = [['مناطق آنیروب','d.settings.area']];
+    #[Title('مناطق آنیروب')]
     public function render()
     {
 

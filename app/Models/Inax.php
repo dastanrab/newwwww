@@ -19,7 +19,7 @@ class Inax extends Model
      * preparation => ثبت رکورد و آماده سازی برای انجام عملیات
      * pendingDecreaseCredit => شارژ خریداری شده و منتظر کسر از اعتبار است
      * pendingVerifyDecreaseCredit => منتظر اعتبارسنجی پرداخت
-     * pendingSubmitRecordDb => منتظر ثبت رکورد مربوط به جدول پرداختی (آپ یا کیف پول بازیست)
+     * pendingSubmitRecordDb => منتظر ثبت رکورد مربوط به جدول پرداختی (آپ یا کیف پول آنیروب)
      * done => روال پرداخت با موفقیت انجام شده
      * cancel => لغو شده و هیچ شارژی هم خریداری نشده
      */
@@ -273,7 +273,7 @@ class Inax extends Model
                 "mobile"      => $mobile,
                 "charge_type" => $type,
                 "order_id"    => $orderId,
-                "company"     => 'بازیست',
+                "company"     => 'آنیروب',
                 "pay_type"    => 'credit',
                 //"test_mode"   => true
             ]))->post($self->url);

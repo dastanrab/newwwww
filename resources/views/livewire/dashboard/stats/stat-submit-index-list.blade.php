@@ -96,7 +96,7 @@
                                             echo 'کارت به کارت';
                                         }
                                         elseif($submit->cashout_type == 'bazist'){
-                                            echo 'بازیست';
+                                            echo 'آنیروب';
                                         }
                                     @endphp
                                 </td>

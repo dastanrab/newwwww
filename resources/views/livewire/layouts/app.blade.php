@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta NAME="robots" content="noindex,nofollow">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{isset($title) ? $title : 'بازیست | داشبورد'}}</title>
+    <title>{{isset($title) ? $title : 'آنیروب | داشبورد'}}</title>
     <link rel="icon" type="image/png" sizes="128x128" href="https://bazistco.com/wp-content/themes/bazist/assets/img/favicon-128x128.png">
     <link rel="stylesheet" href="{{asset('/assets/css/style.jquery-ui.css')}}">
     <link rel="stylesheet" href="{{asset('/assets/css/style.bootstrap.css')}}">

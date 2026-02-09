@@ -207,7 +207,7 @@ class WalletController extends Controller
         $ap = AsanPardakht::resetPermission($user->mobile);
         $hresp = json_decode($ap['hresp']);
         if($hresp->st == 0){
-            return sendJson('success','دسترسی بازیست از کیف پول شما لغو شد');
+            return sendJson('success','دسترسی آنیروب از کیف پول شما لغو شد');
         }
         return sendJson('error', 'خطایی پیش آمد لطفا دوباره امتحان کنید');
     }

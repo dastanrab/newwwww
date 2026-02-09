@@ -61,7 +61,7 @@ class SettingController extends Controller
                 'gender'           => $gender,
                 'referralCode'     => $user->referral_code,
                 'selfReferral' => [
-                    'text' => 'با استفاده از کد و یا لینک زیر می توانید اپلیکیشن بازیست را به دوستان خود معرفی کرده و از مزایای معرفی بهره مند شوید',
+                    'text' => 'با استفاده از کد و یا لینک زیر می توانید اپلیکیشن آنیروب را به دوستان خود معرفی کرده و از مزایای معرفی بهره مند شوید',
                     'code' => $user->referral(),
                     'link' => 'https://bazistco.com/ref/?code='.$user->referral(),
                 ],
@@ -259,7 +259,7 @@ class SettingController extends Controller
 
                     [
                         "value" => "bazist",
-                        "label" => "کیف پول بازیست"
+                        "label" => "کیف پول آنیروب"
                     ],
 
                 ]*/null,
