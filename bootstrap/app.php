@@ -19,7 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
         then: function (){
-            Route::prefix('api')->group(function () {
+            Route::prefix('api')->middleware([ForceJsonRequestHeader::class])->group(function () {
                 Route::middleware('api')
 //            ->domain('api.'.env('DOMAIN_URL'))
                     ->prefix('user')
@@ -40,9 +40,9 @@ return Application::configure(basePath: dirname(__DIR__))
 
     )
     ->withMiddleware(function (Middleware $middleware): void {
-      //  $middleware->append(ForceJsonRequestHeader::class);
+//        $middleware->append(ForceJsonRequestHeader::class);
         $middleware->append(\App\Http\Middleware\AllowOnlySpecificIPs::class);
-   //     $middleware->append(\App\Http\Middleware\EnsureJsonRequest::class);
+//        $middleware->append(\App\Http\Middleware\EnsureJsonRequest::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->renderable(function (AuthenticationException $e, Request $request) {
