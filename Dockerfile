@@ -34,7 +34,7 @@ RUN echo "===== Running composer install =====" \
 RUN echo "===== Running Artisan commands =====" \
     && php artisan storage:link || echo "storage:link failed" \
     && php artisan optimize || echo "optimize failed" \
-    && php artisan vendor:publish --all --force || echo "vendor:publish failed" \
+    && php artisan vendor:publish --all || echo "vendor:publish failed" \
     && php artisan scribe:generate || echo "scribe generate failed"
 
 # Permissions
