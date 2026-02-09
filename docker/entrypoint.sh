@@ -30,7 +30,7 @@ if [ ! -L "public/storage" ]; then
   php artisan storage:link || true
 fi
 echo "Publish..."
-php artisan vendor:publish || true
+#php artisan vendor:publish || true
 
 # Clear & rebuild cache
 echo "Clearing cache..."
