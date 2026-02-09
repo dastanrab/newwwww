@@ -29,7 +29,8 @@ if [ ! -L "public/storage" ]; then
   echo "Creating storage symlink..."
   php artisan storage:link || true
 fi
-
+echo "Publish..."
+php artisan vendor:publish || true
 
 # Clear & rebuild cache
 echo "Clearing cache..."
@@ -43,8 +44,7 @@ if [ "$APP_ENV" = "production" ]; then
   php artisan route:cache
   php artisan view:cache
 fi
-echo "Publish..."
-php artisan vendor:publish --all
+
 
 echo "create scribe docs..."
 php artisan scribe:generate
