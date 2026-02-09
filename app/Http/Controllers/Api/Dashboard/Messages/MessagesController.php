@@ -63,7 +63,7 @@ class MessagesController extends Controller
             'title' => 'پیام از پشتیبانی',
             'message' => $requester->name.' عزیز، پیامی برای شما ارسال شد',
         ];
-        Notification::send($requester, new UserNotification(Firebase::dataFormat($data)));
+       // Notification::send($requester, new UserNotification(Firebase::dataFormat($data)));
         return success_response(message: 'با موفقیت ایجاد شد');
 
     }

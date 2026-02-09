@@ -65,7 +65,7 @@ class ProcessPayment implements ShouldQueue
             'title' => 'آنیروب - جمع آوری درخواست',
             'message' => $user->name.' عزیز، درخواست شما با موفقیت جمع آوری شد',
         ];
-        Notification::send($user, new UserNotification(Firebase::dataFormat($data)));*/
+     //   Notification::send($user, new UserNotification(Firebase::dataFormat($data)));*/
 
     }
 }

@@ -629,7 +629,7 @@ class ShopController extends Controller
                         'message' => "ضمن سپاس از همراهی ارزشمند شما شهروند گرامی
                         درتاریخ {$date} مبلغ {$amount} از کیف پول شما کسر و به حساب خیریه {$charitylabel} پرداخت گردید جزییات این تراکنش از بخش سوابق تراکنش قابل مشاهده و پیگیری می باشد",
                     ];
-                    Notification::send($user, new UserNotification(Firebase::dataFormat($msg)));
+                  //  Notification::send($user, new UserNotification(Firebase::dataFormat($msg)));
                     return sendJson('success', 'کمک شما به خیریه انجام شد',$data);
                 }
             } catch (Exception $e) {

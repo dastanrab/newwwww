@@ -43,7 +43,7 @@ class ContactSingle extends Component
             'title' => 'پیام از پشتیبانی',
             'message' => $requester->name.' عزیز، پیامی برای شما ارسال شد',
         ];
-        Notification::send($requester, new UserNotification(Firebase::dataFormat($data)));
+       // Notification::send($requester, new UserNotification(Firebase::dataFormat($data)));
 
         $this->reset('message');
     }

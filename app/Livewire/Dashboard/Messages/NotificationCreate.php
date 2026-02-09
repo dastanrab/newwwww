@@ -44,7 +44,7 @@ class NotificationCreate extends Component
             "title" => $this->title,
             "message" => $this->text,
         ];
-        Notification::send($user,new TopicNotification(Firebase::dataFormat($data),'all'));
+//        Notification::send($user,new TopicNotification(Firebase::dataFormat($data),'all'));
         $user->messages()->create(['title' => $this->title, 'text' => $this->text]);
         sendToast(1,'پیام همگانی ارسال شد');
     }

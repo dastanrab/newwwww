@@ -54,7 +54,7 @@ class Driver extends Model
                 'title' => 'درخواست شما تایید شد',
                 'message' => $requester->name.' عزیز، در زمان مقرر درخواست شما جمع آوری خواهد شد',
             ];
-            Notification::send($requester, new UserNotification(Firebase::dataFormat($data)));*/
+        //    Notification::send($requester, new UserNotification(Firebase::dataFormat($data)));*/
             return $saveDriver;
         }
         else{

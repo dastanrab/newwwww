@@ -228,13 +228,13 @@ class SubmitAllIndexList extends Component
             'title' => 'درخواست شما تایید شد',
             'message' => $submit->user->name.' عزیز، در زمان مقرر درخواست شما جمع آوری خواهد شد',
         ];
-        Notification::send($submit->user, new UserNotification(Firebase::dataFormat($data)));*/
+      //  Notification::send($submit->user, new UserNotification(Firebase::dataFormat($data)));*/
 
         /*$data = [
             'title' => 'درخواستی به شما تعلق گرفت',
             'message' => $submit->driver->user->name.' عزیز، لطفا در زمان مقرر درخواست را جمع آوری کنید',
         ];
-        Notification::send($submit->driver->user, new UserNotification(Firebase::dataFormat($data),'driver-app'));*/
+      //  Notification::send($submit->driver->user, new UserNotification(Firebase::dataFormat($data),'driver-app'));*/
         $this->dispatch('remove-modal');
         sendToast(1,'راننده تغییر یافت');
     }
