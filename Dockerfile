@@ -31,11 +31,11 @@ RUN echo "===== Running composer install =====" \
         --verbose
 
 # Publish / artisan commands with output
-RUN echo "===== Running Artisan commands =====" \
-    && php artisan storage:link || echo "storage:link failed" \
-    && php artisan optimize || echo "optimize failed" \
-    && php artisan vendor:publish --all || echo "vendor:publish failed" \
-    && php artisan scribe:generate || echo "scribe generate failed"
+#RUN echo "===== Running Artisan commands =====" \
+#    && php artisan storage:link || echo "storage:link failed" \
+#    && php artisan optimize || echo "optimize failed" \
+#    && php artisan vendor:publish --all || echo "vendor:publish failed" \
+#    && php artisan scribe:generate || echo "scribe generate failed"
 
 # Permissions
 RUN echo "===== Setting permissions =====" \
@@ -47,5 +47,10 @@ RUN echo "===== Copying Supervisor config ====="
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 EXPOSE 8000
+
+COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+ENTRYPOINT ["entrypoint.sh"]
 
 CMD echo "===== Starting Supervisor =====" && /usr/bin/supervisord -n
