@@ -6,7 +6,7 @@
                     <div class="cr-cover" style="background-image: url({{asset('assets/img/login-cover.jpg')}});">
                         <div class="cr-content animate__animated animate__fadeIn">
                             <figure>
-{{--                                <img src="{{asset('assets/img/Logo-White.png')}}" alt="" class="img-fluid">--}}
+                                <img src="{{asset('assets/img/logo.png')}}" alt="" class="img-fluid">
                             </figure>
                             <div class="cr-carousel">
                                 <div id="cr-carousel" class="carousel slide" data-bs-interval="true">
