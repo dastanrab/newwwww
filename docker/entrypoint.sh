@@ -38,12 +38,11 @@ php artisan config:clear
 php artisan route:clear
 php artisan view:clear
 
-if [ "$APP_ENV" = "production" ]; then
-  echo "Caching config & routes..."
-  php artisan config:cache
-  php artisan route:cache
-  php artisan view:cache
-fi
+echo "Caching config & routes..."
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+
 
 
 echo "create scribe docs..."

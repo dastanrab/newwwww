@@ -7,6 +7,10 @@ services:
     restart: always
     env_file:
       - .env
+    volumes:
+      - laravel_storage:/var/www/storage
+      - laravel_cache:/var/www/bootstrap/cache
+      - laravel_public_storage:/var/www/public/storage
     depends_on:
       - db
       - redis
@@ -59,3 +63,6 @@ networks:
 
 volumes:
   db_data:
+  laravel_storage:
+  laravel_cache:
+  laravel_public_storage:
