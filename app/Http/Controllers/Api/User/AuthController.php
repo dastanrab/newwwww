@@ -167,12 +167,35 @@ class AuthController extends Controller
      *
      * @response 200 {
      *   "status": "success",
-     *   "message": "ثبت نام با موفقیت تکمیل شد"
+     *   "message": "ثبت نام با موفقیت تکمیل شد",
+     *   "data": {
+     *     "registered": true,
+     *     "id": 5,
+     *     "userType": "citizen",
+     *     "guildTitle": "سایر",
+     *     "guildMarket": null,
+     *     "birthDate": null,
+     *     "firstName": "dastan",
+     *     "lastName": "rab",
+     *     "mob": "-",
+     *     "email": null,
+     *     "gender": "male",
+     *     "referralCode": null,
+     *     "selfReferral": {
+     *       "text": "با استفاده از کد و یا لینک زیر می توانید اپلیکیشن آنیروب را به دوستان خود معرفی کرده و از مزایای معرفی بهره مند شوید",
+     *       "code": 112116,
+     *       "link": "https://aniroob.com/ref/?code=112116"
+     *     },
+     *     "city": 1,
+     *     "balance": 15000
+     *   }
      * }
-     */
+ */
+
     public function register(Request $request)
     {
-        $validator = Validator::make($request->all(),
+
+        $validator = Validator::make($request->json()->all(),
             [
                 'userType'     => 'required|in:citizen,guild',
                 'guildMarket'  => $request->userType == 'guild' ? 'required|exists:guilds,id' : 'nullable',
@@ -309,8 +332,29 @@ class AuthController extends Controller
      * @bodyParam birthDate string تاریخ تولد
      *
      * @response 200 {
-     *   "status": "success",
-     *   "message": "پروفایل ذخیره شد"
+     * "status": "success",
+     * "message": "پروفایل ذخیره شد",
+     * "data": {
+     * "registered": true,
+     * "id": 5,
+     * "userType": "citizen",
+     * "guildTitle": "سایر",
+     * "guildMarket": null,
+     * "birthDate": null,
+     * "firstName": "dastan",
+     * "lastName": "rab",
+     * "mob": "-",
+     * "email": null,
+     * "gender": "male",
+     * "referralCode": null,
+     * "selfReferral": {
+     * "text": "با استفاده از کد و یا لینک زیر می توانید اپلیکیشن آنیروب را به دوستان خود معرفی کرده و از مزایای معرفی بهره مند شوید",
+     * "code": 112116,
+     * "link": "https://aniroob.com/ref/?code=112116"
+     * },
+     * "city": 1,
+     * "balance": 15000
+     * }
      * }
      */
     public function profile(Request $request)

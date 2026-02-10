@@ -8,6 +8,51 @@ use App\Models\Recyclable;
 
 class RecyclableController extends Controller
 {
+
+    /**
+     * لیست قیمت ضایعات
+     *
+     * لیست کامل انواع ضایعات قابل بازیافت به‌همراه:
+     * - توضیحات
+     * - تصویر
+     * - بیشترین قیمت
+     * - قیمت واحد (۱ کیلو)
+     * - جدول قیمت بر اساس وزن
+     *
+     * قیمت‌ها بر اساس نوع کاربر (حقیقی / حقوقی) محاسبه می‌شود.
+     *
+     * @group Recyclables
+     * @authenticated
+     *
+     * @response 200 {
+     *   "status": "success",
+     *   "message": "",
+     *   "data": {
+     *     "list": [
+     *       {
+     *         "id": 1,
+     *         "title": "کاغذ و کارتن",
+     *         "description": "مثال‌های قابل بازیافت...",
+     *         "bgImage": "https://aniroob.com/wp-content/uploads/2024/09/recyclables-1.png",
+     *         "image": "https://example.com/assets/img/icons/recyclables/1.png",
+     *         "maxAmount": 3850,
+     *         "unitAmount": 2450,
+     *         "rateList": {
+     *           "1": 2450,
+     *           "2": 2450,
+     *           "3": 2450,
+     *           "4": 3150,
+     *           "5": 3150,
+     *           "10": 3500,
+     *           "15": 3850,
+     *           "30": 3850
+     *         }
+     *       }
+     *     ]
+     *   }
+     * }
+     */
+
     public function prices()
     {
         $user = auth()->user();

@@ -25,6 +25,43 @@ use Illuminate\Support\Facades\Validator;
 
 class RequestController extends Controller
 {
+
+    /**
+     * زمان‌بندی ثبت درخواست
+     *
+     * لیست روزها و بازه‌های زمانی مجاز برای جمع‌آوری پسماند
+     * به‌همراه امکان ثبت درخواست فوری
+     *
+     * @group Request
+     * @authenticated
+     *
+     * @response 200 {
+     *   "status": "success",
+     *   "message": "",
+     *   "data": {
+     *     "list": [
+     *       {
+     *         "value": "1404/11/21",
+     *         "label": "1404/11/21",
+     *         "subLabel": "",
+     *         "weekday": "امروز",
+     *         "enabled": true,
+     *         "hours": [
+     *           {
+     *             "value": "9",
+     *             "label": "9 الی 12",
+     *             "subLabel": "صبح",
+     *             "enabled": true
+     *           }
+     *         ]
+     *       }
+     *     ],
+     *     "immediate": true,
+     *     "immediateText": "جمع‌آوری ۱ الی ۲ ساعته پسماند، بین ساعت ۹ تا ۱۷ هر روز"
+     *   }
+     * }
+     */
+
     public function scheduling(Request $request)
     {
         $user = auth()->user();
@@ -51,6 +88,52 @@ class RequestController extends Controller
         return sendJson('success', '', $data);
     }
 
+    /**
+     * ثبت درخواست جمع‌آوری
+     *
+     * کاربر می‌تواند درخواست را به‌صورت:
+     * - فوری (immediate)
+     * - یا زمان‌بندی‌شده (scheduled)
+     * ثبت کند.
+     *
+     * @group Request
+     * @authenticated
+     *
+     * @bodyParam addressId integer required شناسه آدرس انتخاب‌شده Example: 12
+     *
+     * @bodyParam payMethod string required روش پرداخت Example: card
+     * @bodyParam cardId integer required_when:payMethod,card شناسه کارت بانکی Example: 3
+     *
+     * @bodyParam scheduling string required نوع زمان‌بندی Example: immediate
+     * @bodyParam scheduling.day string required_when:scheduling,scheduled روز جمع‌آوری Example: 1404/11/22
+     * @bodyParam scheduling.hour string required_when:scheduling,scheduled ساعت جمع‌آوری Example: 9
+     *
+     * @response 200 {
+     *   "status": "success",
+     *   "message": "درخواست شما با موفقیت ثبت شد",
+     *   "data": {
+     *     "id": 336,
+     *     "requestDate": {
+     *       "day": "21 بهمن",
+     *       "range": "9:00 الی 12:00"
+     *     },
+     *     "address": "دلاوران 7",
+     *     "collectDate": null,
+     *     "status": {
+     *       "value": 1,
+     *       "label": "در انتظار"
+     *     },
+     *     "driver": null,
+     *     "cancelable": true
+     *   }
+     * }
+     *
+     * @response 200 {
+     *   "status": "error",
+     *   "message": "شما یک درخواست فعال دارید"
+     * }
+     */
+
     public function store(Request $request)
     {
         $user = auth()->user();
@@ -70,7 +153,6 @@ class RequestController extends Controller
                 'scheduling.hour' => 'لطفا ساعت جمع آوری را انتخاب کنید',
             ]
         );
-        $request->payMethod='aniroob';
         if($validator->fails()){
             return sendJson('error',$validator->errors()->first());
         }
@@ -92,6 +174,49 @@ class RequestController extends Controller
         return sendJson('success','درخواست شما با موفقیت ثبت شد', $user->currentSubmit());
 
     }
+
+    /**
+     * جزئیات یک درخواست
+     *
+     * @group Request
+     * @authenticated
+     *
+     * @urlParam submit integer required شناسه درخواست Example: 331
+     *
+     * @response 200 {
+     *   "status": "success",
+     *   "message": "",
+     *   "data": {
+     *     "id": 331,
+     *     "requestDate": {
+     *       "day": "1404/08/19",
+     *       "range": "9 الی 12"
+     *     },
+     *     "collectedDate": null,
+     *     "weight": 0,
+     *     "amount": 0,
+     *     "status": {
+     *       "value": 5,
+     *       "label": "لغو توسط کاربر"
+     *     },
+     *     "customer": {
+     *       "name": "dastan rab",
+     *       "mob": "09158992231",
+     *       "address": "مشهد، بلوار پیروزی، پیروزی 16، حق شناس 2 - رز 20، حق شناس 2/3",
+     *       "location": {
+     *         "lat": 36.3107,
+     *         "lng": 59.5125
+     *       }
+     *     },
+     *     "driver": null,
+     *     "wasteItems": null,
+     *     "actionButtons": {
+     *       "cancel": false,
+     *       "review": false
+     *     }
+     *   }
+     * }
+     */
 
     public function single(Submit $submit)
     {
@@ -158,6 +283,38 @@ class RequestController extends Controller
         return sendJson('success','', $data);
     }
 
+    /**
+     * لیست درخواست‌های کاربر
+     *
+     * @group Request
+     * @authenticated
+     *
+     * @response 200 {
+     *   "status": "success",
+     *   "message": "",
+     *   "data": {
+     *     "list": [
+     *       {
+     *         "id": 331,
+     *         "requestDate": {
+     *           "day": "1404/08/19",
+     *           "range": "9 الی 12"
+     *         },
+     *         "collectedDate": null,
+     *         "weight": 0,
+     *         "amount": 0,
+     *         "status": {
+     *           "value": 5,
+     *           "label": "لغو توسط کاربر"
+     *         },
+     *         "driver": null
+     *       }
+     *     ],
+     *     "limit": 10
+     *   }
+     * }
+     */
+
     public function list()
     {
         $user = auth()->user();
@@ -191,6 +348,19 @@ class RequestController extends Controller
         $data['limit'] = $paginate;
         return sendJson('success','', $data);
     }
+
+    /**
+     * لغو درخواست فعال
+     *
+     * @group Request
+     * @authenticated
+     *
+     * @response 200 {
+     *   "status": "success",
+     *   "message": "درخواست شما لغو شد",
+     *   "data": null
+     * }
+     */
 
     public function cancel()
     {
@@ -233,6 +403,31 @@ class RequestController extends Controller
 
     }
 
+    /**
+     * ثبت نظر روی درخواست
+     *
+     * این متد به کاربر اجازه می‌دهد نظر و امتیاز خود را برای یک درخواست ثبت کند.
+     *
+     * @group Request
+     *
+     * @bodyParam comment string required متن نظر کاربر Example: خدمات عالی بود
+     * @bodyParam rate integer required امتیاز کاربر Example: 5
+     *
+     * @bodyParam tipValues object required نکات مثبت و منفی
+     * @bodyParam tipValues.good array required نکات مثبت Example: ["رفتار عالی","سرعت بالا"]
+     * @bodyParam tipValues.bad array required نکات منفی Example: ["تاخیر در جمع آوری"]
+     *
+     * @response 200 {
+     *   "status": "success",
+     *   "message": "با تشکر از همکاری شما",
+     *   "data": null
+     * }
+     *
+     * @response 200 {
+     *   "status": "error",
+     *   "message": "لطفا موارد مثبت را مشخص کنید."
+     * }
+     */
     public function review(Request $request, Submit $submit)
     {
         $user = auth()->user();
@@ -244,9 +439,7 @@ class RequestController extends Controller
             [
                 'comment' => 'required|string',
                 'rate'    => 'required|numeric',
-
                 'tipValues' => 'required|array',
-
                 'tipValues.good' => 'required|array',
                 'tipValues.bad'  => 'required|array',
             ],

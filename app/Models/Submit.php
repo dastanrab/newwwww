@@ -678,8 +678,6 @@ class Submit extends Model
 
     public static function add($registrantId,$user,$request)
     {
-        $payMethod = !isset($request->payMethod) ? 'aniroob' : null;
-
         if($request->scheduling == 'immediate'){
             $start_deadline = now()->format('Y-m-d H:i:s');
             $end_deadline = now()->addHour()->format('Y-m-d H:i:s');
@@ -697,14 +695,13 @@ class Submit extends Model
         $submit->user_id = $user->id;
         $submit->start_deadline = $start_deadline;
         $submit->end_deadline = $end_deadline;
-        $submit->is_instant = $is_instant;
         $submit->recyclables = json_encode(['GoodRef' => 1, 'Quantity' => 1, 'Price' => Percentage::where('recyclable_id', 1)->where('is_legal', false)->where('weight', 1)->first()->price * 10]);
 
         $city_id = $address->city_id;
         $submit->address_id = $address->id;
         $submit->region_id= @$district;
         $submit->city_id = $city_id;
-        $submit->cashout_type = $payMethod;
+        $submit->cashout_type = !isset($request->payMethod)? 'aniroob':$request->payMethod;
         $submit->is_instant = $request->scheduling == 'immediate' ? 1 : 0;
         $submit->cashout_instant = 0;
         $submit->submit_phone = 0;

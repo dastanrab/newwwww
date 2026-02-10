@@ -18,11 +18,22 @@ return [
 
     // Text to place in the "Introduction" section, right after the `description`. Markdown and HTML are supported.
     'intro_text' => <<<'INTRO'
-            This documentation aims to provide all the information you need to work with our API.
+این مستندات مربوط به **API آنی روب** است و هدف آن ارائه اطلاعات کامل برای استفاده از وب‌سرویس‌های ما می‌باشد.
 
-            <aside>As you scroll, you'll see code examples for working with the API in different programming languages in the dark area to the right (or as part of the content on mobile).
-            You can switch the language used with the tabs at the top right (or from the nav menu at the top left on mobile).</aside>
-        INTRO,
+تمام پاسخ‌های این API در یک **قالب استاندارد JSON** ارائه می‌شوند که شامل سه فیلد اصلی است:
+
+- `status`: وضعیت درخواست، که مقدار آن همیشه `success` برای موفق و `error` برای ناموفق می‌باشد.
+- `message`: پیامی کوتاه درباره نتیجه درخواست (مثلاً پیام خطا یا پیام موفقیت).
+- `data`: داده‌های مربوط به درخواست، که می‌تواند آرایه یا آبجکت باشد. در صورت عدم وجود داده، آرایه خالی بازگردانده می‌شود.
+
+**مثال پاسخ موفق:**
+```json
+{
+    "status": "success",
+    "message": "درخواست با موفقیت انجام شد",
+    "data": []
+}
+INTRO, //
 
     // The base URL displayed in the docs.
     // If you're using `laravel` type, you can set this to a dynamic string, like '{{ config("app.tenant_url") }}' to get a dynamic base URL.

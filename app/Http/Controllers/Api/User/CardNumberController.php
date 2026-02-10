@@ -9,6 +9,26 @@ use Illuminate\Support\Facades\Validator;
 
 class CardNumberController extends Controller
 {
+    /**
+     * لیست کارت‌های بانکی کاربر
+     *
+     * @group Card
+     * @authenticated
+     *
+     * @response 200 {
+     *   "status": "success",
+     *   "message": "",
+     *   "data": [
+     *     {
+     *       "value": 3,
+     *       "label": "5xxxxxxx5645",
+     *       "name": " kjasxxxxxxxxxxxshas ",
+     *       "bank": "REFAH"
+     *     }
+     *   ]
+     * }
+     */
+
     public function index()
     {
         $user = auth()->user();
@@ -24,6 +44,31 @@ class CardNumberController extends Controller
         }
         return sendJson('success', '', $data);
     }
+
+    /**
+     * افزودن شماره کارت
+     *
+     * @group Card
+     * @authenticated
+     *
+     * @bodyParam cardNumber string required شماره کارت 16 رقمی Example: 5894631890588775
+     *
+     * @response 200 {
+     *   "status": "success",
+     *   "message": "شماره کارت افزوده شد",
+     *   "data": {
+     *     "value": "xxxx",
+     *     "label": "xxxx",
+     *     "name": "xxxx",
+     *     "bank": "XXX"
+     *   }
+     * }
+     *
+     * @response 400 {
+     *   "status": "error",
+     *   "message": "این شماره کارت قبلا ثبت شده"
+     * }
+     */
 
     public function store(Request $request)
     {
@@ -43,11 +88,16 @@ class CardNumberController extends Controller
         if ($ibanExists) {
             return sendJson('error','این شماره کارت قبلا ثبت شده');
         }
-        $card_to_iban = Iban::cardToIban($request->cardNumber);
-        //$card_to_iban = false;
-        if (!$card_to_iban) {
-            return sendJson('error', 'شماره کارت وارد شده نادرست است.');
+        try {
+            $card_to_iban = Iban::cardToIban($request->cardNumber);
+            //$card_to_iban = false;
+            if (!$card_to_iban) {
+                return sendJson('error', 'شماره کارت وارد شده نادرست است.');
+            }
+        }catch (\Exception $exception){
+            return sendJson('error', 'خطا در استعلام است.');
         }
+
         $iban = $user->ibans()->create([
             'name'    => preg_replace('/[\x{200B}-\x{200D}\x{FEFF}]/u', '', explode(' / فعال', $card_to_iban['result']['depositOwners'])[0]),
             'bank'    => $card_to_iban['result']['bankName'],

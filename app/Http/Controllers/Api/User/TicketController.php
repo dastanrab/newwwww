@@ -10,12 +10,33 @@ use Illuminate\Support\Facades\Validator;
 
 class TicketController extends Controller
 {
+    /**
+     * Create a new support ticket.
+     *
+     * @group Tickets
+     * @authenticated
+     * @bodyParam subject string required Subject of the ticket. Example: where is driver?
+     * @bodyParam message string required Message content. Example: my request's driver is so late
+     *
+     * @response 200 {
+     *   "status": "success",
+     *   "message": "تیکت با موفقیت ایجاد شد لطفا تا پاسخ اپراتور صبور باشید",
+     *   "data": {
+     *       "id": 2
+     *   }
+     * }
+     * @response 422 {
+     *   "status": "error",
+     *   "message": "پیام باید بین ۳ تا ۵۰۰۰ کاراکتر باشد",
+     *   "data": []
+     * }
+     */
     public function store(Request $request)
     {
         $user = auth()->user();
         $validator = Validator::make($request->all(),
             [
-                'subject' => 'string|max:255|required',
+                'subject' => 'required|string|max:255|required',
                 'message' => 'required|string|min:3|max:5000',
             ],
             [
@@ -41,6 +62,31 @@ class TicketController extends Controller
         return sendJson('error','تیکت شما ثبت نشد لطفا دوباره امتحان کنید');
     }
 
+    /**
+     * List all tickets of authenticated user.
+     *
+     * @group Tickets
+     * @authenticated
+     * @response 200 {
+     *   "status": "success",
+     *   "message": "",
+     *   "data": {
+     *     "limit": 10,
+     *     "list": [
+     *       {
+     *         "id": 2,
+     *         "refId": 2,
+     *         "title": "where is driver?",
+     *         "date": {
+     *           "day": "1404/11/21",
+     *           "time": "09:54"
+     *         },
+     *         "seen": true
+     *       }
+     *     ]
+     *   }
+     * }
+     */
     public function index()
     {
         $user = auth()->user();
@@ -62,6 +108,51 @@ class TicketController extends Controller
         return sendJson('success','', $data);
     }
 
+
+    /**
+     * Show a single ticket with all messages.
+     *
+     * @group Tickets
+     * @authenticated
+     * @urlParam contact required The ID of the ticket. Example: 2
+     * @response 200 {
+     *   "status": "success",
+     *   "message": "",
+     *   "data": {
+     *     "id": 2,
+     *     "refId": 2,
+     *     "userId": 5,
+     *     "title": "where is driver?",
+     *     "date": {
+     *       "day": "1404/11/21",
+     *       "time": "10:01"
+     *     },
+     *     "messages": [
+     *       {
+     *         "type": "admin",
+     *         "name": "اپراتور",
+     *         "message": "what happend?????",
+     *         "date": {
+     *           "day": "1404/11/21",
+     *           "time": "09:54"
+     *         }
+     *       },
+     *       {
+     *         "type": "user",
+     *         "name": "dastan rab",
+     *         "message": "my request's driver is so late",
+     *         "date": {
+     *           "day": "1404/11/21",
+     *           "time": "10:01"
+     *         }
+     *       }
+     *     ],
+     *     "badgeCounters": {
+     *       "tickets": 0
+     *     }
+     *   }
+     * }
+     */
     public function show(Contact $contact)
     {
         Gate::authorize('edit',$contact);
@@ -106,6 +197,30 @@ class TicketController extends Controller
         return sendJson('success','', $data);
     }
 
+
+    /**
+     * Reply to a ticket.
+     *
+     * @group Tickets
+     * @authenticated
+     * @urlParam contact required The ID of the ticket to reply. Example: 2
+     * @bodyParam message string required Reply message. Example: thank you, I received your message
+     *
+     * @response 200 {
+     *   "status": "success",
+     *   "message": "پیام شما ارسال شد",
+     *   "data": {
+     *       "badgeCounters": {
+     *           "tickets": 0
+     *       }
+     *   }
+     * }
+     * @response 200 {
+     *   "status": "error",
+     *   "message": "پیام باید بین ۳ تا ۵۰۰۰ کاراکتر باشد",
+     *   "data": []
+     * }
+     */
     public function update(Request $request, Contact $contact)
     {
         Gate::authorize('edit', $contact);

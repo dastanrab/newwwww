@@ -25,6 +25,7 @@ Route::post('register', [AuthController::class,'register'])->middleware('auth:sa
 Route::post('profile', [AuthController::class,'profile'])->middleware('auth:sanctum');
 Route::post('fcm', [AuthController::class,'fcm'])->middleware('auth:sanctum');
 
+Route::post('search', [AddressController::class,'search'])->middleware('auth:sanctum');
 Route::get('addresses', [AddressController::class,'index'])->middleware('auth:sanctum');
 Route::post('address', [AddressController::class,'store'])->middleware('auth:sanctum');
 Route::delete('address/{address}', [AddressController::class,'destroy'])->middleware('auth:sanctum');

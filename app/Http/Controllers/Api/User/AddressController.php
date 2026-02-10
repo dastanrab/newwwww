@@ -8,6 +8,7 @@ use App\Models\City;
 use App\Models\Polygon;
 use App\Models\PolygonDayHour;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 
 class AddressController extends Controller
@@ -21,19 +22,19 @@ class AddressController extends Controller
      * @authenticated
      *
      * @response 200 {
-     *   "status": "success",
-     *   "message": "",
-     *   "data": [
-     *     {
-     *       "id": 1,
-     *       "title": "خانه",
-     *       "address": "مشهد، بلوار وکیل آباد",
-     *       "city": 1,
-     *       "lat": 36.297,
-     *       "lng": 59.606
-     *     }
-     *   ]
-     * }
+     * "status": "success",
+     * "message": "",
+     * "data": [
+     *   {
+     *     "id": 2,
+     *     "title": "خونه",
+     *     "address": "-",
+     *     "city": 1,
+     *     "lat": 36.1237,
+     *     "lng": 88.0005
+     *   }
+     * ]
+     *  }
      */
     public function index()
     {
@@ -158,8 +159,46 @@ class AddressController extends Controller
      *   "message": "حذف با اشکال روبرو شد"
      * }
      */
+
+
+    public function search(Request $request)
+    {
+        $validator = Validator::make($request->all(),
+            [
+                'address'    => 'required|min:6',
+            ],
+            [
+                'address'    => 'آدرس را به درستی وارد نمایید',
+            ]
+        );
+        if($validator->fails()){
+            return sendJson('error',$validator->errors()->first());
+        }
+        $addresses=[];
+        $response = Http::timeout(8)->withHeaders([
+            'Api-Key' => 'service.b28eded11be548d198058478e5296f16'
+        ])->get("https://api.neshan.org/v1/search?term={$request->address}&lat=36.2966309&lng=59.6029849");
+        if($response->status() == 200){
+            $result = $response->json()->items ?? [];
+            foreach ($result as $item) {
+                $addresses[] = [
+                    'lat' => $item->location->y,
+                    'lng' => $item->location->x,
+                    'address' => isset($item->address) ? $item->address : '',
+                    'title'=> isset($item->title) ? $item->title : '',
+                    'region'=> isset($item->region) ? $item->region : '',
+                    'neighbourhood'=> isset($item->neighbourhood) ? $item->neighbourhood : '',
+                ];
+            }
+        }
+        return sendJson('success', 'لیست آدرس ها', $addresses);
+
+    }
     public function destroy(Address $address)
     {
+        if ($address->user_id != auth()->id()) {
+            return sendJson('error','شما مجاز به حذف  نیستید');
+        }
         $delete = $address->delete();
         if($delete){
             return sendJson('success','با موفقیت حذف شد');
