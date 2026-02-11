@@ -39,14 +39,14 @@ php artisan route:clear
 php artisan view:clear
 
 echo "Caching config & routes..."
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
+#php artisan config:cache
+#php artisan route:cache
+#php artisan view:cache
 
 
 
 echo "create scribe docs..."
-#php artisan scribe:generate
+php artisan scribe:generate
 echo "===== Laravel Entrypoint Finished ====="
 
 # Start Supervisor
