@@ -95,6 +95,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/sos',function (){
+
+
     dd(request()->server,request()->headers,request()->all(),request()->ip());
 });
 Route::get('pa/login', Login::class)->name('d.login');
@@ -220,7 +222,7 @@ Route::group(['prefix' => 'pa', 'as' => 'd.', 'middleware' => [\App\Http\Middlew
     Route::get('/export/stat/hotels', [ExportController::class,'statHotels'])->name('export.stat.hotels');
     Route::get('/export/stat/schools', [ExportController::class,'statSchools'])->name('export.stat.schools');
     Route::get('/export/stat/fava_sum', [ExportController::class,'statFavaSum'])->name('export.stat.favasum');
-    Route::get('/export/stat/admin_deposit', [ExportController::class,'statAdminDeposit'])->name('export.stat.favasum');
+    Route::get('/export/stat/admin_deposit', [ExportController::class,'statAdminDeposit'])->name('export.stat.admindepo');
     Route::get('/export/stat/inax', [ExportController::class,'statInax'])->name('export.stat.inax');
     Route::get('/export/stat/saman_untrace', [ExportController::class,'statSamanUnTrace'])->name('export.stat.saman_untrace');
     Route::get('/export/stat/daily_submits', [ExportController::class,'statDailySubmits'])->name('export.stat.daily_submits');
