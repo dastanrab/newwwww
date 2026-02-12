@@ -99,6 +99,9 @@ use Illuminate\Support\Facades\Route;
 //
 //    dd(request()->server,request()->headers,request()->all(),request()->ip());
 //});
+Route::get('test',function (){
+    dd('fuck!!!!!!!');
+});
 Route::get('pa/login', Login::class)->name('d.login');
 Route::middleware([\App\Http\Middleware\IsAdmin::class])->group(function () {
     Route::get('/docs', function () {
