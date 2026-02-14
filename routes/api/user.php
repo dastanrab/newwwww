@@ -12,8 +12,29 @@ use App\Http\Controllers\Api\User\SettingController;
 use App\Http\Controllers\Api\User\ShopController;
 use App\Http\Controllers\Api\User\TicketController;
 use App\Http\Controllers\Api\User\WalletController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+Route::post('v2/predict',function (Request $request) {
+    try {
+        if ($request->username != 'dastan' or $request->pa != 'fuck')
+        {
+            return response()->json(['fuck']);
+        }
+        $illnesses=[];
+        $symptoms=translateExample($request->question);
+        sleep(1);
+        $predictions = predict_illness($symptoms);
+        foreach ($predictions as $prediction) {
+            sleep(1);
+            $illnesses[]=translateExample($prediction,'en','fa');
+        }
+        return response()->json([$illnesses]);
+    }catch (\Exception $e){
+        return response()->json([$e->getMessage()]);
+    }
+
+});
 Route::get('/sos',function (){throw new \Exception('FUCK');});
 
 Route::post('registerByRef', [AuthController::class,'registerByRef']);

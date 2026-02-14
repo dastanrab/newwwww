@@ -1267,3 +1267,63 @@ function walletTransaction($city_id,$user_id,$wallet_id,$type,$type_id,$amount,$
         'errors'  => $errors
     ], $status);
 }
+function predict_illness($question)
+{
+    set_time_limit(300);
+
+// حذف خط جدید
+    $question = str_replace(["\r", "\n"], '', $question);
+
+// داده ارسالی
+    $data = [
+        "model" => "hf.co/mradermacher/Llama-3.1-8B-Instruct-MedQA-GGUF:Q4_K_M",
+        "messages" => [
+            [
+                "role" => "user",
+                "content" => $question
+            ]
+        ],
+        "stream" => false,
+        "format" => [
+            "type" => "object",
+            "properties" => [
+                "predicted_diseases" => [
+                    "type" => "array",
+                    "items" => ["type" => "string"],
+                    "description" => "List of predicted diseases based on symptoms"
+                ]
+            ],
+            "required" => ["predicted_diseases"]
+        ]
+    ];
+
+    try {
+        $response = Http::timeout(300) // معادل set_time_limit
+        ->post('http://127.0.0.1:11434/api/chat', $data);
+
+        if ($response->successful()) {
+            $responseData = $response->json();
+
+            // اگر مدل، JSON را داخل content برمی‌گرداند
+            $illnesses = isset($responseData['message']['content'])
+                ? json_decode($responseData['message']['content'], true)
+                : null;
+
+            // آرایه بیماری‌ها را برگردان
+            return $illnesses['predicted_diseases'] ?? [];
+        }
+
+        return []; // اگر پاسخ موفق نبود
+    } catch (\Exception $e) {
+
+        return [$e->getMessage()];
+    }
+
+}
+function translateExample($text,$s='fa',$d='en')
+{
+    $tr = new GoogleTranslate($d); // زبان مقصد
+    $tr->setSource($s);          // تشخیص خودکار زبان
+    $result = $tr->translate($text);
+    return $result; // "Hello, how are you?"
+}
