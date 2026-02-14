@@ -1300,7 +1300,7 @@ function predict_illness($question)
 
     try {
         $response = Http::timeout(300) // معادل set_time_limit
-        ->post('http://127.0.0.1:11434/api/chat', $data);
+        ->post('http://ollama:11434/api/chat', $data);
 
         if ($response->successful()) {
             $responseData = $response->json();
