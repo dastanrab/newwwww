@@ -25,12 +25,21 @@ Route::post('v2/predict',function (Request $request) {
         $symptoms=translateExample($request->question);
         sleep(1);
         $predictions = predict_illnessV2($symptoms);
-        return response()->json(['predictions'=>$predictions]);
         foreach ($predictions as $prediction) {
-            sleep(1);
-            $illnesses[]=translateExample($prediction,'en','fa');
+
+            $translatedName = translateExample($prediction['name'], 'en', 'fa');
+
+            $illnesses[] = [
+                "name" => $translatedName,
+                "description" => $prediction['description'] ?? null,
+                "probability" => $prediction['probability'] ?? null,
+            ];
         }
-        return response()->json([$illnesses]);
+
+        return response()->json([
+            "success" => true,
+            "response" => $illnesses
+        ]);
     }catch (\Exception $e){
         return response()->json([$e->getMessage()]);
     }
