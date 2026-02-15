@@ -25,7 +25,6 @@ Route::post('v2/predict',function (Request $request) {
         $symptoms=translateExample($request->question);
         sleep(1);
         $predictions = predict_illnessV2($symptoms);
-        dd($predictions);
         foreach ($predictions as $prediction) {
 
             $translatedName = translateExample($prediction['name'], 'en', 'fa');
