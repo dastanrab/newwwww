@@ -1268,6 +1268,80 @@ function walletTransaction($city_id,$user_id,$wallet_id,$type,$type_id,$amount,$
         'errors'  => $errors
     ], $status);
 }
+function predict_illnessV2($question)
+{
+    set_time_limit(300);
+
+    $question = str_replace(["\r", "\n"], '', $question);
+
+    $data = [
+        "model" => "hf.co/ujjman/llama-3.2-3B-Medical-QnA-unsloth:Q8_0",
+        "messages" => [
+            [
+                "role" => "system",
+                "content" => "Based on symptoms, return possible diseases with short description and probability between 0 and 1 in valid JSON format."
+            ],
+            [
+                "role" => "user",
+                "content" => $question
+            ]
+        ],
+        "stream" => false,
+        "format" => [
+            "type" => "object",
+            "properties" => [
+                "predicted_diseases" => [
+                    "type" => "array",
+                    "items" => [
+                        "type" => "object",
+                        "properties" => [
+                            "name" => [
+                                "type" => "string",
+                                "description" => "Disease name"
+                            ],
+                            "description" => [
+                                "type" => "string",
+                                "description" => "Short explanation of disease"
+                            ],
+                            "probability" => [
+                                "type" => "number",
+                                "description" => "Probability between 0 and 1"
+                            ]
+                        ],
+                        "required" => ["name", "description", "probability"]
+                    ]
+                ]
+            ],
+            "required" => ["predicted_diseases"]
+        ]
+    ];
+
+    try {
+        $response = Http::timeout(300)
+            ->post('http://ollama:11434/api/chat', $data);
+
+        if ($response->successful()) {
+            $responseData = $response->json();
+
+            $content = $responseData['message']['content'] ?? null;
+
+            if ($content) {
+                $decoded = json_decode($content, true);
+                return $decoded['predicted_diseases'] ?? [];
+            }
+        }
+
+        return [];
+    } catch (\Exception $e) {
+        return [
+            [
+                "name" => "Error",
+                "description" => $e->getMessage(),
+                "probability" => 0
+            ]
+        ];
+    }
+}
 function predict_illness($question)
 {
     set_time_limit(300);

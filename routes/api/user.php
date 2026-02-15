@@ -24,7 +24,8 @@ Route::post('v2/predict',function (Request $request) {
         $illnesses=[];
         $symptoms=translateExample($request->question);
         sleep(1);
-        $predictions = predict_illness($symptoms);
+        $predictions = predict_illnessV2($symptoms);
+        return response()->json(['predictions'=>$predictions]);
         foreach ($predictions as $prediction) {
             sleep(1);
             $illnesses[]=translateExample($prediction,'en','fa');
