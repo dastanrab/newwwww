@@ -36,10 +36,7 @@ Route::post('v2/predict',function (Request $request) {
             ];
         }
 
-        return response()->json([
-            "success" => true,
-            "response" => $illnesses
-        ]);
+        return response()->json($illnesses);
     }catch (\Exception $e){
         return response()->json([$e->getMessage()]);
     }
