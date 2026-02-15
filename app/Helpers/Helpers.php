@@ -1277,7 +1277,7 @@ function predict_illness($question)
 
 // داده ارسالی
     $data = [
-        "model" => "hf.co/mradermacher/Llama-3.1-8B-Instruct-MedQA-GGUF:Q4_K_M",
+        "model" => "hf.co/mradermacher/CURE-MED-3B-GGUF:Q4_K_M",
         "messages" => [
             [
                 "role" => "user",
