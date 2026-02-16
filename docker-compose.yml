@@ -18,23 +18,13 @@ services:
     networks:
       - appnet
 
-  frontend:
-    build:
-      context: ./frontend
-    container_name: frontend_build
-    volumes:
-      - frontend_dist:/var/www/frontend/dist
-    networks:
-      - appnet
-    command: [ "sh", "-c", "npm run build" ]
-
   nginx:
     image: nginx:alpine
     container_name: laravel_nginx
     restart: always
     volumes:
-      - .:/var/www
-      - frontend_dist:/var/www/frontend/dist
+      - ./frontend/dist:/var/www/frontend/dist
+      - ./backend:/var/www/backend
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
     ports:
       - "80:80"
