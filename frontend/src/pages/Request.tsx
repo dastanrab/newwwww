@@ -12,7 +12,7 @@ import {
 import AllInbox from '@mui/icons-material/AllInbox';
 import Portrait from '@mui/icons-material/Portrait';
 import Recycling from '@mui/icons-material/Recycling';
-
+import {useParams} from "react-router-dom";
 const itemStyle = {
     px: 0,
     py: 0.5,
@@ -56,6 +56,8 @@ const SkeletonCard = () => (
 
 export default function Request() {
     const [loading, setLoading] = useState(true);
+    const {id} = useParams();
+    console.log('id is ',id);
 
     useEffect(() => {
         const timer = setTimeout(() => setLoading(false), 2000);
