@@ -17,6 +17,20 @@ services:
     networks:
       - appnet
 
+  frontend:
+    build:
+      context: ./frontend
+    container_name: nextjs_app
+    restart: always
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - app
+    networks:
+      - appnet
+
   nginx:
     image: nginx:alpine
     container_name: laravel_nginx
