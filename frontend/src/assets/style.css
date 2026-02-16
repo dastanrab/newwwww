@@ -1,0 +1,94 @@
+@font-face {
+    font-family: 'Estedad-Regular';
+    font-weight: 400;
+    src: url('fonts/Estedad-Regular.woff2') format('woff');
+    font-display: swap
+}
+
+@font-face {
+    font-family: 'Estedad-Medium';
+    font-weight: 500;
+    src: url('fonts/Estedad-Medium.woff2') format('woff');
+    font-display: swap
+}
+
+@font-face {
+    font-family: 'Estedad-Bold';
+    font-weight: 700;
+    src: url('fonts/Estedad-Bold.woff2') format('woff');
+    font-display: swap
+}
+
+@font-face {
+    font-family: 'Estedad-Black';
+    font-weight: 700;
+    src: url('fonts/Estedad-Black.woff2') format('woff');
+    font-display: swap
+}
+
+img {
+    max-width: 100%
+}
+
+.zo-container {
+    max-width: 600px;
+    margin: 0 auto;
+    position: relative;
+    background: rgb(250, 250, 250)
+}
+
+.zo-page {
+    position: relative;
+}
+
+.zo-page:before {
+    content: "";
+    width: 250px;
+    height: 250px;
+    display: block;
+    position: absolute;
+    top: 180px;
+    right: -90px;
+    background: linear-gradient(90deg, rgb(20, 200, 135) 0%, rgb(15, 160, 105) 100%);
+    opacity: .5;
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+    border-radius: 50%;
+    -webkit-filter: blur(90px);
+    filter: blur(90px);
+}
+
+header.MuiPaper-root.MuiPaper-elevation {
+    background-image: linear-gradient(90deg, rgb(20, 200, 135) 0%, rgb(15, 160, 105) 100%);
+    /*
+    background-image: linear-gradient(90deg, rgba(20, 200, 135, .90) 0%, rgba(15, 160, 105, .90) 100%);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px)
+    */
+}
+
+.swiper {
+    margin: -15px -25px !important;
+}
+
+.swiper .swiper-wrapper {
+    padding: 15px 0;
+}
+
+.swiper .swiper-wrapper .swiper-slide {
+    transform: scale(.80);
+}
+
+.swiper .swiper-wrapper .swiper-slide.swiper-slide-active {
+    transform: scale(1);
+}
+
+.swiper .swiper-wrapper .swiper-slide img {
+    width: 100%;
+    height: 225px;
+    object-fit: cover;
+    border-radius: 1.5rem;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.25), 0 2px 2px 0 rgba(0, 0, 0, 0.15), 0 1px 5px 0 rgba(0, 0, 0, 0.10)
+}
