@@ -4,13 +4,13 @@ WORKDIR /app
 
 # -------- Dependencies --------
 FROM base AS deps
-COPY ../../frontend/package*.json ./
+COPY ./package*.json ./
 RUN npm ci
 
 # -------- Build --------
 FROM base AS builder
 COPY --from=deps /app/node_modules ./node_modules
-COPY ../../frontend .
+COPY . .
 RUN npm run build
 
 # -------- Production --------
