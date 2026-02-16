@@ -57,9 +57,10 @@ const SkeletonCard = () => (
 export default function Request() {
     const [loading, setLoading] = useState(true);
     const {id} = useParams();
-    console.log('id is ',id);
+
 
     useEffect(() => {
+        console.log('id is ',id);
         const timer = setTimeout(() => setLoading(false), 2000);
         return () => clearTimeout(timer);
     }, []);
