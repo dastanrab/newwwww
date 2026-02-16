@@ -12,6 +12,8 @@ services:
       - laravel_storage:/var/www/storage
       - laravel_cache:/var/www/bootstrap/cache
       - laravel_public_storage:/var/www/public/storage
+    ports:
+      - "8000:8000"
     depends_on:
       - db
       - redis
