@@ -53,7 +53,7 @@ const initialUser: UserInfo = {
 // ایجاد استور کاربر با قابلیت ذخیره‌سازی
 export const useUserStore = create<UserState>()(
     persist(
-        (set, get) => ({
+        (set) => ({
             // مقادیر اولیه
             user: initialUser,
             isProfileComplete: false,

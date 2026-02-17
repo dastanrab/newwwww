@@ -104,7 +104,9 @@ const Verify: React.FC = () => {
 
         if (response.status === "success") {
             console.log(response.data)
+            // @ts-ignore
             const token = response.data?.accessToken;
+            // @ts-ignore
             const setting = response.data?.settings;
 
             if (token) {
