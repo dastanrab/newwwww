@@ -1,15 +1,15 @@
-import {Grid, Card, Box, Typography, Button} from "@mui/material";
+import {Grid, Card, Box, Typography, Stack, Button} from "@mui/material";
+import { ShoppingCart, RequestPage, PriceChange, People } from "@mui/icons-material";
 import {Swiper, SwiperSlide} from "swiper/react";
 import 'swiper/swiper-bundle.css';
 import slide1 from "../assets/slide1.png";
 import slide2 from "../assets/slide2.jpg";
 import slide3 from "../assets/slide3.webp";
-import recycling from "../assets/recycling.png";
 import credit_card from "../assets/credit-card.png";
 import leaf from "../assets/leaf.png";
 import box from "../assets/box.png";
+import recycling from "../assets/recycling.png"
 
-import West from '@mui/icons-material/West';
 import {useNavigate} from "react-router-dom";
 
 export default function Home() {
@@ -17,74 +17,42 @@ export default function Home() {
     const navigate = useNavigate();
 
     return (
-        <Box className="zo-page">
+        <Box className="zo-page" >
             <Swiper
-                spaceBetween={-25}
-                slidesPerView={1.25}
-                centeredSlides={true}
-                loop={true}
-                pagination={{clickable: true}}
+                spaceBetween={-12}
+                slidesPerView={1.15}
+                centeredSlides
+                loop
+                pagination={{ clickable: true }}
+                style={{
+                    paddingTop: 8,
+                    paddingBottom: 12,
+                }}
             >
-                <SwiperSlide>
-                    <img src={slide1} alt=""/>
-                </SwiperSlide>
-                <SwiperSlide>
-                    <img src={slide2} alt=""/>
-                </SwiperSlide>
-                <SwiperSlide>
-                    <img src={slide3} alt=""/>
-                </SwiperSlide>
-                <SwiperSlide>
-                    <img src={slide1} alt=""/>
-                </SwiperSlide>
-                <SwiperSlide>
-                    <img src={slide2} alt=""/>
-                </SwiperSlide>
-                <SwiperSlide>
-                    <img src={slide3} alt=""/>
-                </SwiperSlide>
-                <SwiperSlide>
-                    <img src={slide1} alt=""/>
-                </SwiperSlide>
-                <SwiperSlide>
-                    <img src={slide3} alt=""/>
-                </SwiperSlide>
+                {[slide1, slide2, slide3, slide1, slide2, slide3].map((img, i) => (
+                    <SwiperSlide key={i}>
+                        <Box
+                            sx={{
+                                height: { xs: 150, sm: 180 },
+                                borderRadius: 3,
+                                overflow: "hidden",
+                                boxShadow: "0 6px 15px rgba(0,0,0,0.08)",
+                            }}
+                        >
+                            <img
+                                src={img}
+                                alt=""
+                                style={{
+                                    width: "100%",
+                                    height: "100%",
+                                    objectFit: "cover",
+                                }}
+                            />
+                        </Box>
+                    </SwiperSlide>
+                ))}
             </Swiper>
-            <Box
-                sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: 0,
-                    textAlign: "center"
-                }}>
-                <Box sx={{
-                    width: "50px",
-                    mt: 3,
-                }}>
-                    <img src={recycling}/>
-                </Box>
-                <Typography variant="h6">درخواست فعالی ندارین!</Typography>
-                <Typography variant="body1" sx={{py: 0.25}}>
-                    طبیعت هنوز به شما احتیاج داره، سهم‌ِتون رو ادا کنین
-                </Typography>
-                <Button
-                    variant="contained"
-                    size="large"
-                    sx={{
-                        borderRadius: "300px",
-                        mt: 1.5,
-                        mb: 3,
-                        px: 6,
-                    }}
-                    onClick={() => navigate("/collect")}
-                >
-                    درخواست جمع آوری
-                </Button>
-            </Box>
-
-            <Box sx={{mb: 7}}>
+            <Box sx={{mb: 3}}>
                 <Grid container spacing={2}>
                     <Grid size={4} sx={{textAlign: "center"}}>
                         <Box sx={{
@@ -129,238 +97,204 @@ export default function Home() {
                     </Grid>
                 </Grid>
             </Box>
-            <Box sx={{mb: 3}}>
+            <Box >
                 <Grid container spacing={2}>
-                    <Grid size={4} sx={{textAlign: "center", position: "relative"}}>
+                    <Grid size={4} sx={{ textAlign: "center" }}>
                         <Card
                             sx={{
-                                p: 2,
-                                overflow: "visible",
-                                borderRadius: 3,
+                                p: 1.5,
+                                borderRadius: 4,
                                 cursor: "pointer",
+                                backdropFilter: "blur(10px)",
+                                background: "rgba(255,255,255,0.6)",
+                                border: "1px solid rgba(255,255,255,0.3)",
+                                boxShadow: "0 8px 20px rgba(0,0,0,0.05)",
                                 transition: "0.2s",
                                 "&:hover": {
-                                    boxShadow: 3,
-                                },
-                                "@media (max-width: 475px)": {
-                                    p: "16px 4px",
+                                    boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
                                 },
                             }}
-
-                            onClick={() => navigate("/tickets")}
-                        >
-                            <Typography variant="h6" sx={{
-                                "@media (max-width: 475px)": {
-                                    fontSize: "0.875rem",
-                                },
-                            }}>
-                                معرفی دوستان
-                            </Typography>
-                            <Button color="secondary" variant="contained" size="small"
-                                    sx={{
-                                        minWidth: "25px",
-                                        height: "25px",
-                                        p: 0,
-                                        position: "absolute",
-                                        bottom: "-15px",
-                                        right: "15px",
-                                    }}>
-                                <West fontSize="inherit"/>
-                            </Button>
-                        </Card>
-                    </Grid>
-                    <Grid size={4} sx={{textAlign: "center", position: "relative"}}>
-                        <Card
-                            sx={{
-                                p: 2,
-                                overflow: "visible",
-                                borderRadius: 3,
-                                cursor: "pointer",
-                                transition: "0.2s",
-                                "&:hover": {
-                                    boxShadow: 3,
-                                },
-                                "@media (max-width: 475px)": {
-                                    p: "16px 4px",
-                                },
-                            }}
-
                             onClick={() => navigate("/prices")}
                         >
-                            <Typography variant="h6" sx={{
-                                "@media (max-width: 475px)": {
-                                    fontSize: "0.875rem",
-                                },
-                            }}>
-                                قیمت پسماندها
-                            </Typography>
-                            <Button color="secondary" variant="contained" size="small"
+                            <Stack spacing={1.5} alignItems="center">
+                                <Box
                                     sx={{
-                                        minWidth: "25px",
-                                        height: "25px",
-                                        p: 0,
-                                        position: "absolute",
-                                        bottom: "-15px",
-                                        right: "15px",
-                                    }}>
-                                <West fontSize="inherit"/>
-                            </Button>
+                                        width: 50,
+                                        height: 50,
+                                        borderRadius: "50%",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        background:
+                                            "linear-gradient(90deg, rgb(20, 200, 135) 0%, rgb(15, 160, 105) 100%)",
+                                        color: "#fff",
+                                    }}
+                                >
+                                    <PriceChange />
+                                </Box>
+                                <Typography variant="h6" sx={{ fontSize: "0.9rem" }}>
+                                     پسماندها
+                                </Typography>
+                            </Stack>
                         </Card>
                     </Grid>
-                    <Grid size={4} sx={{textAlign: "center", position: "relative"}}>
+
+                    <Grid size={4} sx={{ textAlign: "center" }}>
                         <Card
                             sx={{
-                                p: 2,
-                                overflow: "visible",
-                                borderRadius: 3,
+                                p: 1.5,
+                                borderRadius: 4,
                                 cursor: "pointer",
+                                backdropFilter: "blur(10px)",
+                                background: "rgba(255,255,255,0.6)",
+                                border: "1px solid rgba(255,255,255,0.3)",
+                                boxShadow: "0 8px 20px rgba(0,0,0,0.05)",
                                 transition: "0.2s",
                                 "&:hover": {
-                                    boxShadow: 3,
-                                },
-                                "@media (max-width: 475px)": {
-                                    p: "16px 4px",
+                                    boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
                                 },
                             }}
-
                             onClick={() => navigate("/shop")}
                         >
-                            <Typography variant="h6" sx={{
-                                "@media (max-width: 475px)": {
-                                    fontSize: "0.875rem",
-                                },
-                            }}>
-                                اینترنت ، شارژ
-                            </Typography>
-                            <Button color="secondary" variant="contained" size="small"
+                            <Stack spacing={1.5} alignItems="center">
+                                <Box
                                     sx={{
-                                        minWidth: "25px",
-                                        height: "25px",
-                                        p: 0,
-                                        position: "absolute",
-                                        bottom: "-15px",
-                                        right: "15px",
-                                    }}>
-                                <West fontSize="inherit"/>
-                            </Button>
+                                        width: 50,
+                                        height: 50,
+                                        borderRadius: "50%",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        background:
+                                            "linear-gradient(90deg, rgb(20, 200, 135) 0%, rgb(15, 160, 105) 100%)",
+                                        color: "#fff",
+                                    }}
+                                >
+                                    <ShoppingCart />
+                                </Box>
+                                <Typography variant="h6" sx={{ fontSize: "0.9rem" }}>
+                                    فروشگاه
+                                </Typography>
+                            </Stack>
                         </Card>
                     </Grid>
-                    <Grid size={4} sx={{textAlign: "center", position: "relative"}}>
+
+                    <Grid size={4} sx={{ textAlign: "center" }}>
                         <Card
                             sx={{
-                                p: 2,
-                                overflow: "visible",
-                                borderRadius: 3,
+                                p: 1.5,
+                                borderRadius: 4,
                                 cursor: "pointer",
+                                backdropFilter: "blur(10px)",
+                                background: "rgba(255,255,255,0.6)",
+                                border: "1px solid rgba(255,255,255,0.3)",
+                                boxShadow: "0 8px 20px rgba(0,0,0,0.05)",
                                 transition: "0.2s",
                                 "&:hover": {
-                                    boxShadow: 3,
-                                },
-                                "@media (max-width: 475px)": {
-                                    p: "16px 4px",
+                                    boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
                                 },
                             }}
-
-                            onClick={() => navigate("/tickets")}
-                        >
-                            <Typography variant="h6" sx={{
-                                "@media (max-width: 475px)": {
-                                    fontSize: "0.875rem",
-                                },
-                            }}>
-                                پشتیبانی زی پاک
-                            </Typography>
-                            <Button color="secondary" variant="contained" size="small"
-                                    sx={{
-                                        minWidth: "25px",
-                                        height: "25px",
-                                        p: 0,
-                                        position: "absolute",
-                                        bottom: "-15px",
-                                        right: "15px",
-                                    }}>
-                                <West fontSize="inherit"/>
-                            </Button>
-                        </Card>
-                    </Grid>
-                    <Grid size={4} sx={{textAlign: "center", position: "relative"}}>
-                        <Card
-                            sx={{
-                                p: 2,
-                                overflow: "visible",
-                                borderRadius: 3,
-                                cursor: "pointer",
-                                transition: "0.2s",
-                                "&:hover": {
-                                    boxShadow: 3,
-                                },
-                                "@media (max-width: 475px)": {
-                                    p: "16px 4px",
-                                },
-                            }}
-
-                            onClick={() => navigate("/profile")}
-                        >
-                            <Typography variant="h6" sx={{
-                                "@media (max-width: 475px)": {
-                                    fontSize: "0.875rem",
-                                },
-                            }}>
-                                پروفایل کاربری
-                            </Typography>
-                            <Button color="secondary" variant="contained" size="small"
-                                    sx={{
-                                        minWidth: "25px",
-                                        height: "25px",
-                                        p: 0,
-                                        position: "absolute",
-                                        bottom: "-15px",
-                                        right: "15px",
-                                    }}>
-                                <West fontSize="inherit"/>
-                            </Button>
-                        </Card>
-                    </Grid>
-                    <Grid size={4} sx={{textAlign: "center", position: "relative"}}>
-                        <Card
-                            sx={{
-                                p: 2,
-                                overflow: "visible",
-                                borderRadius: 3,
-                                cursor: "pointer",
-                                transition: "0.2s",
-                                "&:hover": {
-                                    boxShadow: 3,
-                                },
-                                "@media (max-width: 475px)": {
-                                    p: "16px 4px",
-                                },
-                            }}
-
                             onClick={() => navigate("/requests")}
                         >
-                            <Typography variant="h6" sx={{
-                                "@media (max-width: 475px)": {
-                                    fontSize: "0.875rem",
-                                },
-                            }}>
-                                درخواست‌ها
-                            </Typography>
-                            <Button color="secondary" variant="contained" size="small"
+                            <Stack spacing={1.5} alignItems="center">
+                                <Box
                                     sx={{
-                                        minWidth: "25px",
-                                        height: "25px",
-                                        p: 0,
-                                        position: "absolute",
-                                        bottom: "-15px",
-                                        right: "15px",
-                                    }}>
-                                <West fontSize="inherit"/>
-                            </Button>
+                                        width: 50,
+                                        height: 50,
+                                        borderRadius: "50%",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        background:
+                                            "linear-gradient(90deg, rgb(20, 200, 135) 0%, rgb(15, 160, 105) 100%)",
+                                        color: "#fff",
+                                    }}
+                                >
+                                    <RequestPage />
+                                </Box>
+                                <Typography variant="h6" sx={{ fontSize: "0.9rem" }}>
+                                    درخواست‌ها
+                                </Typography>
+                            </Stack>
+                        </Card>
+                    </Grid>
+
+                    <Grid size={4} sx={{ textAlign: "center" }}>
+                        <Card
+                            sx={{
+                                p: 1.5,
+                                borderRadius: 4,
+                                cursor: "pointer",
+                                backdropFilter: "blur(10px)",
+                                background: "rgba(255,255,255,0.6)",
+                                border: "1px solid rgba(255,255,255,0.3)",
+                                boxShadow: "0 8px 20px rgba(0,0,0,0.05)",
+                                transition: "0.2s",
+                                "&:hover": {
+                                    boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
+                                },
+                            }}
+                            onClick={() => navigate("/tickets")}
+                        >
+                            <Stack spacing={1.5} alignItems="center">
+                                <Box
+                                    sx={{
+                                        width: 50,
+                                        height: 50,
+                                        borderRadius: "50%",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        background:
+                                            "linear-gradient(90deg, rgb(20, 200, 135) 0%, rgb(15, 160, 105) 100%)",
+                                        color: "#fff",
+                                    }}
+                                >
+                                    <People />
+                                </Box>
+                                <Typography variant="h6" sx={{ fontSize: "0.9rem" }}>
+                                    معرفی دوستان
+                                </Typography>
+                            </Stack>
                         </Card>
                     </Grid>
                 </Grid>
             </Box>
+            <Box
+                sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 0,
+                    textAlign: "center"
+                }}>
+                <Box sx={{
+                    width: "50px",
+                    mt: 3,
+                }}>
+                    <img src={recycling}/>
+                </Box>
+                <Typography variant="h6">درخواست فعالی ندارین!</Typography>
+                <Typography variant="body1" sx={{py: 0.25}}>
+                    طبیعت هنوز به شما احتیاج داره، سهم‌ِتون رو ادا کنین
+                </Typography>
+                <Button
+                    variant="contained"
+                    size="large"
+                    sx={{
+                        borderRadius: "300px",
+                        mt: 1.5,
+                        mb: 3,
+                        px: 6,
+                    }}
+                    onClick={() => navigate("/collect")}
+                >
+                    درخواست جمع آوری
+                </Button>
+            </Box>
+
+
         </Box>
     );
 }
