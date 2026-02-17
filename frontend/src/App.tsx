@@ -22,6 +22,7 @@ import Shop from "./pages/Shop";
 import ShopHistory from "./pages/shop/ShopHistory";
 import ShopCharity from "./pages/shop/ShopCharity";
 import ShopInternet from "./pages/shop/ShopInternet";
+import ProtectedRoute from "./components/auth/ProtectedRoute.tsx";
 
 function App() {
     return (
@@ -34,41 +35,44 @@ function App() {
                 <Route
                     path="/*"
                     element={
-                        <>
-                            <Header/>
-                            <Container
-                                sx={{
-                                    height: "100vh",
-                                    py: 12,
-                                    boxShadow: 3,
-                                    overflowY: "scroll",
-                                    scrollbarWidth: "none",
-                                    "&::-webkit-scrollbar": {display: "none"},
-                                }}
-                            >
-                                <Routes>
-                                    <Route path="/" element={<Home/>}/>
-                                    <Route path="/collect" element={<Collect/>}/>
-                                    <Route path="/messages" element={<Messages/>}/>
-                                    <Route path="/profile" element={<Profile/>}/>
-                                    <Route path="/requests" element={<Requests/>}/>
-                                    <Route path="/request/:id" element={<Request/>}/>
-                                    <Route path="/tickets" element={<TicketListPage/>}/>
-                                    <Route path="/tickets/new" element={<TicketAddPage/>}/>
-                                    <Route path="/tickets/:id" element={<TicketViewPage/>}/>
-                                    <Route path="/prices" element={<WastePrices/>}/>
-                                    <Route path="/rule" element={<Rule/>}/>
-                                    <Route path="/privacy" element={<Privacy/>}/>
-                                    <Route path="/shop" element={<Shop/>}/>
-                                    <Route path="/shop/history" element={<ShopHistory/>}/>
-                                    <Route path="/shop/charity" element={<ShopCharity/>}/>
-                                    <Route path="/shop/internet" element={<ShopInternet/>}/>
-                                </Routes>
-                            </Container>
-                            <Footer/>
-                        </>
+                        <ProtectedRoute>
+                            <>
+                                <Header/>
+                                <Container
+                                    sx={{
+                                        height: "100vh",
+                                        py: 12,
+                                        boxShadow: 3,
+                                        overflowY: "scroll",
+                                        scrollbarWidth: "none",
+                                        "&::-webkit-scrollbar": { display: "none" },
+                                    }}
+                                >
+                                    <Routes>
+                                        <Route path="/" element={<Home/>}/>
+                                        <Route path="/collect" element={<Collect/>}/>
+                                        <Route path="/messages" element={<Messages/>}/>
+                                        <Route path="/profile" element={<Profile/>}/>
+                                        <Route path="/requests" element={<Requests/>}/>
+                                        <Route path="/request/:id" element={<Request/>}/>
+                                        <Route path="/tickets" element={<TicketListPage/>}/>
+                                        <Route path="/tickets/new" element={<TicketAddPage/>}/>
+                                        <Route path="/tickets/:id" element={<TicketViewPage/>}/>
+                                        <Route path="/prices" element={<WastePrices/>}/>
+                                        <Route path="/rule" element={<Rule/>}/>
+                                        <Route path="/privacy" element={<Privacy/>}/>
+                                        <Route path="/shop" element={<Shop/>}/>
+                                        <Route path="/shop/history" element={<ShopHistory/>}/>
+                                        <Route path="/shop/charity" element={<ShopCharity/>}/>
+                                        <Route path="/shop/internet" element={<ShopInternet/>}/>
+                                    </Routes>
+                                </Container>
+                                <Footer/>
+                            </>
+                        </ProtectedRoute>
                     }
                 />
+
             </Routes>
         </Router>
     );

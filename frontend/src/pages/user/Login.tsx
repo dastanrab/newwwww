@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import {
     Box,
     TextField,
@@ -10,42 +10,59 @@ import {
     Link,
     Snackbar,
     Alert,
+    CircularProgress,
 } from "@mui/material";
-import logo from "../../assets/logo.png";
 import Dock from "@mui/icons-material/Dock";
-import {Link as RouterLink, useNavigate } from "react-router-dom";
+import logo from "../../assets/logo.png";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+
+import { useAuth } from "../../hooks/useAuth";
+import { useAuthStore } from "../../store/useAuthStore.ts";
 
 const Login: React.FC = () => {
     const [phone, setPhone] = useState("");
     const [acceptedTerms, setAcceptedTerms] = useState(false);
-
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
-    const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error" | "warning" | "info">("error");
+    const [snackbarSeverity, setSnackbarSeverity] =
+        useState<"success" | "error" | "warning" | "info">("error");
 
     const navigate = useNavigate();
+    const { login, loading } = useAuth();
+    const setMob = useAuthStore((state) => state.setMob);
 
-    const handleLogin = () => {
-        if (!acceptedTerms) {
-            setSnackbarMessage("لطفا قوانین و مقررات را قبول کنید.");
-            setSnackbarSeverity("error");
-            setOpenSnackbar(true);
-            return;
-        }
-        if (!/^09\d{9}$/.test(phone)) {
-            setSnackbarMessage("شماره موبایل معتبر نیست.");
-            setSnackbarSeverity("error");
-            setOpenSnackbar(true);
-            return;
-        }
-
-        setSnackbarMessage("ورود موفقیت‌آمیز بود!");
-        setSnackbarSeverity("success");
+    const showSnackbar = (
+        message: string,
+        severity: "success" | "error" | "warning" | "info"
+    ) => {
+        setSnackbarMessage(message);
+        setSnackbarSeverity(severity);
         setOpenSnackbar(true);
+    };
 
-        console.log("شماره موبایل:", phone);
+    const handleLogin = async () => {
+        if (!acceptedTerms) {
+            showSnackbar("لطفا قوانین و مقررات را قبول کنید.", "error");
+            return;
+        }
 
-        navigate("/verify", {state: {phone}});
+        if (!/^09\d{9}$/.test(phone)) {
+            showSnackbar("شماره موبایل معتبر نیست.", "error");
+            return;
+        }
+
+        const response = await login(phone);
+
+        if (response.status === "success") {
+            setMob(phone); // ذخیره موبایل در zustand
+            showSnackbar("کد تایید ارسال شد.", "success");
+
+            setTimeout(() => {
+                navigate("/verify");
+            }, 800);
+        } else {
+            showSnackbar(response.message || "خطا در ورود", "error");
+        }
     };
 
     return (
@@ -58,25 +75,10 @@ const Login: React.FC = () => {
                 justifyContent: "center",
                 px: 3,
                 position: "relative",
-                "&::before": {
-                    content: '""',
-                    width: "250px",
-                    height: "250px",
-                    display: "block",
-                    position: "absolute",
-                    top: "0",
-                    left: "-90px",
-                    background: "linear-gradient(90deg, rgb(20, 200, 135) 0%, rgb(15, 160, 105) 100%)",
-                    opacity: 0.25,
-                    transform: "rotate(45deg)",
-                    borderRadius: "50%",
-                    filter: "blur(90px)",
-                    zIndex: 1,
-                },
             }}
         >
-            <Box sx={{width: "125px", m: "0 auto 15px"}}>
-                <img src={logo}/>
+            <Box sx={{ width: "125px", m: "0 auto 15px" }}>
+                <img src={logo} alt="logo" />
             </Box>
 
             <TextField
@@ -87,7 +89,7 @@ const Login: React.FC = () => {
                 InputProps={{
                     endAdornment: (
                         <InputAdornment position="end">
-                            <Dock/>
+                            <Dock />
                         </InputAdornment>
                     ),
                 }}
@@ -100,14 +102,14 @@ const Login: React.FC = () => {
                         onChange={(e) => setAcceptedTerms(e.target.checked)}
                     />
                 }
-                sx={{mt: 0.5}}
+                sx={{ mt: 0.5 }}
                 label={
                     <Typography variant="body2">
                         تمامی{" "}
                         <Link
                             component={RouterLink}
                             to="/rule"
-                            sx={{color: "primary.main", textDecoration: "none"}}
+                            sx={{ color: "primary.main", textDecoration: "none" }}
                         >
                             قوانین و مقررات
                         </Link>{" "}
@@ -118,21 +120,24 @@ const Login: React.FC = () => {
 
             <Button
                 fullWidth
-                type="button"
                 variant="contained"
                 onClick={handleLogin}
-                sx={{mt: 1.5, py: 1.5, borderRadius: "300px"}}
+                disabled={loading}
+                sx={{ mt: 1.5, py: 1.5, borderRadius: "300px" }}
             >
-                ورود به حساب کاربری
+                {loading ? <CircularProgress size={24} color="inherit" /> : "ورود به حساب کاربری"}
             </Button>
 
             <Snackbar
                 open={openSnackbar}
                 autoHideDuration={3000}
                 onClose={() => setOpenSnackbar(false)}
-                anchorOrigin={{vertical: "bottom", horizontal: "center"}}
+                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
             >
-                <Alert severity={snackbarSeverity} onClose={() => setOpenSnackbar(false)}>
+                <Alert
+                    severity={snackbarSeverity}
+                    onClose={() => setOpenSnackbar(false)}
+                >
                     {snackbarMessage}
                 </Alert>
             </Snackbar>
