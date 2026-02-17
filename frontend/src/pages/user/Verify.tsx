@@ -18,7 +18,7 @@ const Verify: React.FC = () => {
     const navigate = useNavigate();
 
     const { verify, login, loading } = useAuth();
-    const { mob, setAccessToken } = useAuthStore();
+    const { mob, setAccessToken , setSetting } = useAuthStore();
 
     const [code, setCode] = useState<string[]>(Array(5).fill(""));
     const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -105,9 +105,11 @@ const Verify: React.FC = () => {
         if (response.status === "success") {
             console.log(response.data)
             const token = response.data?.accessToken;
+            const setting = response.data?.settings;
 
             if (token) {
                 setAccessToken(token);
+                setSetting(setting)
                 showSnackbar("ورود موفقیت‌آمیز بود", "success");
 
                 setTimeout(() => {
