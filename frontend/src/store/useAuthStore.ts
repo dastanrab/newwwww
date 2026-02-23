@@ -20,7 +20,9 @@ interface AuthState {
     profile: UserProfile | null;
     setting: SettingsData | null;
 
-    setSetting: (setting: SettingsData) => void;
+    setSetting: (
+        setting: SettingsData | ((prev: SettingsData | null) => SettingsData)
+    ) => void;
     setMob: (mob: string) => void;
     setAccessToken: (token: string) => void;
     setProfile: (profile: UserProfile) => void;
@@ -34,7 +36,13 @@ export const useAuthStore = create<AuthState>()(
             profile: null,
             setting: null,
 
-            setSetting: (setting) => set({ setting }),
+            setSetting: (setting) =>
+                set((state) => ({
+                    setting:
+                        typeof setting === "function"
+                            ? setting(state.setting)
+                            : { ...(state.setting ?? {}), ...setting },
+                })),
             setMob: (mob) => set({ mob }),
             setAccessToken: (token) => set({ accessToken: token }),
             setProfile: (profile) => set({ profile }),

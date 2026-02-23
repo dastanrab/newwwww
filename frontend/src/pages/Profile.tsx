@@ -19,7 +19,7 @@ import {
     DialogTitle,
     Avatar,
     IconButton,
-    Skeleton,
+    Skeleton, CircularProgress,
 } from "@mui/material";
 
 import type {SelectChangeEvent} from "@mui/material";
@@ -31,6 +31,7 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import {useAuthStore} from "../store/useAuthStore.ts";
+import {useProfile} from "../hooks/useProfile.ts";
 
 const ProfileSkeleton: React.FC = () => {
     return (
@@ -111,8 +112,7 @@ const ProfileSkeleton: React.FC = () => {
 };
 
 export default function Profile() {
-    const { setting } = useAuthStore();
-    const user = setting?.user;
+
     const [formData, setFormData] = useState({
         userType: "citizen",
         firstName: "",
@@ -129,6 +129,9 @@ export default function Profile() {
     const [open, setOpen] = useState(false);
     const [tempDate, setTempDate] = useState({birthYear: "", birthMonth: "", birthDay: ""});
     const [loading, setLoading] = useState(true);
+    const { updateProfile, loading: apiLoading } = useProfile();
+    const { accessToken,setting, setSetting } = useAuthStore();
+    const user = setting?.user;
 
     useEffect(() => {
         setLoading(true)
@@ -170,11 +173,42 @@ export default function Profile() {
         setTempDate(prev => ({...prev, [name!]: value}));
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        console.log("اطلاعات کاربر:", formData);
-    };
+    const getBirthDate = () => {
+        if (!formData.birthYear || !formData.birthMonth || !formData.birthDay) return undefined;
 
+        // اگر ماه اسمه باید تبدیلش کنی (اینجا ساده گذاشتم)
+        const monthIndex = months.indexOf(formData.birthMonth) + 1;
+
+        return `${formData.birthYear}/${String(monthIndex).padStart(2, "0")}/${String(formData.birthDay).padStart(2, "0")}`;
+    };
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        if (!accessToken) return;
+
+        try {
+            const payload = {
+                firstName: formData.firstName,
+                lastName: formData.lastName,
+                email: formData.email || undefined,
+                gender: formData.gender as "male" | "female",
+                birthDate: getBirthDate(),
+            };
+
+            const res = await updateProfile(accessToken, payload);
+
+            // ✅ آپدیت Zustand
+            if (res.status === "success") {
+                setSetting((prev: any) => ({
+                    ...prev,
+                    user: res.data,
+                }));
+            }
+
+        } catch (err) {
+            console.error(err);
+        }
+    };
     const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             const file = e.target.files[0];
@@ -294,8 +328,14 @@ export default function Profile() {
                     <Grid size={12}>
                         <Box
                             sx={{width: "100%", position: "fixed", bottom: 90, right: 0, left: 0, textAlign: "center"}}>
-                            <Button type="submit" variant="contained" size="large" sx={{borderRadius: "300px", px: 5}}>
-                                ویرایش پروفایل کاربری
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                size="large"
+                                disabled={apiLoading}
+                                sx={{ borderRadius: "300px", px: 5 }}
+                            >
+                                {apiLoading ? <CircularProgress size={12}/> : "ویرایش پروفایل کاربری"}
                             </Button>
                         </Box>
                     </Grid>
