@@ -30,6 +30,7 @@ import GroupAdd from "@mui/icons-material/GroupAdd";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
+import {useAuthStore} from "../store/useAuthStore.ts";
 
 const ProfileSkeleton: React.FC = () => {
     return (
@@ -110,6 +111,8 @@ const ProfileSkeleton: React.FC = () => {
 };
 
 export default function Profile() {
+    const { setting } = useAuthStore();
+    const user = setting?.user;
     const [formData, setFormData] = useState({
         userType: "citizen",
         firstName: "",
@@ -128,9 +131,34 @@ export default function Profile() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const timer = setTimeout(() => setLoading(false), 2000);
-        return () => clearTimeout(timer);
-    }, []);
+        setLoading(true)
+        if (user) {
+            setLoading(false)
+            setFormData(prev => ({
+                ...prev,
+                userType: user.userType || "citizen",
+                firstName: user.firstName || "",
+                lastName: user.lastName || "",
+                gender: user.gender || "male",
+                phone: user.mob || "",
+                email: user.email || "",
+                referralCode: user.referralCode || "",
+                avatar: "", // اگر بعداً از API گرفتی اینجا ست کن
+            }));
+
+            // اگر birthDate داشتی (مثلاً "1375-05-12")
+            if (user.birthDate) {
+                const [year, month, day] = user.birthDate.split("-");
+                setFormData(prev => ({
+                    ...prev,
+                    birthYear: year,
+                    birthMonth: month,
+                    birthDay: day,
+                }));
+            }
+        }
+
+    }, [user]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const {name, value} = e.target;

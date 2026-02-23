@@ -55,7 +55,7 @@ const Header: React.FC = () => {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
-    const {logout } = useAuthStore();
+    const {logout ,setting } = useAuthStore();
 
     const toggleDrawer = (open: boolean) => () => {
         setDrawerOpen(open);
@@ -139,10 +139,12 @@ const Header: React.FC = () => {
                         >
                             <Avatar src={userAvatar} alt="User Avatar"/>
                             <Typography variant="h6" sx={{color: "rgb(255,255,255)"}}>
-                                امیر صابری
+                                {[setting?.user?.firstName, setting?.user?.lastName]
+                                    .filter(Boolean)
+                                    .join(" ") || "-"}
                             </Typography>
                             <Typography variant="body2" sx={{color: "rgb(255,255,255)"}}>
-                                09156200300
+                                {setting?.user?.mob || '-'}
                             </Typography>
                         </ListItem>
                         <Divider sx={{borderColor: "rgba(255,255,255,0.15)"}}/>

@@ -13,6 +13,8 @@ interface ApiResponse<T = any> {
 =========================== */
 
 export interface UserProfile {
+    birthDate: string;
+    referralCode: string;
     id: number;
     firstName: string;
     lastName: string;
