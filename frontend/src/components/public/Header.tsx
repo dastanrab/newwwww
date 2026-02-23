@@ -27,9 +27,11 @@ import LockIcon from "@mui/icons-material/Lock";
 import Timeline from "@mui/icons-material/Timeline";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import CreditCard from "@mui/icons-material/CreditCard";
+import LogoutIcon from "@mui/icons-material/Logout";
 import {useLocation, useNavigate} from "react-router-dom";
 
 import userAvatar from "../../assets/user.png";
+import {useAuthStore} from "../../store/useAuthStore.ts";
 
 const pageTitles: Record<string, string> = {
     "/": "زی پاک",
@@ -53,6 +55,7 @@ const Header: React.FC = () => {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
+    const {logout } = useAuthStore();
 
     const toggleDrawer = (open: boolean) => () => {
         setDrawerOpen(open);
@@ -158,11 +161,23 @@ const Header: React.FC = () => {
                             {text: "قیمت پسماندها", icon: <Timeline/>, path: "/prices"},
                             {text: "پشتیبانی", icon: <SupportAgentIcon/>, path: "/tickets"},
                             {text: "اینترنت ، شارژ", icon: <CreditCard/>, path: "/shop"},
+                            {
+                                text: "خروج",
+                                icon: <LogoutIcon />,
+                                path: "/login",
+                                logout: true,
+                            }
+
                         ].map((item, index) => (
                             <ListItem key={index} disablePadding>
                                 <ListItemButton
                                     onClick={() => {
-                                        navigate(item.path);
+                                        if (item.logout) {
+                                            logout()
+                                            navigate("/login");
+                                        } else {
+                                            navigate(item.path);
+                                        }
                                         setDrawerOpen(false);
                                     }}
                                     sx={{color: "rgb(255,255,255)"}}

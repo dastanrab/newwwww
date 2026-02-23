@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import type { SettingsData } from "../hooks/useSettings.ts";
 
 interface UserProfile {
     id?: number;
@@ -17,9 +18,9 @@ interface AuthState {
     accessToken: string | null;
     mob: string | null;
     profile: UserProfile | null;
-    setting: []
+    setting: SettingsData | null;
 
-    setSetting: (setting: []) =>void;
+    setSetting: (setting: SettingsData) => void;
     setMob: (mob: string) => void;
     setAccessToken: (token: string) => void;
     setProfile: (profile: UserProfile) => void;
@@ -31,7 +32,7 @@ export const useAuthStore = create<AuthState>()(
             accessToken: null,
             mob: null,
             profile: null,
-            setting:[],
+            setting: null,
 
             setSetting: (setting) => set({ setting }),
             setMob: (mob) => set({ mob }),
@@ -42,6 +43,7 @@ export const useAuthStore = create<AuthState>()(
                     accessToken: null,
                     mob: null,
                     profile: null,
+                    setting: null,
                 }),
         }),
         {

@@ -23,8 +23,25 @@ import ShopHistory from "./pages/shop/ShopHistory";
 import ShopCharity from "./pages/shop/ShopCharity";
 import ShopInternet from "./pages/shop/ShopInternet";
 import ProtectedRoute from "./components/auth/ProtectedRoute.tsx";
+import {useInitApp} from "./hooks/useInitApp.ts";
+import { Box, CircularProgress } from "@mui/material";
 
 function App() {
+    const { loading } = useInitApp();
+    if (loading) {
+        return (
+            <Box
+                sx={{
+                    height: "100vh",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                }}
+            >
+                <CircularProgress size={50} />
+            </Box>
+        );
+    }
     return (
         <Router>
             <Routes>
