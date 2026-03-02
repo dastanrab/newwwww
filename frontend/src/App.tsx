@@ -8,6 +8,7 @@ import Header from "./components/public/Header";
 import Footer from "./components/public/Footer";
 import Home from "./pages/Home";
 import Collect from "./pages/Collect";
+import CollectSchedule from "./pages/CollectSchedule";
 import Messages from "./pages/Messages";
 import Profile from "./pages/Profile";
 import TicketListPage from "./pages/tickets/TicketList";
@@ -68,6 +69,7 @@ function App() {
                                     <Routes>
                                         <Route path="/" element={<Home/>}/>
                                         <Route path="/collect" element={<Collect/>}/>
+                                        <Route path="/collect/schedule" element={<CollectSchedule/>}/>
                                         <Route path="/messages" element={<Messages/>}/>
                                         <Route path="/profile" element={<Profile/>}/>
                                         <Route path="/requests" element={<Requests/>}/>

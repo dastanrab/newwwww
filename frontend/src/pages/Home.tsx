@@ -1,5 +1,5 @@
 import {Grid, Card, Box, Typography, Stack, Button} from "@mui/material";
-import { ShoppingCart, RequestPage, PriceChange, People } from "@mui/icons-material";
+import {ShoppingCart, RequestPage, PriceChange, People} from "@mui/icons-material";
 import {Swiper, SwiperSlide} from "swiper/react";
 import 'swiper/swiper-bundle.css';
 import slide1 from "../assets/slide1.png";
@@ -17,48 +17,38 @@ export default function Home() {
     const navigate = useNavigate();
 
     return (
-        <Box className="zo-page" >
+        <Box className="zo-page">
             <Swiper
                 spaceBetween={-12}
                 slidesPerView={1.15}
                 centeredSlides
                 loop
-                pagination={{ clickable: true }}
-                style={{
-                    paddingTop: 8,
-                    paddingBottom: 12,
-                }}
+                pagination={{clickable: true}}
             >
                 {[slide1, slide2, slide3, slide1, slide2, slide3].map((img, i) => (
                     <SwiperSlide key={i}>
                         <Box
                             sx={{
-                                height: { xs: 150, sm: 180 },
+                                height: {xs: 175, sm: 200},
+                                mb: 1,
+                                overflow: 'hidden',
                                 borderRadius: 3,
-                                overflow: "hidden",
-                                boxShadow: "0 6px 15px rgba(0,0,0,0.08)",
+                                boxShadow: '0 5px 15px rgba(0,0,0,0.075)',
                             }}
                         >
                             <img
                                 src={img}
                                 alt=""
-                                style={{
-                                    width: "100%",
-                                    height: "100%",
-                                    objectFit: "cover",
-                                }}
+                                style={{width: '100%', height: '100%', objectFit: 'cover'}}
                             />
                         </Box>
                     </SwiperSlide>
                 ))}
             </Swiper>
-            <Box sx={{mb: 3}}>
+            <Box sx={{my: 1.5}}>
                 <Grid container spacing={2}>
-                    <Grid size={4} sx={{textAlign: "center"}}>
-                        <Box sx={{
-                            width: "35px",
-                            m: "auto"
-                        }}>
+                    <Grid size={4} sx={{textAlign: 'center'}}>
+                        <Box sx={{width: '35px', m: 'auto'}}>
                             <img src={leaf}/>
                         </Box>
                         <Typography variant="body1" sx={{mb: 0.75}}>درخواست‌ها</Typography>
@@ -66,11 +56,8 @@ export default function Home() {
                             12
                         </Typography>
                     </Grid>
-                    <Grid size={4} sx={{textAlign: "center"}}>
-                        <Box sx={{
-                            width: "35px",
-                            m: "auto"
-                        }}>
+                    <Grid size={4} sx={{textAlign: 'center'}}>
+                        <Box sx={{width: '35px', m: 'auto'}}>
                             <img src={credit_card}/>
                         </Box>
                         <Typography variant="body1" sx={{mt: -0.5, mb: 0.75}}>درآمد</Typography>
@@ -81,198 +68,146 @@ export default function Home() {
                             </Typography>
                         </Typography>
                     </Grid>
-                    <Grid size={4} sx={{textAlign: "center"}}>
-                        <Box sx={{
-                            width: "35px",
-                            m: "auto"
-                        }}>
+                    <Grid size={4} sx={{textAlign: 'center'}}>
+                        <Box sx={{width: '35px', m: 'auto'}}>
                             <img src={box}/>
                         </Box>
                         <Typography variant="body1" sx={{mb: 0.75}}>پسماندها</Typography>
                         <Typography variant="h1" sx={{fontSize: "1.25rem"}}>
                             0.6
-                            <Typography component="span"
-                                        sx={{pl: .25, fontSize: "0.90rem", fontWeight: 400}}>تن</Typography>
+                            <Typography component="span" sx={{pl: .25, fontSize: "0.90rem", fontWeight: 400}}>
+                                تن
+                            </Typography>
                         </Typography>
                     </Grid>
                 </Grid>
             </Box>
-            <Box >
-                <Grid container spacing={2}>
-                    <Grid size={4} sx={{ textAlign: "center" }}>
-                        <Card
-                            sx={{
-                                p: 1.5,
-                                borderRadius: 4,
-                                cursor: "pointer",
-                                backdropFilter: "blur(10px)",
-                                background: "rgba(255,255,255,0.6)",
-                                border: "1px solid rgba(255,255,255,0.3)",
-                                boxShadow: "0 8px 20px rgba(0,0,0,0.05)",
-                                transition: "0.2s",
-                                "&:hover": {
-                                    boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
-                                },
-                            }}
-                            onClick={() => navigate("/prices")}
-                        >
-                            <Stack spacing={1.5} alignItems="center">
-                                <Box
-                                    sx={{
-                                        width: 50,
-                                        height: 50,
-                                        borderRadius: "50%",
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                        background:
-                                            "linear-gradient(90deg, rgb(20, 200, 135) 0%, rgb(15, 160, 105) 100%)",
-                                        color: "#fff",
-                                    }}
-                                >
-                                    <PriceChange />
-                                </Box>
-                                <Typography variant="h6" sx={{ fontSize: "0.9rem" }}>
-                                     پسماندها
-                                </Typography>
-                            </Stack>
-                        </Card>
-                    </Grid>
-
-                    <Grid size={4} sx={{ textAlign: "center" }}>
-                        <Card
-                            sx={{
-                                p: 1.5,
-                                borderRadius: 4,
-                                cursor: "pointer",
-                                backdropFilter: "blur(10px)",
-                                background: "rgba(255,255,255,0.6)",
-                                border: "1px solid rgba(255,255,255,0.3)",
-                                boxShadow: "0 8px 20px rgba(0,0,0,0.05)",
-                                transition: "0.2s",
-                                "&:hover": {
-                                    boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
-                                },
-                            }}
-                            onClick={() => navigate("/shop")}
-                        >
-                            <Stack spacing={1.5} alignItems="center">
-                                <Box
-                                    sx={{
-                                        width: 50,
-                                        height: 50,
-                                        borderRadius: "50%",
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                        background:
-                                            "linear-gradient(90deg, rgb(20, 200, 135) 0%, rgb(15, 160, 105) 100%)",
-                                        color: "#fff",
-                                    }}
-                                >
-                                    <ShoppingCart />
-                                </Box>
-                                <Typography variant="h6" sx={{ fontSize: "0.9rem" }}>
-                                    فروشگاه
-                                </Typography>
-                            </Stack>
-                        </Card>
-                    </Grid>
-
-                    <Grid size={4} sx={{ textAlign: "center" }}>
-                        <Card
-                            sx={{
-                                p: 1.5,
-                                borderRadius: 4,
-                                cursor: "pointer",
-                                backdropFilter: "blur(10px)",
-                                background: "rgba(255,255,255,0.6)",
-                                border: "1px solid rgba(255,255,255,0.3)",
-                                boxShadow: "0 8px 20px rgba(0,0,0,0.05)",
-                                transition: "0.2s",
-                                "&:hover": {
-                                    boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
-                                },
-                            }}
-                            onClick={() => navigate("/requests")}
-                        >
-                            <Stack spacing={1.5} alignItems="center">
-                                <Box
-                                    sx={{
-                                        width: 50,
-                                        height: 50,
-                                        borderRadius: "50%",
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                        background:
-                                            "linear-gradient(90deg, rgb(20, 200, 135) 0%, rgb(15, 160, 105) 100%)",
-                                        color: "#fff",
-                                    }}
-                                >
-                                    <RequestPage />
-                                </Box>
-                                <Typography variant="h6" sx={{ fontSize: "0.9rem" }}>
-                                    درخواست‌ها
-                                </Typography>
-                            </Stack>
-                        </Card>
-                    </Grid>
-
-                    <Grid size={4} sx={{ textAlign: "center" }}>
-                        <Card
-                            sx={{
-                                p: 1.5,
-                                borderRadius: 4,
-                                cursor: "pointer",
-                                backdropFilter: "blur(10px)",
-                                background: "rgba(255,255,255,0.6)",
-                                border: "1px solid rgba(255,255,255,0.3)",
-                                boxShadow: "0 8px 20px rgba(0,0,0,0.05)",
-                                transition: "0.2s",
-                                "&:hover": {
-                                    boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
-                                },
-                            }}
-                            onClick={() => navigate("/tickets")}
-                        >
-                            <Stack spacing={1.5} alignItems="center">
-                                <Box
-                                    sx={{
-                                        width: 50,
-                                        height: 50,
-                                        borderRadius: "50%",
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                        background:
-                                            "linear-gradient(90deg, rgb(20, 200, 135) 0%, rgb(15, 160, 105) 100%)",
-                                        color: "#fff",
-                                    }}
-                                >
-                                    <People />
-                                </Box>
-                                <Typography variant="h6" sx={{ fontSize: "0.9rem" }}>
-                                    معرفی دوستان
-                                </Typography>
-                            </Stack>
-                        </Card>
-                    </Grid>
+            <Grid container spacing={2} sx={{my: 3}}>
+                <Grid size={4}>
+                    <Card
+                        sx={{
+                            p: 1.5,
+                            background: 'rgba(255, 255, 255)',
+                            border: '1px solid rgba(255,255,255,0.25)',
+                            borderRadius: 4,
+                            boxShadow: '0 10px 20px rgba(0,0,0,0.05)',
+                            cursor: 'pointer',
+                            backdropFilter: 'blur(10px)',
+                            transition: "0.25s",
+                            '&:hover': {
+                                boxShadow: '0 10px 25px rgba(0,0,0,0.25)',
+                            },
+                        }}
+                        onClick={() => navigate("/prices")}
+                    >
+                        <Stack spacing={1.5} alignItems="center">
+                            <Box
+                                sx={{
+                                    width: 50,
+                                    height: 50,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    background: 'linear-gradient(90deg, rgb(20, 200, 135) 0%, rgb(15, 160, 105) 100%)',
+                                    color: 'rgb(255, 255, 255)',
+                                    borderRadius: '50%',
+                                }}
+                            >
+                                <PriceChange/>
+                            </Box>
+                            <Typography variant="h6" sx={{fontSize: '0.90rem'}}>
+                                پسماندها
+                            </Typography>
+                        </Stack>
+                    </Card>
                 </Grid>
-            </Box>
+                <Grid size={4}>
+                    <Card
+                        sx={{
+                            p: 1.5,
+                            background: 'rgba(255, 255, 255)',
+                            border: '1px solid rgba(255,255,255,0.25)',
+                            borderRadius: 4,
+                            boxShadow: '0 10px 20px rgba(0,0,0,0.05)',
+                            cursor: 'pointer',
+                            backdropFilter: 'blur(10px)',
+                            transition: "0.25s",
+                            '&:hover': {
+                                boxShadow: '0 10px 25px rgba(0,0,0,0.25)',
+                            },
+                        }}
+                        onClick={() => navigate("/shop")}
+                    >
+                        <Stack spacing={1.5} alignItems="center">
+                            <Box
+                                sx={{
+                                    width: 50,
+                                    height: 50,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    background: 'linear-gradient(90deg, rgb(20, 200, 135) 0%, rgb(15, 160, 105) 100%)',
+                                    color: 'rgb(255, 255, 255)',
+                                    borderRadius: '50%',
+                                }}
+                            >
+                                <ShoppingCart/>
+                            </Box>
+                            <Typography variant="h6" sx={{fontSize: '0.90rem'}}>
+                                اینترنت ، شارژ
+                            </Typography>
+                        </Stack>
+                    </Card>
+                </Grid>
+                <Grid size={4}>
+                    <Card
+                        sx={{
+                            p: 1.5,
+                            background: 'rgba(255, 255, 255)',
+                            border: '1px solid rgba(255,255,255,0.25)',
+                            borderRadius: 4,
+                            boxShadow: '0 10px 20px rgba(0,0,0,0.05)',
+                            cursor: 'pointer',
+                            backdropFilter: 'blur(10px)',
+                            transition: "0.25s",
+                            '&:hover': {
+                                boxShadow: '0 10px 25px rgba(0,0,0,0.25)',
+                            },
+                        }}
+                        onClick={() => navigate("/requests")}
+                    >
+                        <Stack spacing={1.5} alignItems="center">
+                            <Box
+                                sx={{
+                                    width: 50,
+                                    height: 50,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    background: 'linear-gradient(90deg, rgb(20, 200, 135) 0%, rgb(15, 160, 105) 100%)',
+                                    color: 'rgb(255, 255, 255)',
+                                    borderRadius: '50%',
+                                }}
+                            >
+                                <RequestPage/>
+                            </Box>
+                            <Typography variant="h6" sx={{fontSize: '0.90rem'}}>
+                                درخواست‌ها
+                            </Typography>
+                        </Stack>
+                    </Card>
+                </Grid>
+            </Grid>
             <Box
                 sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
+                    display: 'flex',
+                    alignItems: 'center',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
                     gap: 0,
-                    textAlign: "center"
+                    textAlign: 'center'
                 }}>
-                <Box sx={{
-                    width: "50px",
-                    mt: 3,
-                }}>
+                <Box sx={{width: '50px'}}>
                     <img src={recycling}/>
                 </Box>
                 <Typography variant="h6">درخواست فعالی ندارین!</Typography>
@@ -293,8 +228,6 @@ export default function Home() {
                     درخواست جمع آوری
                 </Button>
             </Box>
-
-
         </Box>
     );
 }
