@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const BASE_URL = "http://185.255.88.111/api/user";
+const BASE_URL = "http://185.255.88.111:8000/api/user";
 
 interface ApiResponse<T = any> {
     status: "success" | "error";
@@ -70,6 +70,9 @@ export const useTicket = () => {
     const getTickets = (token: string) => {
         return request("/tickets", "GET", undefined, token);
     };
+    const getMessages = (token: string) => {
+        return request("/messages", "GET", undefined, token);
+    };
 
     // جزئیات یک تیکت
     const getTicketDetail = (id: number | string, token: string) => {
@@ -88,6 +91,7 @@ export const useTicket = () => {
     return {
         createTicket,
         getTickets,
+        getMessages,
         getTicketDetail,
         replyTicket,
         loading,

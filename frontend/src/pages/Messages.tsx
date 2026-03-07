@@ -1,92 +1,55 @@
-import React, {useState, useEffect} from "react";
-import {Card, CardContent, Typography, Grid, Box, Skeleton} from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Card, CardContent, Typography, Grid, Box, Skeleton } from "@mui/material";
+import { useTicket } from "../hooks/useTicket"; // مسیر درست هوک
 
-interface Message {
-    id: number;
-    title: string;
-    date: string;
-    content: string;
-}
+const MessageSkeleton: React.FC = () => (
+    <Card sx={{ borderRadius: 3, boxShadow: 3 }}>
+        <CardContent>
+            <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
+                <Skeleton variant="text" width={120} height={30} animation="wave" />
+                <Skeleton variant="text" width={60} height={20} animation="wave" />
+            </Box>
+            <Box sx={{ mt: 1 }}>
+                <Skeleton variant="text" width="100%" height={20} animation="wave" />
+                <Skeleton variant="text" width="90%" height={20} animation="wave" />
+                <Skeleton variant="text" width="80%" height={20} animation="wave" />
+            </Box>
+        </CardContent>
+    </Card>
+);
 
-const messages: Message[] = [
-    {
-        id: 1,
-        title: "خرید پسماند",
-        date: "2025-09-22",
-        content: `کارتن تا 9,108😳😱
-پسماند های شمارو با بالاترین قیمت خریداریم.🤑
-پس همین الان درخواستتو ثبت کن و منتظرمون باش😉
-☎️05138722223
-زی پاک، همیار محیط زیست♻️`,
-    },
-    {
-        id: 2,
-        title: "بالاترین قیمت",
-        date: "2025-09-21",
-        content: `کارتن تا  7,520؟😳😱
-پسماند های شمارو با بالاترین قیمت خریداریم.🤑
-پس همین الان درخواستتو ثبت کن و منتظرمون باش😉
-☎️05138766666
-♻️زی پاک، همیار محیط زیست♻️`,
-    },
-    {
-        id: 3,
-        title: "خرید پسماند",
-        date: "2025-09-22",
-        content: `کارتن تا 9,108😳😱
-پسماند های شمارو با بالاترین قیمت خریداریم.🤑
-پس همین الان درخواستتو ثبت کن و منتظرمون باش😉
-☎️05138722223
-زی پاک، همیار محیط زیست♻️`,
-    },
-    {
-        id: 4,
-        title: "بالاترین قیمت",
-        date: "2025-09-21",
-        content: `کارتن تا  7,520؟😳😱
-پسماند های شمارو با بالاترین قیمت خریداریم.🤑
-پس همین الان درخواستتو ثبت کن و منتظرمون باش😉
-☎️05138766666
-♻️زی پاک، همیار محیط زیست♻️`,
-    },
-];
-
-const MessageSkeleton: React.FC = () => {
-    return (
-        <Card sx={{borderRadius: 3, boxShadow: 3}}>
-            <CardContent>
-                <Box sx={{display: "flex", justifyContent: "space-between", mb: 1}}>
-                    <Skeleton variant="text" width={120} height={30} animation="wave"/>
-                    <Skeleton variant="text" width={60} height={20} animation="wave"/>
-                </Box>
-                <Box sx={{mt: 1}}>
-                    <Skeleton variant="text" width="100%" height={20} animation="wave"/>
-                    <Skeleton variant="text" width="90%" height={20} animation="wave"/>
-                    <Skeleton variant="text" width="80%" height={20} animation="wave"/>
-                </Box>
-            </CardContent>
-        </Card>
-    );
-};
-
-const Messages: React.FC = () => {
+const Messages: React.FC<{ token: string }> = ({ token }) => {
+    const { getMessages } = useTicket();
+    const [messages, setMessages] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const timer = setTimeout(() => setLoading(false), 2000);
-        return () => clearTimeout(timer);
-    }, []);
+        const fetchMessages = async () => {
+            setLoading(true);
+            const res = await getMessages(token);
+            if (res.status === "success") {
+                // @ts-ignore
+                setMessages(res.data.list);
+            }
+            setLoading(false);
+        };
+
+        fetchMessages();
+    }, [getMessages, token]);
+
 
     return (
         <Grid container spacing={2}>
             {loading
-                ? Array.from({length: 4}).map((_, index) => (
-                    <Grid size={12} key={index}>
-                        <MessageSkeleton/>
+                ? Array.from({ length: 4 }).map((_, index) => (
+                    // @ts-ignore
+                    <Grid item xs={12} key={index}>
+                        <MessageSkeleton />
                     </Grid>
                 ))
-                : messages.map((msg) => (
-                    <Grid size={12} key={msg.id}>
+                : messages.map((msg, index) => (
+                    // @ts-ignore
+                    <Grid item xs={12} key={index}>
                         <Card sx={{
                             borderRadius: 3,
                             boxShadow: 3,
@@ -106,22 +69,21 @@ const Messages: React.FC = () => {
                                 filter: "blur(90px)",
                                 zIndex: 1,
                             },
-                        }}
-                        >
+                        }}>
                             <CardContent>
-                                <Box sx={{display: "flex", justifyContent: "space-between"}}>
+                                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                                     <Typography variant="h6" gutterBottom>{msg.title}</Typography>
-                                    <Typography variant="caption" color="textSecondary" display="block"
-                                                gutterBottom>{msg.date}</Typography>
+                                    <Typography variant="caption" color="textSecondary" display="block" gutterBottom>
+                                        {msg.date}
+                                    </Typography>
                                 </Box>
-                                <Typography variant="body1" style={{whiteSpace: "pre-line"}}>
-                                    {msg.content}
+                                <Typography variant="body1" style={{ whiteSpace: "pre-line" }}>
+                                    {msg.message}
                                 </Typography>
                             </CardContent>
                         </Card>
-                    ))
-                </Grid>
-            ))}
+                    </Grid>
+                ))}
         </Grid>
     );
 };

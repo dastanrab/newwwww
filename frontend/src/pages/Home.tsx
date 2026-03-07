@@ -259,7 +259,7 @@ export default function Home() {
                                 <ShoppingCart/>
                             </Box>
                             <Typography variant="h6" sx={{fontSize: '0.90rem'}}>
-                                اینترنت ، شارژ
+                                فروشگاه
                             </Typography>
                         </Stack>
                     </Card>
