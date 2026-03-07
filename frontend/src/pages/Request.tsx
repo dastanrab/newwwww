@@ -13,6 +13,8 @@ import AllInbox from '@mui/icons-material/AllInbox';
 import Portrait from '@mui/icons-material/Portrait';
 import Recycling from '@mui/icons-material/Recycling';
 import {useParams} from "react-router-dom";
+import {useRequest} from "../hooks/useRequest.ts";
+import {useAuthStore} from "../store/useAuthStore.ts";
 const itemStyle = {
     px: 0,
     py: 0.5,
@@ -53,17 +55,86 @@ const SkeletonCard = () => (
         </CardContent>
     </Card>
 );
+type RequestType = {
+    id: number
+    amount: number
+    weight: number
 
+    requestDate: {
+        day: string
+        range: string
+    }
+
+    collectedDate: {
+        day: string
+        time: string
+    }
+
+    status: {
+        label: string
+        value: number
+    }
+
+    customer: {
+        name: string
+        mob: string
+        address: string
+        location: {
+            lat: number
+            lng: number
+        }
+    }
+
+    driver: {
+        name: string
+        mob: string
+        avatar: string
+        plaque: {
+            part1: number
+            part2: string
+            part3: number
+            part4: number
+        }
+    }
+
+    wasteItems: {
+        id: number
+        title: string
+        weight: string
+        amount: string
+        image: string
+    }[]
+}
 export default function Request() {
     const [loading, setLoading] = useState(true);
     const {id} = useParams();
+    const [request, setRequest] = useState<RequestType | null>(null);
+    const {  getDetail } = useRequest();
 
 
+    const {accessToken} = useAuthStore();
+    const getRequest = async () => {
+        if (!accessToken || !id) {
+            setLoading(false);
+            return;
+        }
+
+        try {
+            const res = await getDetail(id,accessToken);
+            // @ts-ignore
+            const response=res.data
+            // @ts-ignore
+            setRequest(response)
+        } catch (error: any) {
+
+        } finally {
+            setLoading(false);
+        }
+    };
     useEffect(() => {
-        console.log('id is ',id);
-        const timer = setTimeout(() => setLoading(false), 2000);
-        return () => clearTimeout(timer);
-    }, []);
+        getRequest()
+    }, [accessToken]);
+    console.log('request',request)
 
     return (
         <Box>
@@ -77,36 +148,50 @@ export default function Request() {
                         <List sx={{p: 0}}>
                             <ListItem sx={itemStyle}>
                                 <Typography>شماره درخواست</Typography>
-                                <Typography><strong>101</strong></Typography>
+                                <Typography><strong>{request?.id ?? '-'}</strong></Typography>
                             </ListItem>
+
                             <Divider sx={dividerStyle}/>
+
                             <ListItem sx={itemStyle}>
                                 <Typography>تاریخ</Typography>
-                                <Typography>1404/06/20</Typography>
+                                <Typography>{request?.requestDate?.day ?? '-'}</Typography>
                             </ListItem>
+
                             <Divider sx={dividerStyle}/>
+
                             <ListItem sx={itemStyle}>
                                 <Typography>سفیر</Typography>
-                                <Typography>علی رضایی</Typography>
+                                <Typography>{request?.driver?.name ?? '-'}</Typography>
                             </ListItem>
+
                             <Divider sx={dividerStyle}/>
+
                             <ListItem sx={itemStyle}>
                                 <Typography>وزن</Typography>
-                                <Typography component="span"><strong>12</strong>
+                                <Typography component="span">
+                                    <strong>{request?.weight ?? '-'}</strong>
                                     <Box component="small" sx={{pl: 0.5}}>کیلوگرم</Box>
                                 </Typography>
                             </ListItem>
+
                             <Divider sx={dividerStyle}/>
+
                             <ListItem sx={itemStyle}>
                                 <Typography>مبلغ</Typography>
-                                <Typography component="span"><strong>۸۵٬۰۰۰</strong>
+                                <Typography component="span">
+                                    <strong>{request?.amount?.toLocaleString()}</strong>
                                     <Box component="small" sx={{pl: 0.5}}>تومان</Box>
                                 </Typography>
                             </ListItem>
+
                             <Divider sx={dividerStyle}/>
+
                             <ListItem sx={itemStyle}>
                                 <Typography>پلاک خودرو</Typography>
-                                <Typography>ایران 85 - 371 ط 43</Typography>
+                                <Typography>
+                                    ایران {request?.driver?.plaque?.part4} - {request?.driver?.plaque?.part3} {request?.driver?.plaque?.part2} {request?.driver?.plaque?.part1}
+                                </Typography>
                             </ListItem>
                         </List>
                     </CardContent>
@@ -120,69 +205,58 @@ export default function Request() {
             {loading ? <SkeletonCard/> : (
                 <Card sx={{width: "100%", mb: 3, borderRadius: 3, boxShadow: 3}}>
                     <CardContent>
-                        <List sx={{p: 0}}>
-                            <ListItem sx={itemStyle}>
-                                <Typography>نام مشتری</Typography>
-                                <Typography>علی مظلوم</Typography>
-                            </ListItem>
-                            <Divider sx={dividerStyle}/>
-                            <ListItem sx={itemStyle}>
-                                <Typography>شماره موبایل</Typography>
-                                <Typography>09332775003</Typography>
-                            </ListItem>
-                            <Divider sx={dividerStyle}/>
-                            <ListItem sx={itemStyle}>
-                                <Typography>آدرس</Typography>
-                                <Typography>سناباد 21 پلاک 40 زنگ 1</Typography>
-                            </ListItem>
-                        </List>
+                        <ListItem sx={itemStyle}>
+                            <Typography>نام مشتری</Typography>
+                            <Typography>{request?.customer?.name}</Typography>
+                        </ListItem>
+
+                        <Divider sx={dividerStyle}/>
+
+                        <ListItem sx={itemStyle}>
+                            <Typography>شماره موبایل</Typography>
+                            <Typography>{request?.customer?.mob}</Typography>
+                        </ListItem>
+
+                        <Divider sx={dividerStyle}/>
+
+                        <ListItem sx={itemStyle}>
+                            <Typography>آدرس</Typography>
+                            <Typography>{request?.customer?.address}</Typography>
+                        </ListItem>
                     </CardContent>
                 </Card>
             )}
 
-            <Box sx={{display: "flex", alignItems: "center", gap: 1, mb: 1.5}}>
+            {request?.wasteItems ? <><Box sx={{display: "flex", alignItems: "center", gap: 1, mb: 1.5}}>
                 <Recycling/>
                 <Typography variant="h6">اطلاعات ضایعات</Typography>
             </Box>
-            {loading ? <SkeletonCard/> : (
-                <Card sx={{width: "100%", borderRadius: 3, boxShadow: 3}}>
-                    <CardContent>
-                        <List sx={{p: 0}}>
-                            <ListItem sx={itemStyle}>
-                                <Typography>ضایعات مخلوط 6 <small>کیلوگرم</small></Typography>
-                                <Typography component="span">
-                                    <strong>176٬250</strong>
-                                    <Box component="small" sx={{pl: 0.5}}>تومان</Box>
-                                </Typography>
-                            </ListItem>
-                            <Divider sx={dividerStyle}/>
-                            <ListItem sx={itemStyle}>
-                                <Typography>شیشه 6 <small>کیلوگرم</small></Typography>
-                                <Typography component="span">
-                                    <strong>85٬129</strong>
-                                    <Box component="small" sx={{pl: 0.5}}>تومان</Box>
-                                </Typography>
-                            </ListItem>
-                            <Divider sx={dividerStyle}/>
-                            <ListItem sx={itemStyle}>
-                                <Typography>مس 12 <small>کیلوگرم</small></Typography>
-                                <Typography component="span">
-                                    <strong>197٬376</strong>
-                                    <Box component="small" sx={{pl: 0.5}}>تومان</Box>
-                                </Typography>
-                            </ListItem>
-                            <Divider sx={dividerStyle}/>
-                            <ListItem sx={itemStyle}>
-                                <Typography>آهن و چدن 9 <small>کیلوگرم</small></Typography>
-                                <Typography component="span">
-                                    <strong>76٬450</strong>
-                                    <Box component="small" sx={{pl: 0.5}}>تومان</Box>
-                                </Typography>
-                            </ListItem>
-                        </List>
-                    </CardContent>
-                </Card>
-            )}
+                {loading ? <SkeletonCard/> : (
+                    <Card sx={{width: "100%", borderRadius: 3, boxShadow: 3}}>
+                        <CardContent>
+                            <List sx={{p: 0}}>
+                                {request?.wasteItems?.map((item, index) => (
+                                    <Box key={item.id}>
+                                        <ListItem sx={itemStyle}>
+                                            <Typography>
+                                                {item.title} <small>{item.weight}</small>
+                                            </Typography>
+
+                                            <Typography component="span">
+                                                <strong>{item.amount}</strong>
+                                            </Typography>
+                                        </ListItem>
+
+                                        {index !== request.wasteItems.length - 1 && (
+                                            <Divider sx={dividerStyle}/>
+                                        )}
+                                    </Box>
+                                ))}
+                            </List>
+                        </CardContent>
+                    </Card>
+                )}</>: null }
+
         </Box>
     );
 }

@@ -26,6 +26,7 @@ import ShopInternet from "./pages/shop/ShopInternet";
 import ProtectedRoute from "./components/auth/ProtectedRoute.tsx";
 import {useInitApp} from "./hooks/useInitApp.ts";
 import { Box, CircularProgress } from "@mui/material";
+import WalletTransactionsPage from "./pages/WalletTransactionsPage.tsx";
 
 function App() {
     const { loading } = useInitApp();
@@ -84,6 +85,7 @@ function App() {
                                         <Route path="/shop/history" element={<ShopHistory/>}/>
                                         <Route path="/shop/charity" element={<ShopCharity/>}/>
                                         <Route path="/shop/internet" element={<ShopInternet/>}/>
+                                        <Route path="/wallet" element={<WalletTransactionsPage/>}/>
                                     </Routes>
                                 </Container>
                                 <Footer/>

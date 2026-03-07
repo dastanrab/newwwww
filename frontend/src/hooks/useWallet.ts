@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const BASE_URL = "http://185.255.88.111:8000/api/user";
+const BASE_URL = "http://185.255.88.111:8000/api/user/wallet";
 
 interface ApiResponse<T = any> {
     status: "success" | "error";
@@ -8,15 +8,15 @@ interface ApiResponse<T = any> {
     data: T;
 }
 
-export const useAddress = () => {
+export const useWallet = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     const request = async <T>(
         endpoint: string,
-        method: "GET" | "POST" | "DELETE" = "GET",
+        method: "GET" | "POST" | "PUT" = "GET",
         body?: any,
-        token?: string | null
+        token?: string
     ): Promise<ApiResponse<T>> => {
         setLoading(true);
         setError(null);
@@ -52,43 +52,20 @@ export const useAddress = () => {
     };
 
     /* ===========================
-          Address Methods
+          Ticket Methods
     ============================ */
 
-    // گرفتن لیست آدرس‌ها
-    const getAddresses = (token: string | null) => {
-        return request("/addresses", "GET", undefined, token);
+
+
+    // لیست تراکنش ها
+    const getTransactions = (token: string) => {
+        return request("/transactions", "GET", undefined, token);
     };
 
-    // ثبت آدرس جدید
-    const createAddress = (
-        token: string,
-        payload: {
-            title: string;
-            address: string;
-            lat: number;
-            lng: number;
-            isFavorite?: boolean;
-        }
-    ) => {
-        return request("/address", "POST", payload, token);
-    };
 
-    // حذف آدرس
-    const deleteAddress = (token: string, addressId: number | string) => {
-        return request(`/address/${addressId}`, "DELETE", undefined, token);
-    };
-
-    // جستجوی آدرس
-    const searchAddress = (token: string, query: string) => {
-        return request("/search", "POST", { address: query }, token);
-    };
 
     return {
-        getAddresses,
-        createAddress,
-        deleteAddress,
-        searchAddress,
+        getTransactions,
         loading,
         error,
     };

@@ -12,46 +12,20 @@ import {
     Divider,
     Skeleton,
 } from "@mui/material";
+import {useRequest} from "../hooks/useRequest.ts";
+import {useAuthStore} from "../store/useAuthStore.ts";
 
-interface Request {
-    id: number;
-    status: "جمع آوری" | "لغو کاربر" | "لغو اپراتور";
-    status_color: "primary" | "error" | "warning";
-    date: string;
-    ambassador: string;
-    weight: number;
-    amount: number;
-}
+// interface Request {
+//     id: number;
+//     status: "جمع آوری" | "لغو کاربر" | "لغو اپراتور";
+//     status_color: "primary" | "error" | "warning";
+//     date: string;
+//     ambassador: string;
+//     weight: number;
+//     amount: number;
+// }
 
-const requests: Request[] = [
-    {
-        id: 101,
-        status: "جمع آوری",
-        status_color: "primary",
-        date: "1404/06/20",
-        ambassador: "علی رضایی",
-        weight: 12,
-        amount: 85000,
-    },
-    {
-        id: 102,
-        status: "لغو کاربر",
-        status_color: "error",
-        date: "1404/06/19",
-        ambassador: "مریم کاظمی",
-        weight: 8,
-        amount: 50000,
-    },
-    {
-        id: 103,
-        status: "لغو اپراتور",
-        status_color: "warning",
-        date: "1404/06/18",
-        ambassador: "حسین محمدی",
-        weight: 5,
-        amount: 32000,
-    },
-];
+
 
 const RequestSkeleton: React.FC = () => {
     return (
@@ -108,23 +82,47 @@ const RequestSkeleton: React.FC = () => {
 };
 
 const RequestsPage: React.FC = () => {
-    const [isLoading, setIsLoading] = useState(true);
+    const [listLoading, setLoading] = useState(true);
+    const [requests, setRequests] = useState([]);
+    const {  getList } = useRequest();
 
+    const {accessToken} = useAuthStore();
+    const getRequests = async () => {
+        if (!accessToken) {
+            setLoading(false);
+            return;
+        }
+
+        try {
+            const res = await getList(accessToken);
+            // @ts-ignore
+            const request=res.data.list
+            // @ts-ignore
+            setRequests(request)
+        } catch (error: any) {
+
+        } finally {
+            setLoading(false);
+        }
+    };
     useEffect(() => {
-        const timer = setTimeout(() => setIsLoading(false), 2000);
-        return () => clearTimeout(timer);
-    }, []);
+        getRequests()
+    }, [accessToken]);
+
+    console.log('requests',requests)
+
 
     return (
         <Box>
             <List>
-                {isLoading
+                {listLoading
                     ? Array.from({length: 3}).map((_, i) => (
                         <ListItem key={i} sx={{p: 0, mb: 2}}>
                             <RequestSkeleton/>
                         </ListItem>
                     ))
                     : requests.map((req) => (
+                        // @ts-ignore
                         <ListItem key={req.id} sx={{p: 0, mb: 2}}>
                             <Card
                                 sx={{
@@ -141,9 +139,11 @@ const RequestsPage: React.FC = () => {
                                         top: "-90px",
                                         left: "-90px",
                                         background:
-                                            req.status_color === "primary"
+                                        // @ts-ignore
+                                            req?.status?.value === 3
                                                 ? "linear-gradient(90deg, rgb(20, 200, 135) 0%, rgb(15, 160, 105) 100%)"
-                                                : req.status_color === "error"
+                                                // @ts-ignore
+                                                : req?.status?.value === 4
                                                     ? "linear-gradient(90deg, rgb(240, 85, 80) 0%, rgb(210, 45, 45) 100%)"
                                                     : "linear-gradient(90deg, rgb(255, 150, 0) 0%, rgb(235, 110, 0) 100%)",
                                         opacity: ".10",
@@ -164,7 +164,8 @@ const RequestsPage: React.FC = () => {
                                             }}
                                         >
                                             <Typography variant="body2">شماره درخواست</Typography>
-                                            <Typography><strong>{req.id}</strong></Typography>
+                                            <Typography><strong>{// @ts-ignore
+                                                 req.id}</strong></Typography>
                                         </ListItem>
                                         <Divider sx={{borderColor: "rgba(225,225,225,0.5)"}}/>
                                         <ListItem
@@ -176,7 +177,8 @@ const RequestsPage: React.FC = () => {
                                             }}
                                         >
                                             <Typography variant="body2">تاریخ</Typography>
-                                            <Typography>{req.date}</Typography>
+                                            <Typography>{// @ts-ignore
+                                                req?.requestDate ? req?.requestDate?.day : '-'}</Typography>
                                         </ListItem>
                                         <Divider sx={{borderColor: "rgba(225,225,225,0.5)"}}/>
                                         <ListItem
@@ -188,7 +190,8 @@ const RequestsPage: React.FC = () => {
                                             }}
                                         >
                                             <Typography variant="body2">نام سفیر</Typography>
-                                            <Typography>{req.ambassador}</Typography>
+                                            <Typography>{// @ts-ignore
+                                                req?.driver?.name ?? '-'}</Typography>
                                         </ListItem>
                                         <Divider sx={{borderColor: "rgba(225,225,225,0.5)"}}/>
                                         <ListItem
@@ -201,7 +204,8 @@ const RequestsPage: React.FC = () => {
                                         >
                                             <Typography variant="body2">وزن</Typography>
                                             <Typography>
-                                                <strong>{req.weight}</strong>
+                                                <strong>{// @ts-ignore
+                                                    req.weight ? req.weight : 0 }</strong>
                                                 <Box component="small" sx={{pl: 0.5}}>کیلوگرم</Box>
                                             </Typography>
                                         </ListItem>
@@ -217,7 +221,8 @@ const RequestsPage: React.FC = () => {
                                             <Typography variant="body2">مبلغ</Typography>
                                             <Typography>
                                                 <strong>
-                                                    {req.amount.toLocaleString("fa-IR")}
+                                                    {// @ts-ignore
+                                                        req.amount ?  req.amount.toLocaleString("fa-IR") : 0}
                                                 </strong>
                                                 <Box component="small" sx={{pl: 0.5}}>تومان</Box>
                                             </Typography>
@@ -231,8 +236,11 @@ const RequestsPage: React.FC = () => {
                                             mt: 2,
                                         }}
                                     >
-                                        <Typography color={req.status_color}>
-                                            {req.status}
+
+                                        <Typography color={// @ts-ignore
+                                            req?.status?.value === 3 ? 'primary' : 'error'}>
+                                            {// @ts-ignore
+                                                 req.status.label}
                                         </Typography>
                                         <Button
                                             variant="contained"
@@ -241,6 +249,7 @@ const RequestsPage: React.FC = () => {
                                                 borderRadius: "300px",
                                                 px: 4,
                                             }}
+                                            // @ts-ignore
                                             to={`/request/${req.id}`}
                                         >
                                             جزئیات درخواست
