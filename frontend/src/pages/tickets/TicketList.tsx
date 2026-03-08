@@ -11,65 +11,19 @@ import {Link} from "react-router-dom";
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import {useState, useEffect} from "react";
+import {useTicket} from "../../hooks/useTicket";
+import {useAuthStore} from "../../store/useAuthStore";
 
-const Tickets = [
-    {
-        id: 1,
-        title: "مشکل ورود",
-        date: "1404/06/24-19:09",
-        track: "432",
-        content: "هنگام ثبت درخواست جمع‌آوری..."
-    },
-    {
-        id: 2,
-        title: "خطای پرداخت",
-        date: "1404/09/26-07:25",
-        track: "756",
-        content: "پرداخت با خطای نامشخص مواجه شد."
-    },
-    {
-        id: 3,
-        title: "عدم دریافت پیامک",
-        date: "1404/07/10-14:32",
-        track: "981",
-        content: "پس از ثبت‌نام، هیچ پیامک تأیید برای من ارسال نشده است."
-    },
-    {
-        id: 4,
-        title: "لغو درخواست",
-        date: "1404/08/02-11:47",
-        track: "125",
-        content: "می‌خواهم درخواست جمع‌آوری قبلی را لغو کنم."
-    },
-    {
-        id: 5,
-        title: "تاخیر در جمع‌آوری",
-        date: "1404/08/15-16:20",
-        track: "348",
-        content: "زمان جمع‌آوری اعلام شده رعایت نشده است."
-    },
-    {
-        id: 6,
-        title: "مشکل کیف پول",
-        date: "1404/09/01-09:58",
-        track: "642",
-        content: "موجودی کیف پول به درستی نمایش داده نمی‌شود."
-    },
-    {
-        id: 7,
-        title: "بروز خطا در اپلیکیشن",
-        date: "1404/09/12-20:33",
-        track: "877",
-        content: "هنگام باز کردن صفحه پروفایل برنامه بسته می‌شود."
-    },
-    {
-        id: 8,
-        title: "نیاز به راهنمایی",
-        date: "1404/09/19-13:10",
-        track: "509",
-        content: "لطفا توضیح دهید چگونه می‌توانم تعرفه‌ها را مشاهده کنم."
+interface TicketType {
+    id: number
+    refId: number
+    title: string
+    seen: boolean
+    date: {
+        day: string
+        time: string
     }
-];
+}
 
 const TicketSkeleton: React.FC = () => {
     return (
@@ -94,15 +48,36 @@ const TicketSkeleton: React.FC = () => {
 };
 
 export default function TicketListPage() {
-    const [loading, setLoading] = useState(true);
+
+    const {getTickets, loading} = useTicket();
+    const {accessToken} = useAuthStore();
+
+    const [tickets, setTickets] = useState<TicketType[]>([]);
 
     useEffect(() => {
-        const timer = setTimeout(() => setLoading(false), 2000);
-        return () => clearTimeout(timer);
+
+        const fetchTickets = async () => {
+
+            if (!accessToken)
+            {
+                return
+            }
+            const res = await getTickets(accessToken);
+
+            if (res.status === "success") {
+                // @ts-ignore
+                setTickets(res.data.list || []);
+            }
+
+        };
+
+        fetchTickets();
+
     }, []);
 
     return (
         <Box>
+
             {/* Ticket List Content */}
             <Box sx={{mb: 7}}>
                 <Grid container spacing={2}>
@@ -110,7 +85,7 @@ export default function TicketListPage() {
                         <Box display="flex" flexDirection="column" gap={2}>
                             {loading
                                 ? Array.from({length: 3}).map((_, i) => <TicketSkeleton key={i}/>)
-                                : Tickets.map((ticket) => (
+                                : tickets.map((ticket) => (
                                     <Card
                                         key={ticket.id}
                                         sx={{
@@ -138,17 +113,17 @@ export default function TicketListPage() {
                                             <Typography variant="h6" gutterBottom>
                                                 {ticket.title}
                                             </Typography>
+
                                             <Box display="flex" justifyContent="space-between" mb={1}>
                                                 <Typography variant="body2" color="text.secondary">
-                                                    تاریخ: {ticket.date}
+                                                    تاریخ: {ticket.date.day}-{ticket.date.time}
                                                 </Typography>
+
                                                 <Typography variant="body2" color="text.secondary">
-                                                    کد پیگیری : {ticket.track}
+                                                    کد پیگیری : {ticket.refId}
                                                 </Typography>
                                             </Box>
-                                            <Typography variant="caption" mb={2}>
-                                                {ticket.content}
-                                            </Typography>
+
                                             <Box display="flex" justifyContent="end">
                                                 <Button
                                                     sx={{p: 0, height: 30, minWidth: 30, borderRadius: '50%'}}

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Card, CardContent, Typography, Grid, Box, Skeleton } from "@mui/material";
-import { useTicket } from "../hooks/useTicket"; // مسیر درست هوک
+import { useTicket } from "../hooks/useTicket";
+import {useAuthStore} from "../store/useAuthStore.ts"; // مسیر درست هوک
 
 const MessageSkeleton: React.FC = () => (
     <Card sx={{ borderRadius: 3, boxShadow: 3 }}>
@@ -18,15 +19,19 @@ const MessageSkeleton: React.FC = () => (
     </Card>
 );
 
-const Messages: React.FC<{ token: string }> = ({ token }) => {
+const Messages: React.FC = () => {
     const { getMessages } = useTicket();
     const [messages, setMessages] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
-
+    const {accessToken} = useAuthStore();
     useEffect(() => {
         const fetchMessages = async () => {
+            if (!accessToken)
+            {
+                return
+            }
             setLoading(true);
-            const res = await getMessages(token);
+            const res = await getMessages(accessToken);
             if (res.status === "success") {
                 // @ts-ignore
                 setMessages(res.data.list);
@@ -35,7 +40,7 @@ const Messages: React.FC<{ token: string }> = ({ token }) => {
         };
 
         fetchMessages();
-    }, [getMessages, token]);
+    }, [ accessToken]);
 
 
     return (
