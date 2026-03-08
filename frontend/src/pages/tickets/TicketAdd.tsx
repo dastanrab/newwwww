@@ -6,38 +6,94 @@ import {
     InputAdornment,
     Grid,
     Box,
+    Snackbar,
+    Alert,
+    CircularProgress
 } from "@mui/material";
-import Notes from '@mui/icons-material/Notes';
-import AccountCircle from '@mui/icons-material/AccountCircle';
+
+import {useState} from "react";
+import {useNavigate} from "react-router-dom";
+
+import Notes from "@mui/icons-material/Notes";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+
+import {useTicket} from "../../hooks/useTicket";
+import {useAuthStore} from "../../store/useAuthStore";
 
 export default function TicketAdd() {
+
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+
+    const [loading, setLoading] = useState(false);
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+    const {createTicket} = useTicket();
+    const {accessToken} = useAuthStore();
+
+    const navigate = useNavigate();
+
+    const submitTicket = async () => {
+
+        if (!title.trim() || !description.trim() || !accessToken) return;
+
+        setLoading(true);
+
+        const res = await createTicket(accessToken, {
+            subject:title,
+            message:description
+        });
+
+        setLoading(false);
+
+        if (res.status === "success") {
+            setSnackbarOpen(true);
+
+            setTimeout(() => {
+                navigate("/tickets");
+            }, 1200);
+        }
+    };
+
     return (
-        <Box sx={{
-            height: '100vh',
-        }}>
+        <Box sx={{height: "100vh"}}>
+
             <Grid container spacing={2}>
+
                 <Grid size={12}>
                     <FormControl fullWidth>
-                        <InputLabel htmlFor="outlined-adornment-amount">عنوان تیکت</InputLabel>
+                        <InputLabel>عنوان تیکت</InputLabel>
                         <OutlinedInput
-                            id="outlined-adornment-amount"
-                            startAdornment={<InputAdornment position="start"><AccountCircle/></InputAdornment>}
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                            startAdornment={
+                                <InputAdornment position="start">
+                                    <AccountCircle/>
+                                </InputAdornment>
+                            }
                             label="عنوان تیکت"
                         />
                     </FormControl>
                 </Grid>
+
                 <Grid size={12}>
                     <FormControl fullWidth>
-                        <InputLabel htmlFor="outlined-adornment-amount">توضیحات تیکت</InputLabel>
+                        <InputLabel>توضیحات تیکت</InputLabel>
                         <OutlinedInput
-                            id="outlined-adornment-amount"
-                            startAdornment={<InputAdornment position="start"><Notes/></InputAdornment>}
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            startAdornment={
+                                <InputAdornment position="start">
+                                    <Notes/>
+                                </InputAdornment>
+                            }
                             label="توضیحات تیکت"
                             multiline
                             rows={4}
                         />
                     </FormControl>
                 </Grid>
+
                 <Box
                     sx={{
                         position: "fixed",
@@ -49,15 +105,39 @@ export default function TicketAdd() {
                     <Button
                         variant="contained"
                         size="large"
+                        disabled={loading}
                         sx={{
                             borderRadius: "300px",
-                            px: 5
+                            px: 5,
+                            minWidth: 150
                         }}
+                        onClick={submitTicket}
                     >
-                        ارسال تیکت
+                        {loading ? (
+                            <CircularProgress size={24} color="inherit"/>
+                        ) : (
+                            "ارسال تیکت"
+                        )}
                     </Button>
                 </Box>
+
             </Grid>
+
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={3000}
+                onClose={() => setSnackbarOpen(false)}
+                anchorOrigin={{vertical: "bottom", horizontal: "center"}}
+            >
+                <Alert
+                    severity="success"
+                    variant="filled"
+                    sx={{width: "100%"}}
+                >
+                    تیکت با موفقیت ثبت شد
+                </Alert>
+            </Snackbar>
+
         </Box>
     );
 }
