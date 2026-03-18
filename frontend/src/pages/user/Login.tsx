@@ -10,7 +10,6 @@ import {
     Link,
     Snackbar,
     Alert,
-    CircularProgress,
 } from "@mui/material";
 import Dock from "@mui/icons-material/Dock";
 import logo from "../../assets/logo.png";
@@ -18,6 +17,7 @@ import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 import { useAuth } from "../../hooks/useAuth";
 import { useAuthStore } from "../../store/useAuthStore.ts";
+import {LoadingButton} from "@mui/lab";
 
 const Login: React.FC = () => {
     const [phone, setPhone] = useState("");
@@ -113,20 +113,20 @@ const Login: React.FC = () => {
                         >
                             قوانین و مقررات
                         </Link>{" "}
-                        زی پاک را می‌پذیرم
+                        آنی‌روب را می‌پذیرم
                     </Typography>
                 }
             />
-
-            <Button
-                fullWidth
+            <LoadingButton
+                type="submit"
                 variant="contained"
+                size="large"
                 onClick={handleLogin}
                 disabled={loading}
-                sx={{ mt: 1.5, py: 1.5, borderRadius: "300px" }}
+                sx={{ mt: 1.5, py: 1.5, borderRadius: '300px' }}
             >
-                {loading ? <CircularProgress size={24} color="inherit" /> : "ورود به حساب کاربری"}
-            </Button>
+                ورود به حساب کاربری
+            </LoadingButton>
 
             <Snackbar
                 open={openSnackbar}

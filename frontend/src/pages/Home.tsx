@@ -1,5 +1,6 @@
 import {Grid, Card, Box, Typography, Stack, Button, CircularProgress} from "@mui/material";
 import {ShoppingCart, RequestPage, PriceChange} from "@mui/icons-material";
+import WalletIcon from '@mui/icons-material/Wallet';
 import {Swiper, SwiperSlide} from "swiper/react";
 import 'swiper/swiper-bundle.css';
 import slide1 from "../assets/slide1.png";
@@ -9,12 +10,12 @@ import credit_card from "../assets/credit-card.png";
 import leaf from "../assets/leaf.png";
 import box from "../assets/box.png";
 import recycling from "../assets/recycling.png"
-import { useRequest } from "../hooks/useRequest";
-import { Snackbar, Alert } from "@mui/material";
+import {useRequest} from "../hooks/useRequest";
+import {Snackbar, Alert} from "@mui/material";
 
 
 import {useNavigate} from "react-router-dom";
-import { useAuthStore } from "../store/useAuthStore";
+import {useAuthStore} from "../store/useAuthStore";
 import {useEffect, useState} from "react";
 
 export default function Home() {
@@ -32,11 +33,11 @@ export default function Home() {
     });
     const [listLoading, setLoading] = useState(true);
     const [requests, setRequests] = useState([]);
-    const { deleteRequest, loading , getList } = useRequest();
+    const {deleteRequest, loading, getList} = useRequest();
     const navigate = useNavigate();
     let total_weights = 0;
     const [total_requests, setTotalRequests] = useState(0);
-    const {setting,accessToken,setSetting} = useAuthStore();
+    const {setting, accessToken, setSetting} = useAuthStore();
     console.log(setting)
     const handleCancelRequest = async () => {
         if (!setting?.currentRequest?.id) return;
@@ -50,7 +51,7 @@ export default function Home() {
                 ...prev,
                 currentRequest: null,
             }));
-            setTotalRequests(total_requests+1)
+            setTotalRequests(total_requests + 1)
             setSnack({
                 open: true,
                 message: "درخواست با موفقیت لغو شد",
@@ -74,10 +75,10 @@ export default function Home() {
         try {
             const res = await getList(accessToken);
             // @ts-ignore
-            const request=res.data.list
+            const request = res.data.list
             // @ts-ignore
-            request.map((req)=>{
-                total_weights += req.status.value == 3 ? req.weight:0
+            request.map((req) => {
+                total_weights += req.status.value == 3 ? req.weight : 0
             })
             setTotalRequests(request.length)
             // @ts-ignore
@@ -102,11 +103,11 @@ export default function Home() {
                     justifyContent: "center",
                 }}
             >
-                <CircularProgress size={50} />
+                <CircularProgress size={50}/>
             </Box>
         );
     }
-    console.log('requests',requests)
+    console.log('requests', requests)
     // @ts-ignore
     return (
         <Box className="zo-page">
@@ -137,7 +138,7 @@ export default function Home() {
                     </SwiperSlide>
                 ))}
             </Swiper>
-            <Box sx={{my: 1.5}}>
+            <Box sx={{my: 0.5}}>
                 <Grid container spacing={2}>
                     {/* Requests */}
                     <Grid
@@ -145,28 +146,28 @@ export default function Home() {
                         sx={{textAlign: 'center', cursor: "pointer"}}
                         onClick={() => navigate("/requests")}
                     >
-                        <Box sx={{width: '35px', m: 'auto'}}>
+                        <Box sx={{width: '25px', m: 'auto'}}>
                             <img src={leaf}/>
                         </Box>
-                        <Typography variant="body1" sx={{mb: 0.75}}>درخواست‌ها</Typography>
-                        <Typography variant="h1" sx={{fontSize: "1.25rem"}}>
+                        <Typography variant="body1" sx={{mt: -0.5, mb: 0.25}}>درخواست‌ها</Typography>
+                        <Typography variant="h1" sx={{fontSize: '1rem'}}>
                             {total_requests}
                         </Typography>
                     </Grid>
 
-                    {/* Wallet */}
+                    {/* Salary */}
                     <Grid
                         size={4}
                         sx={{textAlign: 'center', cursor: "pointer"}}
                         onClick={() => navigate("/wallet")}
                     >
-                        <Box sx={{width: '35px', m: 'auto'}}>
+                        <Box sx={{width: '25px', m: 'auto'}}>
                             <img src={credit_card}/>
                         </Box>
-                        <Typography variant="body1" sx={{mt: -0.5, mb: 0.75}}>درآمد</Typography>
-                        <Typography variant="h1" sx={{fontSize: "1.25rem"}}>
+                        <Typography variant="body1" sx={{mt: -0.5, mb: 0.25}}>درآمد</Typography>
+                        <Typography variant="h1" sx={{fontSize: '1rem'}}>
                             {setting?.user?.balance ?? 0}
-                            <Typography component="span" sx={{pl: .25, fontSize: '0.90rem', fontWeight: 400}}>
+                            <Typography component="span" sx={{pl: .25, fontSize: '0.75rem', fontWeight: 400}}>
                                 تومان
                             </Typography>
                         </Typography>
@@ -174,13 +175,13 @@ export default function Home() {
 
                     {/* Waste */}
                     <Grid size={4} sx={{textAlign: 'center'}}>
-                        <Box sx={{width: '35px', m: 'auto'}}>
+                        <Box sx={{width: '25px', m: 'auto'}}>
                             <img src={box}/>
                         </Box>
-                        <Typography variant="body1" sx={{mb: 0.75}}>پسماندها</Typography>
-                        <Typography variant="h1" sx={{fontSize: "1.25rem"}}>
+                        <Typography variant="body1" sx={{mt: -0.5, mb: 0.25}}>پسماندها</Typography>
+                        <Typography variant="h1" sx={{fontSize: '1rem'}}>
                             {total_weights}
-                            <Typography component="span" sx={{pl: .25, fontSize: "0.90rem", fontWeight: 400}}>
+                            <Typography component="span" sx={{pl: .25, fontSize: '0.75rem', fontWeight: 400}}>
                                 تن
                             </Typography>
                         </Typography>
@@ -191,7 +192,7 @@ export default function Home() {
                 <Grid size={4}>
                     <Card
                         sx={{
-                            p: 1.5,
+                            p: 1.25,
                             background: 'rgba(255, 255, 255)',
                             border: '1px solid rgba(255,255,255,0.25)',
                             borderRadius: 4,
@@ -205,11 +206,11 @@ export default function Home() {
                         }}
                         onClick={() => navigate("/prices")}
                     >
-                        <Stack spacing={1.5} alignItems="center">
+                        <Stack spacing={0.5} alignItems="center">
                             <Box
                                 sx={{
-                                    width: 50,
-                                    height: 50,
+                                    width: 35,
+                                    height: 35,
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
@@ -218,7 +219,7 @@ export default function Home() {
                                     borderRadius: '50%',
                                 }}
                             >
-                                <PriceChange/>
+                                <PriceChange sx={{fontSize: '1rem'}}/>
                             </Box>
                             <Typography variant="h6" sx={{fontSize: '0.90rem'}}>
                                 پسماندها
@@ -229,7 +230,7 @@ export default function Home() {
                 <Grid size={4}>
                     <Card
                         sx={{
-                            p: 1.5,
+                            p: 1.25,
                             background: 'rgba(255, 255, 255)',
                             border: '1px solid rgba(255,255,255,0.25)',
                             borderRadius: 4,
@@ -243,11 +244,11 @@ export default function Home() {
                         }}
                         onClick={() => navigate("/shop")}
                     >
-                        <Stack spacing={1.5} alignItems="center">
+                        <Stack spacing={0.5} alignItems="center">
                             <Box
                                 sx={{
-                                    width: 50,
-                                    height: 50,
+                                    width: 35,
+                                    height: 35,
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
@@ -256,7 +257,7 @@ export default function Home() {
                                     borderRadius: '50%',
                                 }}
                             >
-                                <ShoppingCart/>
+                                <ShoppingCart sx={{fontSize: '1rem'}}/>
                             </Box>
                             <Typography variant="h6" sx={{fontSize: '0.90rem'}}>
                                 فروشگاه
@@ -267,7 +268,7 @@ export default function Home() {
                 <Grid size={4}>
                     <Card
                         sx={{
-                            p: 1.5,
+                            p: 1.25,
                             background: 'rgba(255, 255, 255)',
                             border: '1px solid rgba(255,255,255,0.25)',
                             borderRadius: 4,
@@ -279,13 +280,13 @@ export default function Home() {
                                 boxShadow: '0 10px 25px rgba(0,0,0,0.25)',
                             },
                         }}
-                        onClick={() => navigate("/requests")}
+                        onClick={() => navigate("/wallet")}
                     >
-                        <Stack spacing={1.5} alignItems="center">
+                        <Stack spacing={0.5} alignItems="center">
                             <Box
                                 sx={{
-                                    width: 50,
-                                    height: 50,
+                                    width: 35,
+                                    height: 35,
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
@@ -294,10 +295,10 @@ export default function Home() {
                                     borderRadius: '50%',
                                 }}
                             >
-                                <RequestPage/>
+                                <WalletIcon sx={{fontSize: '1rem'}}/>
                             </Box>
                             <Typography variant="h6" sx={{fontSize: '0.90rem'}}>
-                                درخواست‌ها
+                                کیف پول
                             </Typography>
                         </Stack>
                     </Card>
@@ -306,10 +307,11 @@ export default function Home() {
             {setting?.currentRequest ? (
                 <Card
                     sx={{
+                        mb: 3,
                         p: 2,
+                        border: '2px solid rgb(15, 160, 105)',
                         borderRadius: 4,
-                        boxShadow: '0 10px 25px rgba(0,0,0,0.08)',
-                        mb: 3
+                        boxShadow: '0 10px 25px rgba(0,0,0,0.08)'
                     }}
                 >
                     <Stack spacing={1.5}>
@@ -341,7 +343,7 @@ export default function Home() {
                                 onClick={handleCancelRequest}
                                 disabled={loading}
                             >
-                                {loading ? <CircularProgress /> : "لغو درخواست"}
+                                {loading ? <CircularProgress/> : "لغو درخواست"}
                             </Button>
                         )}
                     </Stack>
@@ -356,7 +358,7 @@ export default function Home() {
                         textAlign: 'center'
                     }}
                 >
-                    <Box sx={{width: '50px'}}>
+                    <Box sx={{width: 30}}>
                         <img src={recycling}/>
                     </Box>
 
@@ -371,7 +373,7 @@ export default function Home() {
                     <Button
                         variant="contained"
                         size="large"
-                        sx={{ borderRadius: "300px", mt: 1.5, mb: 3, px: 6 }}
+                        sx={{borderRadius: "300px", mt: 1.5, mb: 3, px: 6}}
                         onClick={() => navigate("/collect")}
                     >
                         درخواست جمع آوری
@@ -381,14 +383,14 @@ export default function Home() {
             <Snackbar
                 open={snack.open}
                 autoHideDuration={3000}
-                onClose={() => setSnack({ ...snack, open: false })}
-                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                onClose={() => setSnack({...snack, open: false})}
+                anchorOrigin={{vertical: "bottom", horizontal: "center"}}
             >
                 <Alert
-                    onClose={() => setSnack({ ...snack, open: false })}
+                    onClose={() => setSnack({...snack, open: false})}
                     severity={snack.type || 'success'}
                     variant="filled"
-                    sx={{ width: "100%" }}
+                    sx={{width: "100%"}}
                 >
                     {snack.message}
                 </Alert>

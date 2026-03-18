@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, {useState, useEffect, useRef} from "react";
 import {
     Box,
     Typography,
@@ -9,16 +9,17 @@ import {
     Alert,
     CircularProgress,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
+import {LoadingButton} from "@mui/lab";
 
-import { useAuth } from "../../hooks/useAuth";
-import { useAuthStore } from "../../store/useAuthStore";
+import {useAuth} from "../../hooks/useAuth";
+import {useAuthStore} from "../../store/useAuthStore";
 
 const Verify: React.FC = () => {
     const navigate = useNavigate();
 
-    const { verify, login, loading } = useAuth();
-    const { mob, setAccessToken , setSetting } = useAuthStore();
+    const {verify, login, loading} = useAuth();
+    const {mob, setAccessToken, setSetting} = useAuthStore();
 
     const [code, setCode] = useState<string[]>(Array(5).fill(""));
     const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -153,7 +154,7 @@ const Verify: React.FC = () => {
                 کد تایید ارسال شده به شماره <strong>{mob}</strong> را وارد نمایید
             </Typography>
 
-            <Stack direction="row" spacing={1} mb={3} justifyContent="center" sx={{ direction: "ltr" }} >
+            <Stack direction="row" spacing={1} mb={3} justifyContent="center" sx={{direction: "ltr"}}>
                 {code.map((digit, index) => (
                     <TextField
                         key={index}
@@ -164,7 +165,7 @@ const Verify: React.FC = () => {
                         }
                         inputProps={{
                             maxLength: 1,
-                            style: { textAlign: "center" , direction: "ltr"},
+                            style: {textAlign: "center", direction: "ltr"},
                             onKeyDown: (
                                 e: React.KeyboardEvent<HTMLInputElement>
                             ) => handleKeyDown(e, index),
@@ -179,24 +180,22 @@ const Verify: React.FC = () => {
                 ))}
             </Stack>
 
-            <Button
+            <LoadingButton
+                type="submit"
                 variant="contained"
+                size="large"
                 onClick={handleVerify}
                 disabled={loading}
-                sx={{ width: "200px", m: "0 auto 15px", borderRadius: "300px" }}
+                sx={{width: 200, m: '0 auto 15px', borderRadius: '300px'}}
             >
-                {loading ? (
-                    <CircularProgress size={22} color="inherit" />
-                ) : (
-                    "تایید کد"
-                )}
-            </Button>
+                تایید کد
+            </LoadingButton>
 
             {counter > 0 ? (
                 <Typography
                     variant="body2"
                     color="text.secondary"
-                    sx={{ mb: 2, textAlign: "center" }}
+                    sx={{mb: 2, textAlign: "center"}}
                 >
                     ارسال مجدد کد تا {counter} ثانیه دیگر
                 </Typography>
@@ -217,7 +216,7 @@ const Verify: React.FC = () => {
             <Button
                 variant="text"
                 onClick={() => navigate("/login")}
-                sx={{ width: "200px", m: "0 auto", borderRadius: "300px" }}
+                sx={{width: "200px", m: "0 auto", borderRadius: "300px"}}
             >
                 اصلاح شماره موبایل
             </Button>
@@ -226,7 +225,7 @@ const Verify: React.FC = () => {
                 open={openSnackbar}
                 autoHideDuration={3000}
                 onClose={() => setOpenSnackbar(false)}
-                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                anchorOrigin={{vertical: "bottom", horizontal: "center"}}
             >
                 <Alert
                     severity={snackbarSeverity}

@@ -1,19 +1,25 @@
 import React, {useState} from "react";
 import {
+    // Layout / Structure
     AppBar,
     Toolbar,
-    Typography,
-    IconButton,
     Drawer,
+    Box,
+
+    // Lists / Navigation
     List,
     ListItem,
+    ListItemButton,
     ListItemText,
     ListItemIcon,
     Divider,
-    Avatar,
+
+    // Controls
+    IconButton,
     Chip,
-    Box,
-    ListItemButton,
+
+    // Typography
+    Typography,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import MessageIcon from "@mui/icons-material/Message";
@@ -30,11 +36,10 @@ import CreditCard from "@mui/icons-material/CreditCard";
 import LogoutIcon from "@mui/icons-material/Logout";
 import {useLocation, useNavigate} from "react-router-dom";
 
-import userAvatar from "../../assets/user.png";
 import {useAuthStore} from "../../store/useAuthStore.ts";
 
 const pageTitles: Record<string, string> = {
-    "/": "زی پاک",
+    "/": "آنی‌روب",
     "/wallet": "کیف پول",
     "/messages": "اعلان ها",
     "/tickets": "پشتیبانی",
@@ -55,7 +60,7 @@ const Header: React.FC = () => {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
-    const {logout ,setting } = useAuthStore();
+    const {logout, setting} = useAuthStore();
 
     const toggleDrawer = (open: boolean) => () => {
         setDrawerOpen(open);
@@ -68,35 +73,29 @@ const Header: React.FC = () => {
             <AppBar
                 position="fixed"
                 sx={{
-                    width: "95%",
-                    m: "auto",
-                    top: "15px",
+                    width: '95%',
+                    m: 'auto',
+                    top: 10,
                     right: 0,
                     left: 0,
-                    overflow: "hidden",
-                    borderRadius: "300px",
-                    background:
-                        "linear-gradient(90deg, rgb(20, 200, 135) 0%, rgb(15, 160, 105) 100%)",
-                    "@media (min-width: 550px)": {
-                        width: "550px",
-                        mx: "auto",
+                    overflow: 'hidden',
+                    borderRadius: '300px',
+                    background: 'linear-gradient(90deg, rgb(20, 200, 135) 0%, rgb(15, 160, 105) 100%)',
+                    '@media (min-width: 550px)': {
+                        width: '550px',
+                        mx: 'auto',
                         right: 0,
                         left: 0,
                     },
                 }}
             >
-                <Toolbar sx={{display: "flex", justifyContent: "space-between"}}>
+                <Toolbar sx={{display: 'flex', justifyContent: 'space-between'}}>
                     <IconButton color="inherit" edge="end" onClick={toggleDrawer(true)}>
                         <MenuIcon/>
                     </IconButton>
-
-                    <Typography
-                        variant="h6"
-                        sx={{flexGrow: 1, textAlign: "center", color: "#fff"}}
-                    >
-                        {pageTitles[location.pathname] || "زی پاک"}
+                    <Typography variant="h6" sx={{flexGrow: 1, color: 'rgb(255, 255, 255)', textAlign: 'center'}}>
+                        {pageTitles[location.pathname] || "آنی‌روب"}
                     </Typography>
-
                     {isHome ? (
                         <IconButton color="inherit" edge="start" onClick={() => navigate("/messages")}>
                             <MessageIcon/>
@@ -114,30 +113,15 @@ const Header: React.FC = () => {
                 onClose={toggleDrawer(false)}
                 PaperProps={{
                     sx: {
-                        background:
-                            "linear-gradient(90deg, rgb(20, 200, 135) 0%, rgb(15, 160, 105) 100%)",
-                        color: "rgb(255,255,255)",
-                        borderRadius: "0 60px 60px 0",
+                        background: 'linear-gradient(90deg, rgb(20, 200, 135) 0%, rgb(15, 160, 105) 100%)',
+                        color: 'rgb(255, 255, 255)',
+                        borderRadius: '0 60px 60px 0',
                     },
                 }}
             >
-                <Box
-                    sx={{
-                        width: 260,
-                        display: "flex",
-                        flexDirection: "column",
-                        height: "100%",
-                    }}
-                >
+                <Box sx={{width: 260, height: '100%', display: 'flex', flexDirection: 'column'}}>
                     <List>
-                        <ListItem
-                            sx={{
-                                display: "flex",
-                                flexWrap: "wrap",
-                                flexDirection: "column",
-                            }}
-                        >
-                            <Avatar src={userAvatar} alt="User Avatar"/>
+                        <ListItem sx={{display: 'flex', flexWrap: 'wrap', flexDirection: 'column'}}>
                             <Typography variant="h6" sx={{color: "rgb(255,255,255)"}}>
                                 {[setting?.user?.firstName, setting?.user?.lastName]
                                     .filter(Boolean)
@@ -149,7 +133,7 @@ const Header: React.FC = () => {
                         </ListItem>
                         <Divider sx={{borderColor: "rgba(255,255,255,0.15)"}}/>
                         {[
-                            {text: "زی پاک", icon: <HomeFilled/>, path: "/"},
+                            {text: "آنی‌روب", icon: <HomeFilled/>, path: "/"},
                             {text: "پروفایل کاربری", icon: <AccountCircle/>, path: "/profile"},
                             {text: "درخواست ها", icon: <AssignmentIcon/>, path: "/requests"},
                             {
@@ -162,10 +146,10 @@ const Header: React.FC = () => {
                             {text: "حریم خصوصی", icon: <LockIcon/>, path: "/privacy"},
                             {text: "قیمت پسماندها", icon: <Timeline/>, path: "/prices"},
                             {text: "پشتیبانی", icon: <SupportAgentIcon/>, path: "/tickets"},
-                            {text: "اینترنت ، شارژ", icon: <CreditCard/>, path: "/shop"},
+                            {text: "فروشگاه", icon: <CreditCard/>, path: "/shop"},
                             {
                                 text: "خروج",
-                                icon: <LogoutIcon />,
+                                icon: <LogoutIcon/>,
                                 path: "/login",
                                 logout: true,
                             }
@@ -182,7 +166,7 @@ const Header: React.FC = () => {
                                         }
                                         setDrawerOpen(false);
                                     }}
-                                    sx={{color: "rgb(255,255,255)"}}
+                                    sx={{color: 'rgb(255,255,255)'}}
                                 >
                                     <ListItemIcon sx={{color: "rgb(255,255,255)"}}>
                                         {item.icon}
@@ -192,16 +176,16 @@ const Header: React.FC = () => {
                                         <Chip
                                             size="small"
                                             label={
-                                                <Typography sx={{fontSize: "0.8rem", color: "#fff"}}>
+                                                <Typography sx={{fontSize: '0.8rem', color: 'rgb(255, 255, 255)'}}>
                                                     <strong>{item.chip.amount}</strong>{" "}
                                                     <small>{item.chip.currency}</small>
                                                 </Typography>
                                             }
                                             sx={{
-                                                height: "25px",
-                                                p: "0 5px",
-                                                backgroundColor: "rgba(255,255,255,0.25)",
-                                                "& .MuiChip-label": {
+                                                height: '25px',
+                                                p: '0 5px',
+                                                backgroundColor: 'rgba(255, 255, 255, 0.25)',
+                                                '& .MuiChip-label': {
                                                     px: 1,
                                                 },
                                             }}
@@ -213,14 +197,14 @@ const Header: React.FC = () => {
                     </List>
                     <Box
                         sx={{
-                            mt: "auto",
-                            textAlign: "center",
+                            mt: 'auto',
                             py: 2,
-                            color: "rgba(255,255,255,0.7)",
-                            fontSize: "0.85rem",
+                            fontSize: '0.85rem',
+                            textAlign: 'center',
+                            color: 'rgba(255, 255, 255, 0.25)',
                         }}
                     >
-                        1.3.9
+                        1.0.0
                     </Box>
                 </Box>
             </Drawer>

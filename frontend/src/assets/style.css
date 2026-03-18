@@ -62,33 +62,49 @@ img {
 
 header.MuiPaper-root.MuiPaper-elevation {
     background-image: linear-gradient(90deg, rgb(20, 200, 135) 0%, rgb(15, 160, 105) 100%);
-    /*
-    background-image: linear-gradient(90deg, rgba(20, 200, 135, .90) 0%, rgba(15, 160, 105, .90) 100%);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px)
-    */
 }
 
-.swiper {
-    margin: -15px -25px !important;
+.zo-page .swiper {
+    margin: -25px -25px -10px !important;
 }
 
-.swiper .swiper-wrapper {
+.zo-page .swiper .swiper-wrapper,
+.zo-collect .swiper .swiper-wrapper {
     padding: 15px 0;
 }
 
-.swiper .swiper-wrapper .swiper-slide {
+.zo-page .swiper .swiper-wrapper .swiper-slide {
     transform: scale(.80);
 }
 
-.swiper .swiper-wrapper .swiper-slide.swiper-slide-active {
+.zo-page .swiper .swiper-wrapper .swiper-slide.swiper-slide-active {
     transform: scale(1);
 }
 
-.swiper .swiper-wrapper .swiper-slide img {
+.zo-page .swiper .swiper-wrapper .swiper-slide img {
     width: 100%;
     height: 225px;
     object-fit: cover;
     border-radius: 1.5rem;
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.25), 0 2px 2px 0 rgba(0, 0, 0, 0.15), 0 1px 5px 0 rgba(0, 0, 0, 0.10)
+}
+.ol-zoom {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin: 10px
+}
+.ol-zoom .ol-zoom-in,
+.ol-zoom .ol-zoom-out {
+    width: 30px;
+    height: 30px;
+    font-size: 1.25rem;
+    background: rgb(255, 255, 255);
+    border: 0;
+    border-radius: 50%;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.075);
+    cursor: pointer
+}
+.ol-rotate-reset {
+    display: none
 }

@@ -1,26 +1,37 @@
 import {useState, useEffect} from "react";
 import {
+    // Layout
     Box,
+    Grid,
+
+    // Inputs
     TextField,
+    Select,
+    MenuItem,
+    InputLabel,
+    InputAdornment,
+    FormControl,
+
+    // Controls
     Button,
+    Radio,
     RadioGroup,
     FormControlLabel,
-    Radio,
-    Typography,
-    Grid,
-    InputAdornment,
-    MenuItem,
-    Select,
-    FormControl,
-    InputLabel,
+
+    // Feedback
+    CircularProgress,
+    Skeleton,
+
+    // Surfaces / Overlays
     Dialog,
-    DialogActions,
-    DialogContent,
     DialogTitle,
-    Avatar,
-    IconButton,
-    Skeleton, CircularProgress,
+    DialogContent,
+    DialogActions,
+
+    // Typography
+    Typography,
 } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 
 import type {SelectChangeEvent} from "@mui/material";
 import AccountCircle from "@mui/icons-material/AccountCircle";
@@ -36,23 +47,6 @@ import {useProfile} from "../hooks/useProfile.ts";
 const ProfileSkeleton: React.FC = () => {
     return (
         <Grid container justifyContent="center" spacing={2}>
-            <Grid size={12} textAlign="center" position="relative">
-                <IconButton disabled>
-                    <Avatar sx={{width: 100, height: 100}}>
-                        <Skeleton variant="circular" width={100} height={100} animation="wave"/>
-                    </Avatar>
-                    <PhotoCamera
-                        sx={{
-                            position: "absolute",
-                            bottom: 5,
-                            right: 5,
-                            background: "#fff",
-                            borderRadius: "50%",
-                            padding: "3px"
-                        }}
-                    />
-                </IconButton>
-            </Grid>
             <Grid size={12}>
                 <Box sx={{display: "flex", gap: "10px"}}>
                     <Box sx={{display: "flex", alignItems: "center", gap: "5px"}}>
@@ -75,11 +69,13 @@ const ProfileSkeleton: React.FC = () => {
                 <Box sx={{display: "flex", gap: "10px"}}>
                     <Box sx={{display: "flex", alignItems: "center", gap: "5px"}}>
                         <Skeleton variant="circular" width={30} height={30} animation="wave"/>
-                        <Skeleton variant="rectangular" width={60} height={15} sx={{borderRadius: 30}} animation="wave"/>
+                        <Skeleton variant="rectangular" width={60} height={15} sx={{borderRadius: 30}}
+                                  animation="wave"/>
                     </Box>
                     <Box sx={{display: "flex", alignItems: "center", gap: "5px"}}>
                         <Skeleton variant="circular" width={30} height={30} animation="wave"/>
-                        <Skeleton variant="rectangular" width={60} height={15} sx={{borderRadius: 30}} animation="wave"/>
+                        <Skeleton variant="rectangular" width={60} height={15} sx={{borderRadius: 30}}
+                                  animation="wave"/>
                     </Box>
                 </Box>
             </Grid>
@@ -129,8 +125,8 @@ export default function Profile() {
     const [open, setOpen] = useState(false);
     const [tempDate, setTempDate] = useState({birthYear: "", birthMonth: "", birthDay: ""});
     const [loading, setLoading] = useState(true);
-    const { updateProfile, loading: apiLoading } = useProfile();
-    const { accessToken,setting, setSetting } = useAuthStore();
+    const {updateProfile, loading: apiLoading} = useProfile();
+    const {accessToken, setting, setSetting} = useAuthStore();
     const user = setting?.user;
 
     useEffect(() => {
@@ -247,23 +243,6 @@ export default function Profile() {
                 <ProfileSkeleton/>
             ) : (
                 <Grid container justifyContent="center">
-                    <Grid size={12} textAlign="center">
-                        <input accept="image/*" style={{display: "none"}} id="avatar-upload" type="file"
-                               onChange={handleAvatarChange}/>
-                        <label htmlFor="avatar-upload">
-                            <IconButton component="span" sx={{position: "relative"}}>
-                                <Avatar src={formData.avatar} sx={{width: 100, height: 100}}/>
-                                <PhotoCamera sx={{
-                                    position: "absolute",
-                                    bottom: 5,
-                                    right: 5,
-                                    background: "#fff",
-                                    borderRadius: "50%",
-                                    padding: "3px"
-                                }}/>
-                            </IconButton>
-                        </label>
-                    </Grid>
 
                     <Grid size={12}>
                         <Typography variant="h6">نوع کاربر</Typography>
@@ -328,15 +307,15 @@ export default function Profile() {
                     <Grid size={12}>
                         <Box
                             sx={{width: "100%", position: "fixed", bottom: 90, right: 0, left: 0, textAlign: "center"}}>
-                            <Button
+                            <LoadingButton
                                 type="submit"
                                 variant="contained"
                                 size="large"
-                                disabled={apiLoading}
-                                sx={{ borderRadius: "300px", px: 5 }}
+                                loading={apiLoading}
+                                sx={{ px: 3.5, borderRadius: '300px' }}
                             >
-                                {apiLoading ? <CircularProgress size={12}/> : "ویرایش پروفایل کاربری"}
-                            </Button>
+                                ویرایش پروفایل کاربری
+                            </LoadingButton>
                         </Box>
                     </Grid>
                 </Grid>

@@ -15,12 +15,12 @@ export default function Footer() {
     const [value, setValue] = React.useState(0);
     const navigate = useNavigate();
 
-    const mainColor = "#14C887"; // معادل rgba(20, 200, 135, 1)
+    const mainColor = '#14C887';
     const darkerColor = darken(mainColor, 0.5);
 
     const actionStyle = {
         color: "rgb(255, 255, 255)",
-        "&.Mui-selected": {color: darkerColor},
+        '&.Mui-selected': {color: darkerColor},
         '& .MuiBottomNavigationAction-label': {
             fontSize: '.875rem',
             whiteSpace: "nowrap",
@@ -48,18 +48,18 @@ export default function Footer() {
     return (
         <Paper
             sx={{
-                width: "95%",
-                maxWidth: "550px",
-                m: "auto",
-                position: "fixed",
-                bottom: 15,
+                width: '95%',
+                maxWidth: '550px',
+                m: 'auto',
+                position: 'fixed',
+                bottom: 10,
                 right: 0,
                 left: 0,
                 zIndex: 15,
-                overflow: "hidden",
-                borderRadius: "300px",
-                "@media (min-width: 550px)": {
-                    mx: "auto",
+                overflow: 'hidden',
+                borderRadius: '300px',
+                '@media (min-width: 550px)': {
+                    mx: 'auto',
                 },
             }}
             elevation={3}
@@ -72,7 +72,7 @@ export default function Footer() {
                     background: "linear-gradient(90deg, rgb(20, 200, 135) 0%, rgb(15, 160, 105) 100%)",
                 }}
             >
-                <BottomNavigationAction label="زی پاک" icon={<HomeFilled/>} sx={actionStyle}/>
+                <BottomNavigationAction label="آنی‌روب" icon={<HomeFilled/>} sx={actionStyle}/>
                 <BottomNavigationAction label="پروفایل کاربری" icon={<AccountCircleIcon/>} sx={actionStyle}/>
                 <BottomNavigationAction label="درخواست ها" icon={<GroupsIcon/>} sx={actionStyle}/>
                 <BottomNavigationAction label="جمع‌آوری" icon={<Compost/>} sx={actionStyle}/>

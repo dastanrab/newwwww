@@ -168,7 +168,7 @@ export default function Privacy() {
                         اطلاعات تماس شرکت
                     </Typography>
                 </Box>
-                مشهد – سناباد 42 پلاک 123 طبقه 2
+                مشهد – سناباد 25 پلاک 45 طبقه 1
                 <br/>
                 ایمیل: Info@Zipak.com
             </Typography>

@@ -1,15 +1,22 @@
 import {
-    Button,
-    OutlinedInput,
+    // Layout
+    Box,
+    Grid,
+
+    // Inputs
     FormControl,
     InputLabel,
+    OutlinedInput,
     InputAdornment,
-    Grid,
-    Box,
+
+    // Controls
+    Button,
+
+    // Feedback
     Snackbar,
     Alert,
-    CircularProgress
 } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
@@ -102,23 +109,15 @@ export default function TicketAdd() {
                         transform: "translateX(-50%)",
                     }}
                 >
-                    <Button
+                    <LoadingButton
                         variant="contained"
                         size="large"
-                        disabled={loading}
-                        sx={{
-                            borderRadius: "300px",
-                            px: 5,
-                            minWidth: 150
-                        }}
+                        loading={loading}
+                        sx={{minWidth: 150, px: 3.5, borderRadius: '300px'}}
                         onClick={submitTicket}
                     >
-                        {loading ? (
-                            <CircularProgress size={24} color="inherit"/>
-                        ) : (
-                            "ارسال تیکت"
-                        )}
-                    </Button>
+                        ارسال تیکت
+                    </LoadingButton>
                 </Box>
 
             </Grid>

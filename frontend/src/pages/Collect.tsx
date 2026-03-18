@@ -1,4 +1,4 @@
-import {useState, useEffect} from "react";
+import React, {useState, useEffect} from "react";
 import {
     Box,
     TextField,
@@ -17,10 +17,11 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import StarIcon from '@mui/icons-material/Star';
 import MapIcon from '@mui/icons-material/Map';
 import {useNavigate} from "react-router-dom";
-import { useAddress } from "../hooks/useAddress";
-import { useAuthStore } from "../store/useAuthStore";
+import {useAddress} from "../hooks/useAddress";
+import {useAuthStore} from "../store/useAuthStore";
 import SubmitAdressMap from "../components/submit/address/SubmitAdressMap.tsx";
-import { Snackbar, Alert, type AlertColor } from "@mui/material";
+import {Snackbar, Alert, type AlertColor} from "@mui/material";
+import {LoadingButton} from "@mui/lab";
 
 
 interface SelectedLocation {
@@ -43,7 +44,7 @@ function Collect() {
     });
     const [savingAddress, setSavingAddress] = useState(false);
     const [loadingAddresses, setLoadingAddresses] = useState(true);
-    const [addresses, setAddresses] = useState<{id: number, title: string}[]>([]);
+    const [addresses, setAddresses] = useState<{ id: number, title: string }[]>([]);
     const navigate = useNavigate();
     const [openMapModal, setOpenMapModal] = useState(false);
     const [selectedLocation, setSelectedLocation] = useState<SelectedLocation | null>(null);
@@ -51,13 +52,13 @@ function Collect() {
     const [isPreferred, setIsPreferred] = useState(false);
     const [customTitle, setCustomTitle] = useState("");
     const [selectedAddressId, setSelectedAddressId] = useState<number | null>(null);
-  //  const [location, setLocation] = useState<{latitude: number, longitude: number} | null>(null);
+    //  const [location, setLocation] = useState<{latitude: number, longitude: number} | null>(null);
 
 
     // لیست آدرس‌های از پیش تعیین شده
-    const { accessToken} = useAuthStore();
+    const {accessToken} = useAuthStore();
 
-    const { getAddresses, createAddress } = useAddress();
+    const {getAddresses, createAddress} = useAddress();
 
     useEffect(() => {
         async function fetchAddresses() {
@@ -75,6 +76,7 @@ function Collect() {
             }
             setLoadingAddresses(false);
         }
+
         fetchAddresses();
     }, [accessToken]);
     const handleSelectAddress = (addressId: number) => {
@@ -103,7 +105,7 @@ function Collect() {
 
                 if (addressesRes.status === "success") {
                     // @ts-ignore
-                    setAddresses(addressesRes.data.map((a: any) => ({ id: a.id, title: a.title })));
+                    setAddresses(addressesRes.data.map((a: any) => ({id: a.id, title: a.title})));
                 }
 
                 setSnack({
@@ -115,7 +117,7 @@ function Collect() {
 
                 // برو به صفحه بعد با آدرس جدید
                 navigate("/collect/schedule", {
-                    state: { addressId: newAddressId }
+                    state: {addressId: newAddressId}
                 });
             } else {
                 setSnack({
@@ -153,7 +155,6 @@ function Collect() {
     };
 
 
-
     // مدیریت تغییر چک‌باکس
     const handlePreferredChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIsPreferred(event.target.checked);
@@ -186,7 +187,7 @@ function Collect() {
         <Box>
             <Box sx={{display: 'flex', gap: 1, mb: 2, flexWrap: 'wrap', justifyContent: 'center'}}>
                 {loadingAddresses ? (
-                    <CircularProgress />
+                    <CircularProgress/>
                 ) : (
                     addresses.map((address) => (
                         <Button
@@ -217,25 +218,11 @@ function Collect() {
                 open={openMapModal}
                 onClose={handleCloseMapModal}
                 fullWidth
-                maxWidth="md"
-                PaperProps={{sx: {borderRadius: 3}}}
+                fullScreen
             >
-                <DialogTitle>
-                    انتخاب موقعیت از روی نقشه
-                </DialogTitle>
-                <DialogContent sx={{ px: 2.5, py: 2, background: "#fafafa" }}>
-                    {/* 🗺️ Map */}
-                    <Box
-                        sx={{
-                            width: '100%',
-                            height: 320,
-                            mb: 2,
-                            borderRadius: 3,
-                            overflow: 'hidden',
-                            border: '1px solid #eee',
-                            boxShadow: '0 6px 20px rgba(0,0,0,0.08)'
-                        }}
-                    >
+                <DialogTitle>انتخاب موقعیت از روی نقشه</DialogTitle>
+                <DialogContent sx={{px: 2.5, py: 2}}>
+                    <Box sx={{width: '100%', height: '100%', boxShadow: '0 5px 20px rgba(0,0,0,0.075)'}}>
                         <SubmitAdressMap
                             onSelect={(coords) => {
                                 setSelectedLocation({
@@ -279,11 +266,11 @@ function Collect() {
                                 placeholder="آدرس دقیق‌تر..."
                                 value={detailedAddress}
                                 onChange={(e) => setDetailedAddress(e.target.value)}
-                                sx={{ mb: 1.5 }}
+                                sx={{mb: 1.5}}
                                 InputProps={{
                                     startAdornment: (
                                         <InputAdornment position="start">
-                                            <LocationOnIcon fontSize="small" />
+                                            <LocationOnIcon fontSize="small"/>
                                         </InputAdornment>
                                     ),
                                 }}
@@ -291,7 +278,7 @@ function Collect() {
 
                             {/* علاقه‌مندی */}
                             <FormControlLabel
-                                sx={{ mb: isPreferred ? 1.5 : 0 }}
+                                sx={{mb: isPreferred ? 1.5 : 0}}
                                 control={
                                     <Checkbox
                                         size="small"
@@ -320,17 +307,26 @@ function Collect() {
                         </Box>
                     )}
                 </DialogContent>
-                <DialogActions sx={{px: 3, pb: 2}}>
-                    <Button onClick={handleCloseMapModal} variant="outlined">
+                <DialogActions sx={{mb: 1.5, justifyContent: 'center'}}>
+                    <Button onClick={handleCloseMapModal} color="grey" variant="outlined"
+                            sx={{
+                                py: 1,
+                                px: 3.5,
+                                borderRadius: '300px'
+                            }}
+                    >
                         انصراف
                     </Button>
-                    <Button
-                        onClick={handleSaveAddress}
+                    <LoadingButton
+                        type="submit"
                         variant="contained"
+                        size="large"
                         disabled={!selectedLocation || savingAddress}
+                        onClick={handleSaveAddress}
+                        sx={{py: 1, px: 3.5, borderRadius: '300px'}}
                     >
-                        {savingAddress ? <CircularProgress size={20} color="inherit" /> : "ذخیره آدرس"}
-                    </Button>
+                        ذخیره آدرس
+                    </LoadingButton>
                 </DialogActions>
             </Dialog>
 
@@ -348,14 +344,14 @@ function Collect() {
             <Snackbar
                 open={snack.open}
                 autoHideDuration={3000}
-                onClose={() => setSnack({ ...snack, open: false })}
-                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                onClose={() => setSnack({...snack, open: false})}
+                anchorOrigin={{vertical: "bottom", horizontal: "center"}}
             >
                 <Alert
-                    onClose={() => setSnack({ ...snack, open: false })}
+                    onClose={() => setSnack({...snack, open: false})}
                     severity={snack.type}
                     variant="filled"
-                    sx={{ width: "100%" }}
+                    sx={{width: "100%"}}
                 >
                     {snack.message}
                 </Alert>

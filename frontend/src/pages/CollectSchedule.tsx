@@ -1,25 +1,26 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Box, Button, Typography} from "@mui/material";
 //import {useNavigate} from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import {useLocation} from "react-router-dom";
 import {Swiper, SwiperSlide} from "swiper/react";
 import 'swiper/swiper-bundle.css';
-import { useRequest } from "../hooks/useRequest";
-import { useAuthStore } from "../store/useAuthStore";
-import { CircularProgress } from "@mui/material";
+import {useRequest} from "../hooks/useRequest";
+import {useAuthStore} from "../store/useAuthStore";
+import {CircularProgress} from "@mui/material";
+import {LoadingButton} from "@mui/lab";
 
 function CollectSchedule() {
 
     const [submitLoading, setSubmitLoading] = useState(false);
-    const { createRequest } = useRequest();
+    const {createRequest} = useRequest();
     const locationState = useLocation().state as {
         addressId?: number;
     };
 
     const addressId = locationState?.addressId;
 
-    const { accessToken } = useAuthStore();
-    const { getScheduling, loading, error } = useRequest();
+    const {accessToken} = useAuthStore();
+    const {getScheduling, loading, error} = useRequest();
 
     const [days, setDays] = useState<any[]>([]);
 
@@ -71,7 +72,7 @@ function CollectSchedule() {
             addressId: addressId,
             cardId: null,
             payMethod: "aniroob",
-            scheduling: {day : selectedDayData.value , hour:selectedHourData.value},
+            scheduling: {day: selectedDayData.value, hour: selectedHourData.value},
         };
 
         try {
@@ -82,7 +83,7 @@ function CollectSchedule() {
 
             if (res.status === "success") {
                 console.log("درخواست با موفقیت ثبت شد", res.data);
-                window.location.href='/'
+                window.location.href = '/'
             } else {
                 console.error(res.message);
             }
@@ -95,29 +96,23 @@ function CollectSchedule() {
     if (loading) {
         return (
             <Box sx={{height: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                <CircularProgress />
+                <CircularProgress/>
             </Box>
         );
     }
 
     if (error) {
         return (
-            <Typography color="error" align="center">
-                {error}
-            </Typography>
+            <Typography color="error" align="center">{error}</Typography>
         );
     }
     return (
-        <Box>
-            <Typography variant="h5" sx={{mb: 1.5, fontWeight: 'bold', textAlign: 'center'}}>
-                انتخاب تاریخ و زمان
-            </Typography>
-            <Typography variant="h6" sx={{mb: 1.5, fontWeight: 'bold'}}>
-                انتخاب روز
-            </Typography>
-            <Box sx={{mb: 3.5}}>
+        <Box className="zo-collect">
+            <Typography variant="h5" sx={{mb: 1, textAlign: 'center'}}>انتخاب تاریخ و زمان</Typography>
+            <Typography variant="h6">انتخاب روز</Typography>
+            <Box sx={{mb: 1.5}}>
                 <Swiper
-                    spaceBetween={15}
+                    spaceBetween={5}
                     slidesPerView={3}
                     onSlideChange={handleDaySlideChange}
                     onSwiper={(swiper) => {
@@ -125,30 +120,28 @@ function CollectSchedule() {
                             swiper.slideTo(selectedDay);
                         }
                     }}
-                    style={{transform: 'scale(1)'}}
                 >
                     {days.map((day, index) => (
                         <SwiperSlide key={index}>
                             <Button
                                 fullWidth
                                 variant={selectedDay === index ? "contained" : "outlined"}
-                                color={!day.enabled ? "error" : (selectedDay === index ? "primary" : "inherit")}
+                                color={!day.enabled ? "error" : (selectedDay === index ? "secondary" : "inherit")}
                                 disabled={!day.enabled}
                                 onClick={() => handleDaySelect(index)}
+                                sx={{display: 'flex', flexDirection: 'column', gap: 0.5}}
                             >
-                                <Typography variant="h6">{day.weekday}</Typography>
-                                <Typography variant="body2">{day.label}</Typography>
+                                <Typography variant="body1">{day.weekday}</Typography>
+                                <Typography variant="caption">{day.label}</Typography>
                             </Button>
                         </SwiperSlide>
                     ))}
                 </Swiper>
             </Box>
-            <Typography variant="h6" sx={{mb: 1.5, fontWeight: 'bold'}}>
-                انتخاب ساعت
-            </Typography>
-            <Box sx={{mb: 3.5}}>
+            <Typography variant="h6">انتخاب ساعت</Typography>
+            <Box sx={{mb: 1.5}}>
                 <Swiper
-                    spaceBetween={10}
+                    spaceBetween={5}
                     slidesPerView={3}
                     onSlideChange={handleHourSlideChange}
                     onSwiper={(swiper) => {
@@ -156,38 +149,39 @@ function CollectSchedule() {
                             swiper.slideTo(selectedHour);
                         }
                     }}
-                    style={{transform: 'scale(1)'}}
                 >
                     {selectedDay !== null && days[selectedDay]?.hours.map((hour: any, index: number) => (
                         <SwiperSlide key={index}>
                             <Button
                                 fullWidth
                                 variant={selectedHour === index ? "contained" : "outlined"}
-                                color={!hour.enabled ? "error" : (selectedHour === index ? "primary" : "inherit")}
+                                color={!hour.enabled ? "error" : (selectedHour === index ? "secondary" : "inherit")}
                                 disabled={!hour.enabled}
                                 onClick={() => handleHourSelect(index)}
+                                sx={{display: 'flex', flexDirection: 'column', gap: 0.5}}
                             >
-                                <Typography variant="h6">{hour.subLabel}</Typography>
-                                <Typography variant="body2">{hour.label}</Typography>
+                                <Typography variant="body1">{hour.subLabel}</Typography>
+                                <Typography variant="caption">{hour.label}</Typography>
                             </Button>
                         </SwiperSlide>
                     ))}
                 </Swiper>
             </Box>
             <Box sx={{width: '100%', position: 'fixed', bottom: 90, right: 0, left: 0, textAlign: 'center'}}>
-                <Button
-                    onClick={handleFinalSubmit}
+                <LoadingButton
+                    type="submit"
                     variant="contained"
                     size="large"
+                    onClick={handleFinalSubmit}
                     disabled={
                         selectedDay === null ||
                         selectedHour === null ||
                         submitLoading
                     }
-                    sx={{px: 5, borderRadius: '300px'}}
+                    sx={{px: 4.5}}
                 >
-                    {submitLoading ? <CircularProgress size={24} color="inherit" /> : "تایید نهایی"}
-                </Button>
+                    ثبت درخواست جمع‌آوری
+                </LoadingButton>
             </Box>
         </Box>
     );

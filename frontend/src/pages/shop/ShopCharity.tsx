@@ -121,7 +121,7 @@ const ShopCharity = () => {
                             onChange={(e) => setPaymentMethod(e.target.value)}
                         >
                             <FormControlLabel value="آپ" control={<Radio/>} label="کیف پول آپ"/>
-                            <FormControlLabel value="زی پاک" control={<Radio/>} label="کیف پول زی پاک"/>
+                            <FormControlLabel value="آنی‌روب" control={<Radio/>} label="کیف پول آنی‌روب"/>
                         </RadioGroup>
                     </FormControl>
                 </CardContent>
