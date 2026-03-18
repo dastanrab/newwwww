@@ -13,20 +13,12 @@ import {
     FormControl,
 
     // Controls
-    Button,
     Radio,
     RadioGroup,
     FormControlLabel,
 
     // Feedback
-    CircularProgress,
     Skeleton,
-
-    // Surfaces / Overlays
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
 
     // Typography
     Typography,
@@ -40,7 +32,7 @@ import EmailIcon from "@mui/icons-material/Email";
 import GroupAdd from "@mui/icons-material/GroupAdd";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
-import PhotoCamera from "@mui/icons-material/PhotoCamera";
+// import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import {useAuthStore} from "../store/useAuthStore.ts";
 import {useProfile} from "../hooks/useProfile.ts";
 
@@ -205,14 +197,14 @@ export default function Profile() {
             console.error(err);
         }
     };
-    const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files[0]) {
-            const file = e.target.files[0];
-            const reader = new FileReader();
-            reader.onloadend = () => setFormData(prev => ({...prev, avatar: reader.result as string}));
-            reader.readAsDataURL(file);
-        }
-    };
+    // const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //     if (e.target.files && e.target.files[0]) {
+    //         const file = e.target.files[0];
+    //         const reader = new FileReader();
+    //         reader.onloadend = () => setFormData(prev => ({...prev, avatar: reader.result as string}));
+    //         reader.readAsDataURL(file);
+    //     }
+    // };
 
     const years = Array.from({length: 1404 - 1350 + 1}, (_, i) => 1350 + i);
     const months = ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"];
@@ -243,7 +235,6 @@ export default function Profile() {
                 <ProfileSkeleton/>
             ) : (
                 <Grid container justifyContent="center">
-
                     <Grid size={12}>
                         <Typography variant="h6">نوع کاربر</Typography>
                         <RadioGroup row name="userType" value={formData.userType} onChange={handleChange}>

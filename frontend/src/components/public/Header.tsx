@@ -13,12 +13,7 @@ import {
     ListItemText,
     ListItemIcon,
     Divider,
-
-    // Controls
-    IconButton,
     Chip,
-
-    // Typography
     Typography,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -121,7 +116,7 @@ const Header: React.FC = () => {
             >
                 <Box sx={{width: 260, height: '100%', display: 'flex', flexDirection: 'column'}}>
                     <List>
-                        <ListItem sx={{display: 'flex', flexWrap: 'wrap', flexDirection: 'column'}}>
+                        <ListItem>
                             <Typography variant="h6" sx={{color: "rgb(255,255,255)"}}>
                                 {[setting?.user?.firstName, setting?.user?.lastName]
                                     .filter(Boolean)
@@ -140,7 +135,7 @@ const Header: React.FC = () => {
                                 text: "کیف پول",
                                 icon: <AccountBalanceWalletIcon/>,
                                 path: "/wallet",
-                                chip: {amount: "47,000", currency: "تومان"},
+                                chip: {amount: setting?.user?.balance ?? 0, currency: "تومان"},
                             },
                             {text: "قوانین و مقررات", icon: <Shield/>, path: "/rule"},
                             {text: "حریم خصوصی", icon: <LockIcon/>, path: "/privacy"},
