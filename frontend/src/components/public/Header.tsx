@@ -10,7 +10,7 @@ import {
     ListItemText,
     ListItemIcon,
     Divider,
-    Avatar,
+    // Avatar,
     Chip,
     Box,
     ListItemButton,
@@ -30,7 +30,7 @@ import CreditCard from "@mui/icons-material/CreditCard";
 import LogoutIcon from "@mui/icons-material/Logout";
 import {useLocation, useNavigate} from "react-router-dom";
 
-import userAvatar from "../../assets/user.png";
+// import userAvatar from "../../assets/user.png";
 import {useAuthStore} from "../../store/useAuthStore.ts";
 
 const pageTitles: Record<string, string> = {
@@ -137,7 +137,7 @@ const Header: React.FC = () => {
                                 flexDirection: "column",
                             }}
                         >
-                            <Avatar src={userAvatar} alt="User Avatar"/>
+                            {/*<Avatar src={userAvatar} alt="User Avatar"/>*/}
                             <Typography variant="h6" sx={{color: "rgb(255,255,255)"}}>
                                 {[setting?.user?.firstName, setting?.user?.lastName]
                                     .filter(Boolean)
@@ -156,7 +156,7 @@ const Header: React.FC = () => {
                                 text: "کیف پول",
                                 icon: <AccountBalanceWalletIcon/>,
                                 path: "/wallet",
-                                chip: {amount: "47,000", currency: "تومان"},
+                                chip: {amount: setting?.user?.balance ?? 0, currency: "تومان"},
                             },
                             {text: "قوانین و مقررات", icon: <Shield/>, path: "/rule"},
                             {text: "حریم خصوصی", icon: <LockIcon/>, path: "/privacy"},

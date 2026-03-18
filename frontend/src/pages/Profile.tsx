@@ -17,8 +17,8 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
-    Avatar,
-    IconButton,
+//    Avatar,
+  //  IconButton,
     Skeleton, CircularProgress,
 } from "@mui/material";
 
@@ -29,30 +29,30 @@ import EmailIcon from "@mui/icons-material/Email";
 import GroupAdd from "@mui/icons-material/GroupAdd";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
-import PhotoCamera from "@mui/icons-material/PhotoCamera";
+// import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import {useAuthStore} from "../store/useAuthStore.ts";
 import {useProfile} from "../hooks/useProfile.ts";
 
 const ProfileSkeleton: React.FC = () => {
     return (
         <Grid container justifyContent="center" spacing={2}>
-            <Grid size={12} textAlign="center" position="relative">
-                <IconButton disabled>
-                    <Avatar sx={{width: 100, height: 100}}>
-                        <Skeleton variant="circular" width={100} height={100} animation="wave"/>
-                    </Avatar>
-                    <PhotoCamera
-                        sx={{
-                            position: "absolute",
-                            bottom: 5,
-                            right: 5,
-                            background: "#fff",
-                            borderRadius: "50%",
-                            padding: "3px"
-                        }}
-                    />
-                </IconButton>
-            </Grid>
+            {/*<Grid size={12} textAlign="center" position="relative">*/}
+            {/*    <IconButton disabled>*/}
+            {/*        <Avatar sx={{width: 100, height: 100}}>*/}
+            {/*            <Skeleton variant="circular" width={100} height={100} animation="wave"/>*/}
+            {/*        </Avatar>*/}
+            {/*        <PhotoCamera*/}
+            {/*            sx={{*/}
+            {/*                position: "absolute",*/}
+            {/*                bottom: 5,*/}
+            {/*                right: 5,*/}
+            {/*                background: "#fff",*/}
+            {/*                borderRadius: "50%",*/}
+            {/*                padding: "3px"*/}
+            {/*            }}*/}
+            {/*        />*/}
+            {/*    </IconButton>*/}
+            {/*</Grid>*/}
             <Grid size={12}>
                 <Box sx={{display: "flex", gap: "10px"}}>
                     <Box sx={{display: "flex", alignItems: "center", gap: "5px"}}>
@@ -209,14 +209,14 @@ export default function Profile() {
             console.error(err);
         }
     };
-    const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files[0]) {
-            const file = e.target.files[0];
-            const reader = new FileReader();
-            reader.onloadend = () => setFormData(prev => ({...prev, avatar: reader.result as string}));
-            reader.readAsDataURL(file);
-        }
-    };
+    // const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //     if (e.target.files && e.target.files[0]) {
+    //         const file = e.target.files[0];
+    //         const reader = new FileReader();
+    //         reader.onloadend = () => setFormData(prev => ({...prev, avatar: reader.result as string}));
+    //         reader.readAsDataURL(file);
+    //     }
+    // };
 
     const years = Array.from({length: 1404 - 1350 + 1}, (_, i) => 1350 + i);
     const months = ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"];
@@ -247,23 +247,23 @@ export default function Profile() {
                 <ProfileSkeleton/>
             ) : (
                 <Grid container justifyContent="center">
-                    <Grid size={12} textAlign="center">
-                        <input accept="image/*" style={{display: "none"}} id="avatar-upload" type="file"
-                               onChange={handleAvatarChange}/>
-                        <label htmlFor="avatar-upload">
-                            <IconButton component="span" sx={{position: "relative"}}>
-                                <Avatar src={formData.avatar} sx={{width: 100, height: 100}}/>
-                                <PhotoCamera sx={{
-                                    position: "absolute",
-                                    bottom: 5,
-                                    right: 5,
-                                    background: "#fff",
-                                    borderRadius: "50%",
-                                    padding: "3px"
-                                }}/>
-                            </IconButton>
-                        </label>
-                    </Grid>
+                    {/*<Grid size={12} textAlign="center">*/}
+                    {/*    <input accept="image/*" style={{display: "none"}} id="avatar-upload" type="file"*/}
+                    {/*           onChange={handleAvatarChange}/>*/}
+                    {/*    <label htmlFor="avatar-upload">*/}
+                    {/*        <IconButton component="span" sx={{position: "relative"}}>*/}
+                    {/*            <Avatar src={formData.avatar} sx={{width: 100, height: 100}}/>*/}
+                    {/*            <PhotoCamera sx={{*/}
+                    {/*                position: "absolute",*/}
+                    {/*                bottom: 5,*/}
+                    {/*                right: 5,*/}
+                    {/*                background: "#fff",*/}
+                    {/*                borderRadius: "50%",*/}
+                    {/*                padding: "3px"*/}
+                    {/*            }}/>*/}
+                    {/*        </IconButton>*/}
+                    {/*    </label>*/}
+                    {/*</Grid>*/}
 
                     <Grid size={12}>
                         <Typography variant="h6">نوع کاربر</Typography>
