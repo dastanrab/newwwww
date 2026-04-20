@@ -1,4 +1,4 @@
-import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import {Container} from "@mui/material";
 
 import Login from "./pages/user/Login";
@@ -27,74 +27,79 @@ import ProtectedRoute from "./components/auth/ProtectedRoute.tsx";
 import {useInitApp} from "./hooks/useInitApp.ts";
 import { Box, CircularProgress } from "@mui/material";
 import WalletTransactionsPage from "./pages/WalletTransactionsPage.tsx";
-
-function App() {
+function AppContent() {
     const { loading } = useInitApp();
+    const location = useLocation();
+
+
+    const noFooterPaths = ["/collect", "/collect/schedule","/shop/charity","/shop/internet"];
+    const hideFooter = noFooterPaths.includes(location.pathname);
+
     if (loading) {
         return (
-            <Box
-                sx={{
-                    height: "100vh",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                }}
-            >
+            <Box sx={{ height: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <CircularProgress size={50} />
             </Box>
         );
     }
+
+    return (
+        <Routes>
+            <Route path="/login" element={<Login/>}/>
+            <Route path="/verify" element={<Verify/>}/>
+
+            <Route
+                path="/*"
+                element={
+                    <ProtectedRoute>
+                        <>
+                            <Header/>
+                            <Container
+                                sx={{
+                                    height: "100vh",
+                                    py: 12,
+                                    boxShadow: 3,
+                                    overflowY: "scroll",
+                                    scrollbarWidth: "none",
+                                    "&::-webkit-scrollbar": { display: "none" },
+                                }}
+                            >
+                                <Routes>
+                                    <Route path="/" element={<Home/>}/>
+                                    <Route path="/collect" element={<Collect/>}/>
+                                    <Route path="/collect/schedule" element={<CollectSchedule/>}/>
+                                    <Route path="/messages" element={<Messages/>}/>
+                                    <Route path="/profile" element={<Profile/>}/>
+                                    <Route path="/requests" element={<Requests/>}/>
+                                    <Route path="/request/:id" element={<Request/>}/>
+                                    <Route path="/tickets" element={<TicketListPage/>}/>
+                                    <Route path="/tickets/new" element={<TicketAddPage/>}/>
+                                    <Route path="/tickets/:id" element={<TicketViewPage/>}/>
+                                    <Route path="/prices" element={<WastePrices/>}/>
+                                    <Route path="/rule" element={<Rule/>}/>
+                                    <Route path="/privacy" element={<Privacy/>}/>
+                                    <Route path="/shop" element={<Shop/>}/>
+                                    <Route path="/shop/history" element={<ShopHistory/>}/>
+                                    <Route path="/shop/charity" element={<ShopCharity/>}/>
+                                    <Route path="/shop/internet" element={<ShopInternet/>}/>
+                                    <Route path="/wallet" element={<WalletTransactionsPage/>}/>
+                                </Routes>
+                            </Container>
+                            {/* 2. کنترل نمایش فوتر بر اساس مسیر فعلی */}
+                            {!hideFooter && <Footer/>}
+                        </>
+                    </ProtectedRoute>
+                }
+            />
+        </Routes>
+    );
+}
+
+// 3. کامپوننت اصلی فقط Router را نگه می‌دارد
+function App() {
     return (
         <Router>
-            <Routes>
-
-                <Route path="/login" element={<Login/>}/>
-                <Route path="/verify" element={<Verify/>}/>
-
-                <Route
-                    path="/*"
-                    element={
-                        <ProtectedRoute>
-                            <>
-                                <Header/>
-                                <Container
-                                    sx={{
-                                        height: "100vh",
-                                        py: 12,
-                                        boxShadow: 3,
-                                        overflowY: "scroll",
-                                        scrollbarWidth: "none",
-                                        "&::-webkit-scrollbar": { display: "none" },
-                                    }}
-                                >
-                                    <Routes>
-                                        <Route path="/" element={<Home/>}/>
-                                        <Route path="/collect" element={<Collect/>}/>
-                                        <Route path="/collect/schedule" element={<CollectSchedule/>}/>
-                                        <Route path="/messages" element={<Messages/>}/>
-                                        <Route path="/profile" element={<Profile/>}/>
-                                        <Route path="/requests" element={<Requests/>}/>
-                                        <Route path="/request/:id" element={<Request/>}/>
-                                        <Route path="/tickets" element={<TicketListPage/>}/>
-                                        <Route path="/tickets/new" element={<TicketAddPage/>}/>
-                                        <Route path="/tickets/:id" element={<TicketViewPage/>}/>
-                                        <Route path="/prices" element={<WastePrices/>}/>
-                                        <Route path="/rule" element={<Rule/>}/>
-                                        <Route path="/privacy" element={<Privacy/>}/>
-                                        <Route path="/shop" element={<Shop/>}/>
-                                        <Route path="/shop/history" element={<ShopHistory/>}/>
-                                        <Route path="/shop/charity" element={<ShopCharity/>}/>
-                                        <Route path="/shop/internet" element={<ShopInternet/>}/>
-                                        <Route path="/wallet" element={<WalletTransactionsPage/>}/>
-                                    </Routes>
-                                </Container>
-                                <Footer/>
-                            </>
-                        </ProtectedRoute>
-                    }
-                />
-
-            </Routes>
+            <AppContent />
         </Router>
     );
 }

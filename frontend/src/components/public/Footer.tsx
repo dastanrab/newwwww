@@ -10,11 +10,12 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import GroupsIcon from "@mui/icons-material/Groups";
 import Compost from "@mui/icons-material/Compost";
 import {useNavigate} from "react-router-dom";
+import {useAuthStore} from "../../store/useAuthStore.ts";
 
 export default function Footer() {
     const [value, setValue] = React.useState(0);
     const navigate = useNavigate();
-
+    const {setting} = useAuthStore();
     const mainColor = '#14C887';
     const darkerColor = darken(mainColor, 0.5);
 
@@ -72,10 +73,10 @@ export default function Footer() {
                     background: "linear-gradient(90deg, rgb(20, 200, 135) 0%, rgb(15, 160, 105) 100%)",
                 }}
             >
-                <BottomNavigationAction label="آنی‌روب" icon={<HomeFilled/>} sx={actionStyle}/>
+                <BottomNavigationAction  label="آنی‌روب" icon={<HomeFilled/>} sx={actionStyle}/>
                 <BottomNavigationAction label="پروفایل کاربری" icon={<AccountCircleIcon/>} sx={actionStyle}/>
                 <BottomNavigationAction label="درخواست ها" icon={<GroupsIcon/>} sx={actionStyle}/>
-                <BottomNavigationAction label="جمع‌آوری" icon={<Compost/>} sx={actionStyle}/>
+                <BottomNavigationAction disabled={setting?.currentRequest} label="جمع‌آوری" icon={<Compost/>} sx={actionStyle}/>
             </BottomNavigation>
         </Paper>
     );

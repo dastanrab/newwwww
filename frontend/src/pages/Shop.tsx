@@ -126,7 +126,7 @@ export default function Shop() {
                 onClick={() => navigate("/shop/charity")}
             >
                 <Typography variant="h6">کمک به بنیادهای خیریه</Typography>
-                <Typography variant="body2">کمک به موسسه امام علی (ع)، شکوه مهر و ...</Typography>
+                <Typography variant="body2">کمک به موسسه خیریه شکوه مهر و ...</Typography>
                 <Button color="secondary" variant="contained" size="small"
                         sx={{
                             minWidth: "25px",

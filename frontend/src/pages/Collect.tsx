@@ -50,15 +50,17 @@ function Collect() {
     const [selectedLocation, setSelectedLocation] = useState<SelectedLocation | null>(null);
     const [detailedAddress, setDetailedAddress] = useState("");
     const [isPreferred, setIsPreferred] = useState(false);
+    const [showInfo, setShowInfo] = useState(false);
     const [customTitle, setCustomTitle] = useState("");
     const [selectedAddressId, setSelectedAddressId] = useState<number | null>(null);
+    const [step, setStep] = useState(0);
     //  const [location, setLocation] = useState<{latitude: number, longitude: number} | null>(null);
 
 
     // لیست آدرس‌های از پیش تعیین شده
     const {accessToken} = useAuthStore();
 
-    const {getAddresses, createAddress} = useAddress();
+    const {getAddresses, createAddress,reverseAddress} = useAddress();
 
     useEffect(() => {
         async function fetchAddresses() {
@@ -101,12 +103,12 @@ function Collect() {
             if (res.status === "success") {
                 // @ts-ignore
                 const newAddressId = res.data.id; // ← آیدی آدرس جدید
-                const addressesRes = await getAddresses(accessToken);
+                // const addressesRes = await getAddresses(accessToken);
 
-                if (addressesRes.status === "success") {
-                    // @ts-ignore
-                    setAddresses(addressesRes.data.map((a: any) => ({id: a.id, title: a.title})));
-                }
+                // if (addressesRes.status === "success") {
+                //     // @ts-ignore
+                //     setAddresses(addressesRes.data.map((a: any) => ({id: a.id, title: a.title})));
+                // }
 
                 setSnack({
                     open: true,
@@ -136,7 +138,36 @@ function Collect() {
             setSavingAddress(false);
         }
     };
+    const handleAdressInfo = async (lat:number|null,lan:number|null) => {
+        console.log('start')
+        if (!lat || !lan) return;
+        console.log('end')
+        setSavingAddress(true);
+        try {
+            const res = await reverseAddress(lat, lan);
+            if (res.status === "OK") {
+                // @ts-ignore
+                setDetailedAddress(res.formatted_address)
+                setStep(1)
+                setShowInfo(true)
 
+            } else {
+                setSnack({
+                    open: true,
+                    message: res.message || "خطا در ثبت آدرس",
+                    type: "error",
+                });
+            }
+        } catch (err) {
+            setSnack({
+                open: true,
+                message: "خطا در ارتباط با سرور",
+                type: "error",
+            });
+        } finally {
+            setSavingAddress(false);
+        }
+    };
 
     const handleOpenMapModal = () => {
         setOpenMapModal(true);
@@ -147,6 +178,7 @@ function Collect() {
     };
 
     const handleCloseMapModal = () => {
+        setStep(0)
         setOpenMapModal(false);
         setSelectedLocation(null);
         setDetailedAddress("");
@@ -183,6 +215,7 @@ function Collect() {
     };
 
     // @ts-ignore
+
     return (
         <Box>
             <Box sx={{display: 'flex', gap: 1, mb: 2, flexWrap: 'wrap', justifyContent: 'center'}}>
@@ -222,20 +255,9 @@ function Collect() {
             >
                 <DialogTitle>انتخاب موقعیت از روی نقشه</DialogTitle>
                 <DialogContent sx={{px: 2.5, py: 2}}>
-                    <Box sx={{width: '100%', height: '100%', boxShadow: '0 5px 20px rgba(0,0,0,0.075)'}}>
-                        <SubmitAdressMap
-                            onSelect={(coords) => {
-                                setSelectedLocation({
-                                    latitude: coords.lat,
-                                    longitude: coords.lon,
-                                    isPreferred: false,
-                                });
-                            }}
-                        />
-                    </Box>
 
-                    {/* 📍 Info Card */}
-                    {selectedLocation && (
+                    {/* 📍 Info Card Map*/}
+                    {( detailedAddress !== "" && showInfo && selectedLocation) ? (
                         <Box
                             sx={{
                                 p: 2,
@@ -263,9 +285,10 @@ function Collect() {
                                 fullWidth
                                 size="small"
                                 variant="outlined"
-                                placeholder="آدرس دقیق‌تر..."
+                                placeholder={detailedAddress}
                                 value={detailedAddress}
-                                onChange={(e) => setDetailedAddress(e.target.value)}
+                                disabled={true}
+                                // onChange={(e) => setDetailedAddress(e.target.value)}
                                 sx={{mb: 1.5}}
                                 InputProps={{
                                     startAdornment: (
@@ -273,6 +296,20 @@ function Collect() {
                                             <LocationOnIcon fontSize="small"/>
                                         </InputAdornment>
                                     ),
+                                }}
+                            />
+                            {/* ورودی جدید: جزئیات آدرس (فعال) */}
+                            <TextField
+                                fullWidth
+                                size="small"
+                                variant="outlined"
+                                label="جزئیات آدرس (واحد، پلاک، طبقه)"
+                                placeholder="مثلاً: پلاک ۱۰، واحد ۴، زنگ سوم"
+                             //   value={addressDetails} // این استیت را در کامپوننت تعریف کنید
+                              //  onChange={(e) => setAddressDetails(e.target.value)} // این تابع را تعریف کنید
+                                sx={{
+                                    mb: 1.5,
+                                    '& .MuiInputLabel-root': { fontSize: '0.85rem' }, // کوچک‌تر کردن لیبل برای ظاهر بهتر
                                 }}
                             />
 
@@ -305,10 +342,23 @@ function Collect() {
                                 />
                             )}
                         </Box>
-                    )}
+                    ) : ( <Box sx={{width: '100%', height: '100%', boxShadow: '0 5px 20px rgba(0,0,0,0.075)'}}>
+                        <SubmitAdressMap
+                            onSelect={(coords) => {
+                                setSelectedLocation({
+                                    latitude: coords.lat,
+                                    longitude: coords.lon,
+                                    isPreferred: false,
+                                });
+                                if (!coords.lat || !coords.lon) return;
+                                // handleAdressInfo(coords.lat,coords.lon)
+
+                            }}
+                        />
+                    </Box>)}
                 </DialogContent>
                 <DialogActions sx={{mb: 1.5, justifyContent: 'center'}}>
-                    <Button onClick={handleCloseMapModal} color="grey" variant="outlined"
+                    <Button onClick={handleCloseMapModal} color="info" variant="outlined"
                             sx={{
                                 py: 1,
                                 px: 3.5,
@@ -317,16 +367,30 @@ function Collect() {
                     >
                         انصراف
                     </Button>
-                    <LoadingButton
-                        type="submit"
-                        variant="contained"
-                        size="large"
-                        disabled={!selectedLocation || savingAddress}
-                        onClick={handleSaveAddress}
-                        sx={{py: 1, px: 3.5, borderRadius: '300px'}}
-                    >
-                        ذخیره آدرس
-                    </LoadingButton>
+
+                    {step == 0 ?
+                        <> <LoadingButton
+                            type="submit"
+                            variant="contained"
+                            size="large"
+                            disabled={!selectedLocation || savingAddress}
+                            onClick={()=>{handleAdressInfo(selectedLocation?.latitude ?? null,selectedLocation?.longitude??null).then()}}
+                            sx={{py: 1, px: 3.5, borderRadius: '300px'}}
+                        >
+                            تایید آدرس
+                        </LoadingButton></> :
+                        <><LoadingButton
+                            type="submit"
+                            variant="contained"
+                            size="large"
+                            disabled={!selectedLocation || savingAddress}
+                            onClick={handleSaveAddress}
+                            sx={{py: 1, px: 3.5, borderRadius: '300px'}}
+                        >
+                            ذخیره آدرس
+                        </LoadingButton></>}
+
+
                 </DialogActions>
             </Dialog>
 

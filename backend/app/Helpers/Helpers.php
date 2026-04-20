@@ -1379,8 +1379,7 @@ function predict_illnessV3($question)
     ];
 
     try {
-        $response = Http::timeout(300)
-            ->post('http://ollama:11434/api/chat', $data);
+        $response = Http::timeout(300)->post('http://ollama:11434/api/chat', $data);
 
         if ($response->successful()) {
             $responseData = $response->json();

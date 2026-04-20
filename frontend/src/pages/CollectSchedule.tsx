@@ -1,97 +1,100 @@
-import React, {useEffect, useState} from "react";
-import {Box, Button, Typography} from "@mui/material";
-//import {useNavigate} from "react-router-dom";
+import {useEffect, useState} from "react";
+import {Box, Button, Typography, Grid, CircularProgress} from "@mui/material";
 import {useLocation} from "react-router-dom";
-import {Swiper, SwiperSlide} from "swiper/react";
+import {LoadingButton} from "@mui/lab";
 import 'swiper/swiper-bundle.css';
+
 import {useRequest} from "../hooks/useRequest";
 import {useAuthStore} from "../store/useAuthStore";
-import {CircularProgress} from "@mui/material";
-import {LoadingButton} from "@mui/lab";
 
 function CollectSchedule() {
+    const location = useLocation();
 
-    const [submitLoading, setSubmitLoading] = useState(false);
-    const {createRequest} = useRequest();
-    const locationState = useLocation().state as {
-        addressId?: number;
-    };
-
+    // دریافت اطلاعات از استیت مسیر
+    const locationState = location.state as { addressId?: number };
     const addressId = locationState?.addressId;
 
     const {accessToken} = useAuthStore();
-    const {getScheduling, loading, error} = useRequest();
+
+    // تجمیع متدها و وضعیت‌ها از یک هوک واحد
+    const {getScheduling, createRequest, loading, error} = useRequest();
 
     const [days, setDays] = useState<any[]>([]);
+    const [submitLoading, setSubmitLoading] = useState(false);
+    const [selectedDay, setSelectedDay] = useState<number | null>(null);
+    const [selectedHour, setSelectedHour] = useState<number | null>(null);
 
+    // واکشی داده‌ها - این افکت فقط با تغییر addressId یا accessToken اجرا می‌شود
     useEffect(() => {
-        if (!addressId) return;
+        if (!addressId || !accessToken) return;
+
+        let isMounted = true; // برای جلوگیری از آپدیت استیت اگر کامپوننت آنماونت شد
 
         const fetchSchedule = async () => {
-            // @ts-ignore
-            const res = await getScheduling(addressId, accessToken);
-            if (res.status === "success") {
-                // خروجی API: res.data.list
-                // @ts-ignore
-                setDays(res.data.list || []);
-            } else {
-                console.error(res.message);
+            try {
+                const res = await getScheduling(addressId, accessToken);
+                if (isMounted && res.status === "success") {
+                    // @ts-ignore
+                    setDays(res.data.list || []);
+                    // اگر می‌خواهید به صورت پیش‌فرض روز اول انتخاب شود:
+                    // if (res.data.list?.length > 0) setSelectedDay(0);
+                }
+            } catch (err) {
+                console.error("خطا در دریافت زمان‌بندی:", err);
             }
         };
 
         fetchSchedule();
-    }, [addressId, accessToken]);
 
-    const [selectedDay, setSelectedDay] = useState<number | null>(null);
-    const [selectedHour, setSelectedHour] = useState<number | null>(null);
+        return () => {
+            isMounted = false;
+        };
+    }, [addressId, accessToken]); // وابستگی‌های دقیق
 
-
+    // مدیریت تغییر روز
     const handleDaySelect = (index: number) => {
         setSelectedDay(index);
+        setSelectedHour(null); // حیاتی: با تغییر روز، ساعت باید دوباره انتخاب شود
     };
 
     const handleHourSelect = (index: number) => {
         setSelectedHour(index);
     };
 
-    const handleDaySlideChange = (swiper: any) => {
-        setSelectedDay(swiper.activeIndex);
-    };
-
-    const handleHourSlideChange = (swiper: any) => {
-        setSelectedHour(swiper.activeIndex);
-    };
+    // const handleDaySlideChange = (swiper: any) => {
+    //     setSelectedDay(swiper.activeIndex);
+    //     setSelectedHour(null); // ریست کردن ساعت در تغییر اسلاید
+    // };
 
     const handleFinalSubmit = async () => {
         if (selectedDay === null || selectedHour === null || !addressId) return;
 
         const selectedDayData = days[selectedDay];
-        const selectedHourData = days[selectedDay].hours[selectedHour];
+        const selectedHourData = selectedDayData.hours[selectedHour];
 
         const payload = {
             addressId: addressId,
             cardId: null,
             payMethod: "aniroob",
-            scheduling: {day: selectedDayData.value, hour: selectedHourData.value},
+            scheduling: {
+                day: selectedDayData.value,
+                hour: selectedHourData.value
+            },
         };
 
         try {
             setSubmitLoading(true);
-
             // @ts-ignore
             const res = await createRequest(accessToken, payload);
-
             if (res.status === "success") {
-                console.log("درخواست با موفقیت ثبت شد", res.data);
-                window.location.href = '/'
-            } else {
-                console.error(res.message);
+                window.location.href='/'
             }
+        } catch (err) {
+            console.error("خطا در ثبت درخواست:", err);
         } finally {
             setSubmitLoading(false);
         }
     };
-
 
     if (loading) {
         return (
@@ -103,82 +106,93 @@ function CollectSchedule() {
 
     if (error) {
         return (
-            <Typography color="error" align="center">{error}</Typography>
+            <Typography color="error" align="center" sx={{mt: 4}}>{error}</Typography>
         );
     }
+
+
     return (
-        <Box className="zo-collect">
-            <Typography variant="h5" sx={{mb: 1, textAlign: 'center'}}>انتخاب تاریخ و زمان</Typography>
-            <Typography variant="h6">انتخاب روز</Typography>
-            <Box sx={{mb: 1.5}}>
-                <Swiper
-                    spaceBetween={5}
-                    slidesPerView={3}
-                    onSlideChange={handleDaySlideChange}
-                    onSwiper={(swiper) => {
-                        if (selectedDay !== null) {
-                            swiper.slideTo(selectedDay);
-                        }
-                    }}
-                >
+        <Box className="zo-collect" sx={{pb: 15}}>
+            <Typography variant="h5" sx={{mb: 3, textAlign: 'center', fontWeight: 'bold'}}>
+                انتخاب تاریخ و زمان
+            </Typography>
+
+            <Typography variant="h6" sx={{mb: 1}}>انتخاب روز</Typography>
+            <Box sx={{mb: 3}}>
+                <Grid container spacing={1}>
                     {days.map((day, index) => (
-                        <SwiperSlide key={index}>
+                        <Grid size={{xs: 6, md: 3}} key={index}>
                             <Button
                                 fullWidth
                                 variant={selectedDay === index ? "contained" : "outlined"}
-                                color={!day.enabled ? "error" : (selectedDay === index ? "secondary" : "inherit")}
+                                // @ts-ignore
+                                color={!day.enabled ? "inherit" : (selectedDay === index ? "primary" : "outlined")}
                                 disabled={!day.enabled}
                                 onClick={() => handleDaySelect(index)}
-                                sx={{display: 'flex', flexDirection: 'column', gap: 0.5}}
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: 0.5,
+                                    borderRadius: 2,
+                                    opacity: day.enabled ? 1 : 0.5
+                                }}
                             >
-                                <Typography variant="body1">{day.weekday}</Typography>
+                                <Typography variant="body1" sx={{fontWeight: 700}}>{day.weekday}</Typography>
                                 <Typography variant="caption">{day.label}</Typography>
                             </Button>
-                        </SwiperSlide>
+                        </Grid>
                     ))}
-                </Swiper>
+                </Grid>
             </Box>
-            <Typography variant="h6">انتخاب ساعت</Typography>
-            <Box sx={{mb: 1.5}}>
-                <Swiper
-                    spaceBetween={5}
-                    slidesPerView={3}
-                    onSlideChange={handleHourSlideChange}
-                    onSwiper={(swiper) => {
-                        if (selectedHour !== null) {
-                            swiper.slideTo(selectedHour);
-                        }
-                    }}
-                >
-                    {selectedDay !== null && days[selectedDay]?.hours.map((hour: any, index: number) => (
-                        <SwiperSlide key={index}>
+
+            <Typography variant="h6" sx={{mt: 2}}>انتخاب ساعت</Typography>
+            <Grid container spacing={1}>
+                {selectedDay !== null &&
+                    days[selectedDay]?.hours.map((hour: any, index: number) => (
+                        <Grid size={{xs: 6, md: 3}} key={index}>
                             <Button
+                                key={index}
                                 fullWidth
                                 variant={selectedHour === index ? "contained" : "outlined"}
-                                color={!hour.enabled ? "error" : (selectedHour === index ? "secondary" : "inherit")}
+                                // @ts-ignore
+                                color={!hour.enabled ? "inherit" : (selectedHour === index ? "primary" : "outlined")}
                                 disabled={!hour.enabled}
                                 onClick={() => handleHourSelect(index)}
-                                sx={{display: 'flex', flexDirection: 'column', gap: 0.5}}
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    borderRadius: 2,
+                                    padding: '10px 5px',
+                                }}
                             >
-                                <Typography variant="body1">{hour.subLabel}</Typography>
+                                <Typography variant="body2" sx={{fontWeight: 700}}>{hour.subLabel}</Typography>
                                 <Typography variant="caption">{hour.label}</Typography>
                             </Button>
-                        </SwiperSlide>
+                        </Grid>
                     ))}
-                </Swiper>
-            </Box>
-            <Box sx={{width: '100%', position: 'fixed', bottom: 90, right: 0, left: 0, textAlign: 'center'}}>
+            </Grid>
+
+            {/* بخش دکمه نهایی */}
+            <Box
+                sx={{
+                    width: 300,
+                    margin: '0 auto',
+                    position: 'fixed',
+                    right: 0,
+                    bottom: 90,
+                    left: 0,
+                    textAlign: 'center',
+                    zIndex: 15
+                }}
+            >
                 <LoadingButton
-                    type="submit"
+                    fullWidth
+                    loading={submitLoading}
                     variant="contained"
                     size="large"
                     onClick={handleFinalSubmit}
-                    disabled={
-                        selectedDay === null ||
-                        selectedHour === null ||
-                        submitLoading
-                    }
-                    sx={{px: 4.5}}
+                    disabled={selectedDay === null || selectedHour === null}
+                    sx={{py: 1.5, borderRadius: 300, boxShadow: 3}}
                 >
                     ثبت درخواست جمع‌آوری
                 </LoadingButton>

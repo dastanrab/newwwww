@@ -10,7 +10,6 @@ import {
     InputAdornment,
 
     // Controls
-    Button,
 
     // Feedback
     Snackbar,

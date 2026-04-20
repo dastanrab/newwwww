@@ -1,5 +1,5 @@
-import {Grid, Card, Box, Typography, Stack, Button, CircularProgress} from "@mui/material";
-import {ShoppingCart, RequestPage, PriceChange} from "@mui/icons-material";
+import {Grid, Card, Box, Typography, Stack, Button, CircularProgress, IconButton} from "@mui/material";
+import {ShoppingCart,  PriceChange} from "@mui/icons-material";
 import WalletIcon from '@mui/icons-material/Wallet';
 import {Swiper, SwiperSlide} from "swiper/react";
 import 'swiper/swiper-bundle.css';
@@ -12,6 +12,7 @@ import box from "../assets/box.png";
 import recycling from "../assets/recycling.png"
 import {useRequest} from "../hooks/useRequest";
 import {Snackbar, Alert} from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete'; // Import the Delete icon
 
 
 import {useNavigate} from "react-router-dom";
@@ -311,14 +312,36 @@ export default function Home() {
                         p: 2,
                         border: '2px solid rgb(15, 160, 105)',
                         borderRadius: 4,
-                        boxShadow: '0 10px 25px rgba(0,0,0,0.08)'
+                        boxShadow: '0 10px 25px rgba(0,0,0,0.08)',
                     }}
                 >
-                    <Stack spacing={1.5}>
-                        <Typography variant="h6" sx={{fontWeight: 600}}>
-                            درخواست فعال شما
-                        </Typography>
+                    {setting.currentRequest.cancelable && (
+                        <Stack
+                            direction="row"
+                            alignItems="center"
+                            justifyContent="space-between"
+                            spacing={1}
+                            sx={{ mb: 1 }}
+                        >
+                            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                                درخواست فعال شما
+                            </Typography>
 
+                            <IconButton
+                                onClick={handleCancelRequest}
+                                sx={{
+                                    color: 'rgb(255, 0, 0)',
+                                    p: 0.5
+
+                                }}
+                                disabled={loading}
+                            >
+                                <DeleteIcon fontSize="large" />
+                            </IconButton>
+                        </Stack>
+                    )}
+
+                    <Stack spacing={1.5}>
                         <Typography variant="body2">
                             📍 {setting.currentRequest.address}
                         </Typography>
@@ -334,18 +357,6 @@ export default function Home() {
                         <Typography variant="body2">
                             وضعیت: {setting.currentRequest.status.label}
                         </Typography>
-
-                        {setting.currentRequest.cancelable && (
-                            <Button
-                                variant="outlined"
-                                color="error"
-                                sx={{mt: 1, borderRadius: "20px"}}
-                                onClick={handleCancelRequest}
-                                disabled={loading}
-                            >
-                                {loading ? <CircularProgress/> : "لغو درخواست"}
-                            </Button>
-                        )}
                     </Stack>
                 </Card>
             ) : (

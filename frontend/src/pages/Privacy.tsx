@@ -170,7 +170,7 @@ export default function Privacy() {
                 </Box>
                 مشهد – سناباد 25 پلاک 45 طبقه 1
                 <br/>
-                ایمیل: Info@Zipak.com
+                ایمیل: Info@AniRoob.com
             </Typography>
         </Box>
     );

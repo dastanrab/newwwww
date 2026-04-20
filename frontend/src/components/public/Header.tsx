@@ -5,6 +5,7 @@ import {
     Toolbar,
     Drawer,
     Box,
+    IconButton,
 
     // Lists / Navigation
     List,
@@ -116,13 +117,13 @@ const Header: React.FC = () => {
             >
                 <Box sx={{width: 260, height: '100%', display: 'flex', flexDirection: 'column'}}>
                     <List>
-                        <ListItem>
-                            <Typography variant="h6" sx={{color: "rgb(255,255,255)"}}>
+                        <ListItem sx={{display: 'flex', alignItems: 'unset', flexDirection: 'column'}}>
+                            <Typography sx={{mb: 0.5, color: "rgb(255,255,255)"}}>
                                 {[setting?.user?.firstName, setting?.user?.lastName]
                                     .filter(Boolean)
                                     .join(" ") || "-"}
                             </Typography>
-                            <Typography variant="body2" sx={{color: "rgb(255,255,255)"}}>
+                            <Typography variant="h6" sx={{color: "rgb(255,255,255)"}}>
                                 {setting?.user?.mob || '-'}
                             </Typography>
                         </ListItem>

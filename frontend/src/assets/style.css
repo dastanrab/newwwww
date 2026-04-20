@@ -31,10 +31,11 @@ img {
 }
 
 .zo-container {
-    max-width: 600px;
+    max-width: 650px;
     margin: 0 auto;
     position: relative;
-    background: rgb(250, 250, 250)
+    background: rgb(250, 250, 250);
+    box-shadow: 0 0 15px rgb(0, 0, 0, .05)
 }
 
 .zo-page {
@@ -88,12 +89,14 @@ header.MuiPaper-root.MuiPaper-elevation {
     border-radius: 1.5rem;
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.25), 0 2px 2px 0 rgba(0, 0, 0, 0.15), 0 1px 5px 0 rgba(0, 0, 0, 0.10)
 }
+
 .ol-zoom {
     display: flex;
     flex-direction: column;
     gap: 5px;
     margin: 10px
 }
+
 .ol-zoom .ol-zoom-in,
 .ol-zoom .ol-zoom-out {
     width: 30px;
@@ -102,9 +105,10 @@ header.MuiPaper-root.MuiPaper-elevation {
     background: rgb(255, 255, 255);
     border: 0;
     border-radius: 50%;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.075);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.075);
     cursor: pointer
 }
+
 .ol-rotate-reset {
     display: none
 }

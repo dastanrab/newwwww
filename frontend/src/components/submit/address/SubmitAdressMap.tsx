@@ -63,9 +63,9 @@ export default function SubmitAdressMap({ onSelect }: SubmitAdressMapProps) {
             marker.setStyle(
                 new Style({
                     image: new Icon({
-                        src: '/favicon.svg',
+                        src: '/favicon.png',
                         anchor: [0.5, 1],
-                        scale: 0.10,
+                        scale: 0.05,
                     }),
                 })
             );

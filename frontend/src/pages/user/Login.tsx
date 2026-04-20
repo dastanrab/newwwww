@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import {
     Box,
     TextField,
-    Button,
     Checkbox,
     FormControlLabel,
     Typography,
@@ -12,11 +11,12 @@ import {
     Alert,
 } from "@mui/material";
 import Dock from "@mui/icons-material/Dock";
-import logo from "../../assets/logo.png";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import logo from "../../assets/logo.svg";
+import text from "../../assets/logo-text.svg";
+import {Link as RouterLink, useNavigate} from "react-router-dom";
 
-import { useAuth } from "../../hooks/useAuth";
-import { useAuthStore } from "../../store/useAuthStore.ts";
+import {useAuth} from "../../hooks/useAuth";
+import {useAuthStore} from "../../store/useAuthStore.ts";
 import {LoadingButton} from "@mui/lab";
 
 const Login: React.FC = () => {
@@ -28,7 +28,7 @@ const Login: React.FC = () => {
         useState<"success" | "error" | "warning" | "info">("error");
 
     const navigate = useNavigate();
-    const { login, loading } = useAuth();
+    const {login, loading} = useAuth();
     const setMob = useAuthStore((state) => state.setMob);
 
     const showSnackbar = (
@@ -54,7 +54,7 @@ const Login: React.FC = () => {
         const response = await login(phone);
 
         if (response.status === "success") {
-            setMob(phone); // ذخیره موبایل در zustand
+            setMob(phone);
             showSnackbar("کد تایید ارسال شد.", "success");
 
             setTimeout(() => {
@@ -77,8 +77,9 @@ const Login: React.FC = () => {
                 position: "relative",
             }}
         >
-            <Box sx={{ width: "125px", m: "0 auto 15px" }}>
-                <img src={logo} alt="logo" />
+            <Box sx={{width: "125px", m: "0 auto 15px"}}>
+                <img src={logo} alt="logo"/>
+                <img src={text} alt="logo"/>
             </Box>
 
             <TextField
@@ -86,13 +87,7 @@ const Login: React.FC = () => {
                 fullWidth
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                InputProps={{
-                    endAdornment: (
-                        <InputAdornment position="end">
-                            <Dock />
-                        </InputAdornment>
-                    ),
-                }}
+                InputProps={{endAdornment: (<InputAdornment position="end"><Dock/></InputAdornment>),}}
             />
 
             <FormControlLabel
@@ -102,15 +97,11 @@ const Login: React.FC = () => {
                         onChange={(e) => setAcceptedTerms(e.target.checked)}
                     />
                 }
-                sx={{ mt: 0.5 }}
+                sx={{mt: 0.5}}
                 label={
                     <Typography variant="body2">
                         تمامی{" "}
-                        <Link
-                            component={RouterLink}
-                            to="/rule"
-                            sx={{ color: "primary.main", textDecoration: "none" }}
-                        >
+                        <Link component={RouterLink} to="/rule" sx={{color: "primary.main", textDecoration: "none"}}>
                             قوانین و مقررات
                         </Link>{" "}
                         آنی‌روب را می‌پذیرم
@@ -123,7 +114,7 @@ const Login: React.FC = () => {
                 size="large"
                 onClick={handleLogin}
                 disabled={loading}
-                sx={{ mt: 1.5, py: 1.5, borderRadius: '300px' }}
+                sx={{mt: 1.5, py: 1.5, borderRadius: '300px'}}
             >
                 ورود به حساب کاربری
             </LoadingButton>
@@ -132,12 +123,9 @@ const Login: React.FC = () => {
                 open={openSnackbar}
                 autoHideDuration={3000}
                 onClose={() => setOpenSnackbar(false)}
-                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                anchorOrigin={{vertical: "bottom", horizontal: "center"}}
             >
-                <Alert
-                    severity={snackbarSeverity}
-                    onClose={() => setOpenSnackbar(false)}
-                >
+                <Alert severity={snackbarSeverity} onClose={() => setOpenSnackbar(false)}>
                     {snackbarMessage}
                 </Alert>
             </Snackbar>

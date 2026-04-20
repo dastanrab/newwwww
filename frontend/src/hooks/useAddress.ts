@@ -83,8 +83,37 @@ export const useAddress = () => {
     const searchAddress = (token: string, query: string) => {
         return request("/search", "POST", { address: query }, token);
     };
+    const reverseAddress = async (lat: number, lng: number) => {
+        setLoading(true);
+        setError(null);
+
+        try {
+            const res = await fetch(`https://api.neshan.org/v5/reverse?lat=${lat}&lng=${lng}`, {
+               method:"GET",
+                headers: {
+                    "Api-Key": "service.b28eded11be548d198058478e5296f16"
+                }
+            });
+            const json = await res.json();
+
+            if (!json.status || json.status !== "ok") {
+                setError(json.message);
+            }
+            return json;
+        } catch (err: any) {
+            setError("خطا در ارتباط با سرور");
+            return {
+                status: "error",
+                message: "خطا در ارتباط با سرور",
+                data: [] as any,
+            };
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return {
+        reverseAddress,
         getAddresses,
         createAddress,
         deleteAddress,

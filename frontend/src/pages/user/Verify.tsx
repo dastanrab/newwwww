@@ -7,13 +7,14 @@ import {
     Stack,
     Snackbar,
     Alert,
-    CircularProgress,
 } from "@mui/material";
 import {useNavigate} from "react-router-dom";
 import {LoadingButton} from "@mui/lab";
 
 import {useAuth} from "../../hooks/useAuth";
 import {useAuthStore} from "../../store/useAuthStore";
+import logo from "../../assets/logo.svg";
+import text from "../../assets/logo-text.svg";;
 
 const Verify: React.FC = () => {
     const navigate = useNavigate();
@@ -150,6 +151,10 @@ const Verify: React.FC = () => {
                 px: 3,
             }}
         >
+            <Box sx={{width: "125px", m: "0 auto 15px"}}>
+                <img src={logo} alt="logo"/>
+                <img src={text} alt="logo"/>
+            </Box>
             <Typography variant="body1" mb={3} textAlign="center">
                 کد تایید ارسال شده به شماره <strong>{mob}</strong> را وارد نمایید
             </Typography>
@@ -173,7 +178,7 @@ const Verify: React.FC = () => {
                         sx={{
                             width: "50px",
                             "& .MuiOutlinedInput-root": {
-                                borderRadius: "300px",
+                                borderRadius: "20px",
                             },
                         }}
                     />
@@ -197,7 +202,7 @@ const Verify: React.FC = () => {
                     color="text.secondary"
                     sx={{mb: 2, textAlign: "center"}}
                 >
-                    ارسال مجدد کد تا {counter} ثانیه دیگر
+                    ارسال مجدد کد تا <strong>{counter}</strong> ثانیه دیگر
                 </Typography>
             ) : (
                 <Button
