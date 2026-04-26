@@ -1,0 +1,28 @@
+@font-face {
+    font-family: "Estedad-Regular";
+    font-weight: 400;
+    src: url("fonts/Estedad-Regular.woff2") format("woff2");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Estedad-Medium";
+    font-weight: 500;
+    src: url("fonts/Estedad-Medium.woff2") format("woff2");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Estedad-Bold";
+    font-weight: 700;
+    src: url("fonts/Estedad-Bold.woff2") format("woff2");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Estedad-Black";
+    font-weight: 900;
+    src: url("fonts/Estedad-Black.woff2") format("woff2");
+    font-display: swap;
+}
+
