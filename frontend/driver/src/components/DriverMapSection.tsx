@@ -1,32 +1,89 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import {
     Avatar,
     Box,
     Paper,
     Stack,
     Typography,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    Button, Snackbar, Alert, Divider,
 } from "@mui/material";
 import SmartphoneOutlinedIcon from "@mui/icons-material/SmartphoneOutlined";
 import Map from "@neshan-maps-platform/ol/Map";
 import View from "@neshan-maps-platform/ol/View";
 import { fromLonLat } from "@neshan-maps-platform/ol/proj";
-import { MOCK_DRIVER_DISPLAY } from "../mock/driverProfile";
+import { Feature } from "@neshan-maps-platform/ol";
+import Point from "@neshan-maps-platform/ol/geom/Point";
+import Icon from "@neshan-maps-platform/ol/style/Icon";
+import { Style } from "@neshan-maps-platform/ol/style";
+import VectorLayer from "@neshan-maps-platform/ol/layer/Vector";
+import VectorSource from "@neshan-maps-platform/ol/source/Vector";
+import { DriverRequest, useDriverRequests } from "../hooks/useDriverRequests";
+import { useAuthStore } from "../store/useAuthStore";
+import { MapBrowserEvent } from "@neshan-maps-platform/ol";
 
 type DriverMapSectionProps = {
     driverName: string;
     driverPhone: string;
 };
 
-/**
- * Full-bleed map (read-only) with driver info overlays.
- * Uses the same Neshan setup as the main app map component.
- */
 export default function DriverMapSection({
-    driverName,
-    driverPhone,
-}: DriverMapSectionProps) {
+                                             driverName,
+                                             driverPhone,
+                                         }: DriverMapSectionProps) {
     const mapRef = useRef<HTMLDivElement | null>(null);
     const mapInstance = useRef<Map | null>(null);
+    const { getDriverRequests, requests,receiveRequest } = useDriverRequests();
+    const [selectedRequest, setSelectedRequest] = useState<DriverRequest | null>(null);
+    const [openModal, setOpenModal] = useState(false);
+    const { accessToken } = useAuthStore();
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+    type SnackbarSeverity = "error" | "info" | "success" | "warning";
+
+    const [snackbarSeverity, setSnackbarSeverity] = useState<SnackbarSeverity>('success');
+
+    // @ts-ignore
+    const handleRegisterWaste = async (requestId)=>{
+        console.log(requestId)
+    }
+    // @ts-ignore
+    const handleReceiveRequest = async (requestId) => {
+        try {
+            // استفاده از متد receiveRequest از هوک برای ارسال درخواست به سرور
+            const response = await receiveRequest(requestId, accessToken);  // در اینجا token باید از context یا state گرفته شود
+
+            // بررسی موفقیت درخواست
+            if (response.status === "success") {
+                setSnackbarMessage('درخواست با موفقیت دریافت شد!');
+                setSnackbarSeverity('success');
+                await getDriverRequests(accessToken);
+                setOpenModal(false)
+            } else {
+                setSnackbarMessage('خطا در دریافت درخواست!');
+                setSnackbarSeverity('error');
+                setOpenModal(false)
+            }
+        } catch (error) {
+            console.error('Error receiving request:', error);
+            setSnackbarMessage('خطا در برقراری ارتباط با سرور!');
+            setSnackbarSeverity('error');
+        }
+
+        // نمایش پیام
+        setOpenSnackbar(true);
+    };
+    const fetchRequests = useCallback(() => {
+        if (!requests) {
+            getDriverRequests(accessToken);
+        }
+    }, [getDriverRequests, accessToken, requests]);
+
+    useEffect(() => {
+        fetchRequests();
+    }, [fetchRequests]);
 
     useEffect(() => {
         if (!mapRef.current || mapInstance.current) return;
@@ -44,13 +101,66 @@ export default function DriverMapSection({
             }),
         });
 
+        const vectorSource = new VectorSource();
+        const vectorLayer = new VectorLayer({
+            source: vectorSource,
+        });
+        map.addLayer(vectorLayer);
+
+        const defaultLocationFeature = new Feature({
+            geometry: new Point(fromLonLat([59.58874, 36.28865])),
+        });
+
+        defaultLocationFeature.setStyle(
+            new Style({
+                image: new Icon({
+                    src: '/truc.svg',
+                    anchor: [0.5, 1],
+                    scale: 0.32,
+                }),
+            })
+        );
+
+        vectorSource.addFeature(defaultLocationFeature);
+
+        // Add requests with trash.svg icon
+        requests?.forEach((req) => {
+            const requestFeature = new Feature({
+                geometry: new Point(fromLonLat([req.location.lng, req.location.lat])),
+            });
+
+            requestFeature.set('requestData', req);
+            const iconSrc = req.status.value === 2 ? '/received1.svg' : '/rec.svg'; // تغییر آیکون برای وضعیت 2
+
+            requestFeature.setStyle(
+                new Style({
+                    image: new Icon({
+                        src: iconSrc,
+                        scale: req.status.value === 2 ? 0.22 :0.09,
+                    }),
+                })
+            );
+
+            vectorSource.addFeature(requestFeature);
+        });
+
+        // Handling click event on map to show request details
+        map.on('click', (event: MapBrowserEvent<PointerEvent>) => {
+            const feature = map.getFeaturesAtPixel(event.pixel)[0];
+            if (feature && feature.get('requestData')) {
+                const requestData = feature.get('requestData');
+                setSelectedRequest(requestData); // Set the selected request details
+                setOpenModal(true); // Open the modal
+            }
+        });
+
         mapInstance.current = map;
 
         return () => {
             map.setTarget(undefined);
             mapInstance.current = null;
         };
-    }, []);
+    }, [requests]);
 
     return (
         <Box
@@ -68,9 +178,13 @@ export default function DriverMapSection({
                     position: "absolute",
                     inset: 0,
                     "& canvas": { outline: "none" },
+                    pb: "90px",
+                    width: "100%",
+                    height: "100%",
                 }}
             />
 
+            {/* Driver info box */}
             <Box
                 sx={{
                     position: "absolute",
@@ -95,8 +209,6 @@ export default function DriverMapSection({
                         backdropFilter: "blur(10px)",
                         WebkitBackdropFilter: "blur(10px)",
                         border: "1px solid rgba(255, 255, 255, 0.7)",
-                        boxShadow:
-                            "0 4px 18px rgba(13, 71, 161, 0.1), 0 1px 0 rgba(255,255,255,0.85) inset",
                     }}
                 >
                     <Stack alignItems="center" spacing={1}>
@@ -106,8 +218,6 @@ export default function DriverMapSection({
                                 borderRadius: "50%",
                                 background:
                                     "linear-gradient(145deg, #64b5f6 0%, #1565c0 55%, #0d47a1 100%)",
-                                boxShadow:
-                                    "0 3px 10px rgba(21, 101, 192, 0.28)",
                             }}
                         >
                             <Avatar
@@ -117,12 +227,9 @@ export default function DriverMapSection({
                                     bgcolor: "background.paper",
                                     color: "primary.dark",
                                     fontWeight: 800,
-                                    fontSize: "0.95rem",
-                                    fontFamily: "Estedad-Bold, Arial, sans-serif",
-                                    border: "1px solid rgba(255,255,255,0.95)",
                                 }}
                             >
-                                {MOCK_DRIVER_DISPLAY.avatarLetter}
+                                {driverName.substring(0, 1)}
                             </Avatar>
                         </Box>
 
@@ -149,7 +256,6 @@ export default function DriverMapSection({
                                     sx={{
                                         fontSize: 14,
                                         color: "primary.main",
-                                        opacity: 0.7,
                                     }}
                                 />
                                 <Typography
@@ -158,10 +264,6 @@ export default function DriverMapSection({
                                     fontWeight={500}
                                     sx={{
                                         direction: "ltr",
-                                        unicodeBidi: "plaintext",
-                                        letterSpacing: 0.08,
-                                        fontSize: "0.7rem",
-                                        lineHeight: 1.3,
                                     }}
                                 >
                                     {driverPhone}
@@ -171,6 +273,66 @@ export default function DriverMapSection({
                     </Stack>
                 </Paper>
             </Box>
+
+            {/* Modal for selected request */}
+            <Dialog open={openModal} onClose={() => setOpenModal(false)} fullWidth maxWidth="sm">
+                <DialogTitle sx={{ borderBottom: '1px solid #eee', mb: 2 }}>جزئیات درخواست</DialogTitle>
+                <DialogContent>
+                    {selectedRequest && (
+                        <Box display="flex" flexDirection="column" gap={2}>
+                            {/* کارت اطلاعات شخصی */}
+                            <Box p={2} borderRadius={2} bgcolor="#f9f9f9" border="1px solid #e0e0e0">
+                                <Typography variant="h6" color="primary" gutterBottom>{selectedRequest.name}</Typography>
+                                <Typography variant="body1"><b>موبایل:</b> {selectedRequest.mob}</Typography>
+                                <Typography variant="body1"><b>آدرس:</b> {selectedRequest.address}</Typography>
+                            </Box>
+
+                            <Box display="flex" justifyContent="space-between" alignItems="center">
+                                <Typography variant="body2" color="textSecondary"><b>نوع کاربر:</b> {selectedRequest.userType === "citizen" ? "شهروند" : "صنف"}</Typography>
+                                <Typography variant="body2" color="textSecondary"><b>فوری:</b> {selectedRequest.immediate ? "بله" : "خیر"}</Typography>
+                            </Box>
+
+                            <Typography variant="body2" color="textSecondary"><b>زمان:</b> {selectedRequest.date.day} - {selectedRequest.date.time}</Typography>
+
+                            <Divider sx={{ my: 1 }} />
+
+                            {/* دکمه‌ها */}
+                            <Box display="flex" gap={2} mt={1}>
+                                {selectedRequest.status.value === 1 && (
+                                    <Button variant="contained" color="primary" fullWidth onClick={() => handleReceiveRequest(selectedRequest.id)}>
+                                        دریافت درخواست
+                                    </Button>
+                                )}
+
+                                {selectedRequest.status.value === 2 && (
+                                    <Button variant="contained" color="success" fullWidth onClick={() => handleRegisterWaste(selectedRequest.id)}>
+                                        ثبت پسماند
+                                    </Button>
+                                )}
+                            </Box>
+                        </Box>
+                    )}
+                </DialogContent>
+            </Dialog>
+
+            {/* اسنک‌بار با استایل ارتقا یافته */}
+            <Snackbar
+                open={openSnackbar}
+                autoHideDuration={6000}
+                onClose={() => setOpenSnackbar(false)}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                sx={{ zIndex: 9999, mt: 8 }}
+            >
+                <Alert
+                    onClose={() => setOpenSnackbar(false)}
+                    severity={snackbarSeverity}
+                    variant="filled"
+                    sx={{ width: '100%', boxShadow: 3 }}
+                >
+                    {snackbarMessage}
+                </Alert>
+            </Snackbar>
+
         </Box>
     );
 }

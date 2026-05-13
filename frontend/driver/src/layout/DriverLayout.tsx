@@ -4,6 +4,7 @@ import { useEffect, useMemo } from "react";
 import DriverAppBar from "../components/DriverAppBar";
 import DriverBottomNav from "../components/DriverBottomNav";
 import { useDriverSession } from "../context/DriverSessionContext";
+import {useAuthStore} from "../store/useAuthStore";
 
 function getPageTitle(pathname: string): string {
     if (pathname.startsWith("/waste-prices")) return "قیمت پسماندها";
@@ -16,13 +17,19 @@ function getPageTitle(pathname: string): string {
 export default function DriverLayout() {
     const location = useLocation();
     const navigate = useNavigate();
-    const { session } = useDriverSession();
+    const { accessToken, setting, refreshSettings } = useAuthStore();
+    const user = setting?.user;
 
+    console.log('hahahahhahahah')
     useEffect(() => {
-        if (!session) {
+        if (!accessToken) {
+            console.log('no location')
             navigate("/login", { replace: true, state: { from: location } });
+        } else {
+            console.log('refresh setting')
+            refreshSettings();
         }
-    }, [session, navigate, location]);
+    }, [accessToken, navigate, location, refreshSettings]);
 
     const { title, showBack } = useMemo(() => {
         const onHome =
@@ -37,9 +44,10 @@ export default function DriverLayout() {
         navigate(-1);
     };
 
-    if (!session) {
+    if (!accessToken) {
         return null;
     }
+
 
     return (
         <Box
@@ -54,7 +62,7 @@ export default function DriverLayout() {
                 title={title}
                 showBack={showBack}
                 onBack={handleBack}
-                driverPhone={session.phone}
+                driverPhone={user?.mob ?? '-'}
             />
             <Box
                 sx={{

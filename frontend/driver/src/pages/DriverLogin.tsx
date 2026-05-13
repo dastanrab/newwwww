@@ -15,12 +15,16 @@ import logo from "../assets/logo.svg";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { LoadingButton } from "@mui/lab";
 import { useDriverSession } from "../context/DriverSessionContext";
+import {useAuthStore} from "../store/useAuthStore";
+import {useAuth} from "../hooks/useAuth";
 
 /**
  * مرحلهٔ اول ورود راننده (موبایل + قوانین). چیدمان مثل `src/pages/user/Login.tsx`.
  * بدون API؛ پس از اعتبارسنجی به مسیر تایید OTP می‌رود.
  */
 const DriverLogin: React.FC = () => {
+    const setMob = useAuthStore((state) => state.setMob);
+    const {login, loading} = useAuth();
     const [phone, setPhone] = useState("");
     const [acceptedTerms, setAcceptedTerms] = useState(false);
     const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -30,13 +34,13 @@ const DriverLogin: React.FC = () => {
     const [submitting, setSubmitting] = useState(false);
 
     const navigate = useNavigate();
-    const { session, setPendingPhoneForOtp } = useDriverSession();
+    const { accessToken } = useAuthStore();
 
     useEffect(() => {
-        if (session) {
+        if (accessToken) {
             navigate("/home", { replace: true });
         }
-    }, [session, navigate]);
+    }, [accessToken, navigate]);
 
     const showSnackbar = (
         message: string,
@@ -48,6 +52,7 @@ const DriverLogin: React.FC = () => {
     };
 
     const handleLogin = async () => {
+
         if (!acceptedTerms) {
             showSnackbar("لطفا قوانین و مقررات را قبول کنید.", "error");
             return;
@@ -58,14 +63,21 @@ const DriverLogin: React.FC = () => {
             return;
         }
 
+        const response = await login(phone);
+
         setSubmitting(true);
-        await new Promise((r) => setTimeout(r, 400));
-        setPendingPhoneForOtp(phone);
-        showSnackbar("کد تایید ارسال شد.", "success");
-        setSubmitting(false);
-        setTimeout(() => {
-            navigate("/verify");
-        }, 800);
+        if (response.status === "success") {
+            setMob(phone);
+            showSnackbar("کد تایید ارسال شد.", "success");
+
+            setTimeout(() => {
+                navigate("/verify");
+                setSubmitting(false);
+            }, 800);
+        } else {
+            setSubmitting(false);
+            showSnackbar(response.message || "خطا در ورود", "error");
+        }
     };
 
     return (

@@ -2,10 +2,13 @@ import { Box } from "@mui/material";
 import DriverMapSection from "../components/DriverMapSection";
 import { useDriverSession } from "../context/DriverSessionContext";
 import { MOCK_DRIVER_DISPLAY } from "../mock/driverProfile";
+import {useAuthStore} from "../store/useAuthStore";
+import {useEffect} from "react";
 
 export default function DriverHome() {
-    const { session } = useDriverSession();
-    const phone = session?.phone ?? "—";
+    const { setting } = useAuthStore();
+    const user = setting?.user;
+
 
     return (
         <Box
@@ -17,8 +20,8 @@ export default function DriverHome() {
             }}
         >
             <DriverMapSection
-                driverName={MOCK_DRIVER_DISPLAY.name}
-                driverPhone={phone}
+                driverName={user?.firstName ?? '-' + user?.lastName ?? 'S'}
+                driverPhone={user?.mob ?? '-'}
             />
         </Box>
     );

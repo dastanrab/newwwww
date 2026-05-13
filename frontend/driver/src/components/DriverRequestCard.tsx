@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
     Box,
     Button,
@@ -13,19 +12,17 @@ import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import NavigationRoundedIcon from "@mui/icons-material/NavigationRounded";
 import AssignmentTurnedInOutlinedIcon from "@mui/icons-material/AssignmentTurnedInOutlined";
 import ChatBubbleOutlineRoundedIcon from "@mui/icons-material/ChatBubbleOutlineRounded";
-import type { DriverCurrentRequest } from "../mock/currentRequests";
-import DriverRecordWasteDialog, {
-    type RecordedWasteLine,
-} from "./DriverRecordWasteDialog";
+import type { DriverRequest } from "../hooks/useDriverRequests";
 
 type DriverRequestCardProps = {
-    request: DriverCurrentRequest;
+    request: DriverRequest;
 };
 
 export default function DriverRequestCard({ request }: DriverRequestCardProps) {
-    const noop = () => {
-    };
+    const noop = () => {};
 
+    // اگر خواستی می‌توانی این لیبل را قشنگ‌تر بسازی
+    const timeLabel = `${request.date.day} - ${request.date.time}`;
     const [wasteDialogOpen, setWasteDialogOpen] = useState(false);
     const [recordedWaste, setRecordedWaste] = useState<RecordedWasteLine[]>([]);
 
@@ -53,14 +50,14 @@ export default function DriverRequestCard({ request }: DriverRequestCardProps) {
                             fontWeight={800}
                             sx={{ lineHeight: 1.35 }}
                         >
-                            {request.customerName}
+                            {request.name}
                         </Typography>
                         <Typography
                             variant="body2"
                             color="text.secondary"
                             sx={{ mt: 0.25, letterSpacing: 0.2 }}
                         >
-                            {request.phone}
+                            {request.mob}
                         </Typography>
                     </Box>
                     <Typography
@@ -141,7 +138,7 @@ export default function DriverRequestCard({ request }: DriverRequestCardProps) {
                                 زمان درخواست
                             </Typography>
                             <Typography variant="body2" sx={{ lineHeight: 1.65 }}>
-                                {request.timeLabel}
+                                {timeLabel}
                             </Typography>
                         </Box>
                     </Stack>
@@ -173,7 +170,6 @@ export default function DriverRequestCard({ request }: DriverRequestCardProps) {
                     </Button>
                 </Box>
             </CardContent>
-
             {recordedWaste.length > 0 ? (
                 <Box
                     sx={{
@@ -275,7 +271,6 @@ export default function DriverRequestCard({ request }: DriverRequestCardProps) {
                     پیام
                 </Button>
             </Box>
-
             <DriverRecordWasteDialog
                 open={wasteDialogOpen}
                 onClose={() => setWasteDialogOpen(false)}

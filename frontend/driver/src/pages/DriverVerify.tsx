@@ -11,6 +11,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import { LoadingButton } from "@mui/lab";
 import { useDriverSession } from "../context/DriverSessionContext";
+import {useAuth} from "../hooks/useAuth";
+import {useAuthStore} from "../store/useAuthStore";
 
 /**
  * تایید OTP راننده — ساختار و استایل مشابه `src/pages/user/Verify.tsx`، بدون API.
@@ -18,9 +20,8 @@ import { useDriverSession } from "../context/DriverSessionContext";
  */
 const DriverVerify: React.FC = () => {
     const navigate = useNavigate();
-    const { session, pendingPhone, login, clearPendingPhone } =
-        useDriverSession();
-
+    const {verify, login, loading} = useAuth();
+    const {mob, setAccessToken, setSetting} = useAuthStore();
     const [code, setCode] = useState<string[]>(Array(5).fill(""));
     const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
     const [counter, setCounter] = useState(59);
@@ -33,16 +34,11 @@ const DriverVerify: React.FC = () => {
     >("error");
 
     useEffect(() => {
-        if (session) {
-            navigate("/home", { replace: true });
+        if (!mob) {
+            navigate("/login");
         }
-    }, [session, navigate]);
+    }, [mob, navigate]);
 
-    useEffect(() => {
-        if (!pendingPhone) {
-            navigate("/login", { replace: true });
-        }
-    }, [pendingPhone, navigate]);
 
     useEffect(() => {
         if (counter > 0) {
@@ -95,18 +91,35 @@ const DriverVerify: React.FC = () => {
             return;
         }
 
-        if (!pendingPhone) return;
+        if (!mob) return;
 
         setVerifying(true);
         await new Promise((r) => setTimeout(r, 400));
+        const response = await verify(mob, finalCode.split('').reverse().join(''));
 
-        login(pendingPhone);
-        showSnackbar("ورود موفقیت‌آمیز بود", "success");
-        setVerifying(false);
+        if (response.status === "success") {
+            console.log(response.data)
+            // @ts-ignore
+            const token = response.data?.accessToken;
+            // @ts-ignore
+            const setting = response.data?.settings;
 
-        setTimeout(() => {
-            navigate("/home", { replace: true });
-        }, 800);
+            if (token) {
+                setAccessToken(token);
+                setSetting(setting)
+                showSnackbar("ورود موفقیت‌آمیز بود", "success");
+
+                setTimeout(() => {
+                    navigate("/");
+                }, 800);
+            } else {
+                showSnackbar("توکن دریافت نشد", "error");
+                setVerifying(false);
+            }
+        } else {
+            showSnackbar(response.message || "کد اشتباه است", "error");
+            setVerifying(false);
+        }
     };
 
     const handleResend = async () => {
@@ -116,12 +129,8 @@ const DriverVerify: React.FC = () => {
         showSnackbar("کد مجددا ارسال شد", "success");
     };
 
-    const goEditPhone = () => {
-        clearPendingPhone();
-        navigate("/login");
-    };
 
-    if (!pendingPhone) {
+    if (!mob) {
         return null;
     }
 
@@ -138,7 +147,7 @@ const DriverVerify: React.FC = () => {
         >
             <Typography variant="body1" mb={3} textAlign="center">
                 کد تایید ارسال شده به شماره{" "}
-                <strong>{pendingPhone}</strong> را وارد نمایید
+                <strong>{mob}</strong> را وارد نمایید
             </Typography>
 
             <Stack
@@ -157,6 +166,8 @@ const DriverVerify: React.FC = () => {
                         value={digit}
                         onChange={(e) => handleChange(e.target.value, index)}
                         inputProps={{
+                            inputMode: "numeric", // This brings up the numeric keyboard on mobile
+                            pattern: "[0-9]*",  // Ensures that only numbers are entered
                             maxLength: 1,
                             style: { textAlign: "center", direction: "ltr" },
                             onKeyDown: (
@@ -208,7 +219,7 @@ const DriverVerify: React.FC = () => {
 
             <Button
                 variant="text"
-                onClick={goEditPhone}
+                onClick={() => navigate("/login")}
                 sx={{ width: "200px", m: "0 auto", borderRadius: "300px" }}
             >
                 اصلاح شماره موبایل

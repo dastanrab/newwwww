@@ -21,6 +21,7 @@ import { driverDrawerPaperGradient } from "../driverTheme";
 import { MOCK_DRIVER_DISPLAY } from "../mock/driverProfile";
 import { MOCK_CURRENT_REQUESTS_COUNT } from "../mock/currentRequests";
 import { useDriverSession } from "../context/DriverSessionContext";
+import {useAuthStore} from "../store/useAuthStore";
 
 type DriverDrawerMenuProps = {
     open: boolean;
@@ -35,9 +36,16 @@ export default function DriverDrawerMenu({
     onClose,
     driverPhone,
 }: DriverDrawerMenuProps) {
-    const navigate = useNavigate();
-    const { logout } = useDriverSession();
 
+
+
+    const navigate = useNavigate();
+    const {logout,setting} = useAuthStore();
+    // @ts-ignore
+    const count = setting?.request_count ?? 0;
+    const user = setting?.user;
+
+    const firstName = user?.firstName ?? 's'
     const go = (path: string) => {
         navigate(path);
         onClose();
@@ -84,10 +92,10 @@ export default function DriverDrawerMenu({
                             border: "2px solid rgba(255,255,255,0.35)",
                         }}
                     >
-                        {MOCK_DRIVER_DISPLAY.avatarLetter}
+                        {firstName.substring(0, 1)}
                     </Avatar>
                     <Typography variant="h6" sx={{ color: "rgb(255,255,255)" }}>
-                        {MOCK_DRIVER_DISPLAY.name}
+                        {user?.firstName ?? '-' + user?.lastName ?? 'S'}
                     </Typography>
                     <Typography variant="body2" sx={{ color: "rgb(255,255,255)", opacity: 0.95 }}>
                         {driverPhone}
@@ -113,7 +121,7 @@ export default function DriverDrawerMenu({
                     >
                         <ListItemIcon sx={{ minWidth: 44, ...iconSx }}>
                             <Badge
-                                badgeContent={MOCK_CURRENT_REQUESTS_COUNT}
+                                badgeContent={count}
                                 sx={{
                                     "& .MuiBadge-badge": {
                                         bgcolor: "rgba(255,255,255,0.92)",
@@ -128,7 +136,7 @@ export default function DriverDrawerMenu({
                         </ListItemIcon>
                         <ListItemText
                             primary="درخواست‌های جاری"
-                            secondary={`${MOCK_CURRENT_REQUESTS_COUNT} مورد جاری`}
+                            secondary={`${count} مورد جاری`}
                             secondaryTypographyProps={{
                                 sx: { color: "rgba(255,255,255,0.85)" },
                             }}
