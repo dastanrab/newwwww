@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
     Box,
     Button,
@@ -13,6 +14,9 @@ import NavigationRoundedIcon from "@mui/icons-material/NavigationRounded";
 import AssignmentTurnedInOutlinedIcon from "@mui/icons-material/AssignmentTurnedInOutlined";
 import ChatBubbleOutlineRoundedIcon from "@mui/icons-material/ChatBubbleOutlineRounded";
 import type { DriverCurrentRequest } from "../mock/currentRequests";
+import DriverRecordWasteDialog, {
+    type RecordedWasteLine,
+} from "./DriverRecordWasteDialog";
 
 type DriverRequestCardProps = {
     request: DriverCurrentRequest;
@@ -21,6 +25,9 @@ type DriverRequestCardProps = {
 export default function DriverRequestCard({ request }: DriverRequestCardProps) {
     const noop = () => {
     };
+
+    const [wasteDialogOpen, setWasteDialogOpen] = useState(false);
+    const [recordedWaste, setRecordedWaste] = useState<RecordedWasteLine[]>([]);
 
     return (
         <Card
@@ -167,6 +174,53 @@ export default function DriverRequestCard({ request }: DriverRequestCardProps) {
                 </Box>
             </CardContent>
 
+            {recordedWaste.length > 0 ? (
+                <Box
+                    sx={{
+                        px: 2,
+                        pt: 1.5,
+                        pb: 2,
+                        mx: 0,
+                        bgcolor: "background.paper",
+                        borderTop: "1px dashed rgba(0,0,0,0.08)",
+                    }}
+                >
+                    <Typography
+                        variant="caption"
+                        fontWeight={800}
+                        color="primary"
+                        sx={{ letterSpacing: 0.2, display: "block", mb: 1 }}
+                    >
+                        پسماند ثبت‌شده
+                    </Typography>
+                    <Stack spacing={0.75}>
+                        {recordedWaste.map((line) => (
+                            <Typography
+                                key={line.wasteId}
+                                variant="body2"
+                                sx={{ lineHeight: 1.55 }}
+                            >
+                                {line.title}:{" "}
+                                <Box component="span" fontWeight={700}>
+                                    {line.weightKg.toLocaleString("fa-IR")} کیلوگرم
+                                </Box>
+                                {" — "}
+                                <Box component="span" color="text.secondary">
+                                    {line.amountTomans.toLocaleString("fa-IR")} تومان
+                                </Box>
+                            </Typography>
+                        ))}
+                    </Stack>
+                    <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: "block" }}>
+                        جمع:{" "}
+                        {recordedWaste
+                            .reduce((s, l) => s + l.amountTomans, 0)
+                            .toLocaleString("fa-IR")}{" "}
+                        تومان
+                    </Typography>
+                </Box>
+            ) : null}
+
             <Box
                 sx={{
                     px: 2,
@@ -187,7 +241,7 @@ export default function DriverRequestCard({ request }: DriverRequestCardProps) {
                     size="medium"
                     disableElevation
                     startIcon={<AssignmentTurnedInOutlinedIcon />}
-                    onClick={noop}
+                    onClick={() => setWasteDialogOpen(true)}
                     sx={{
                         borderRadius: 999,
                         px: 2,
@@ -221,6 +275,13 @@ export default function DriverRequestCard({ request }: DriverRequestCardProps) {
                     پیام
                 </Button>
             </Box>
+
+            <DriverRecordWasteDialog
+                open={wasteDialogOpen}
+                onClose={() => setWasteDialogOpen(false)}
+                recordedWaste={recordedWaste}
+                onSubmit={(lines) => setRecordedWaste(lines)}
+            />
         </Card>
     );
 }
