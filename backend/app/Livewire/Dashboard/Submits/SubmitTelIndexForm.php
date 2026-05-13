@@ -28,7 +28,7 @@ class SubmitTelIndexForm extends Component
     public $userId;
     public $user;
     public $card;
-    public $cashout = 'card';
+    public $cashout = 'aniroob';
     public $address;
     public $cards;
     public $addresses;
@@ -118,7 +118,7 @@ class SubmitTelIndexForm extends Component
         $this->validate([
             'card' => $this->cashout == 'card' ? 'required|exists:ibans,id' : 'nullable',
             'address' => 'required|exists:addresses,id',
-            'cashout' => 'required|in:card,bazist,aap',
+            'cashout' => 'required|in:card,aniroob,aap',
             'submitType' => 'required|in:instant,time',
             'week' => $this->submitType == 'time' ? 'required' : 'nullable',
             'hour' => $this->submitType == 'time' ? 'required' : 'nullable',

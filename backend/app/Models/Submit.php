@@ -346,6 +346,7 @@ class Submit extends Model
         $wallet = Wallet::where('user_id', $user->id)->first();
         $type = $submit->submit_phone ? 'submit_phone' : 'submit';
         $userRRN = null;
+        dump($user,$wallet);
         if($submit->cashout_type == 'card'){
             try {
                 DB::transaction(function () use($user,$wallet,$submit,$type,$driver){
@@ -373,6 +374,8 @@ class Submit extends Model
                 });
             }
             catch (Exception $e){
+
+                dd($e->getMessage());
                 try {
                     $log = fopen("/home/laravel/la.bazistco.com/storage/logs/UserPayError.txt", "a+") or die("Unable to open file!");
                     $t = 'error|'.$e->getMessage()."\n";
@@ -406,395 +409,429 @@ class Submit extends Model
 
             }*/
         }
-        elseif($submit->cashout_type == 'aniroob'){
-            try {
-                DB::transaction(function () use($user,$wallet,$submit,$type,$driver){
+
+            elseif($submit->cashout_type == 'aniroob'){
+                DB::beginTransaction();
+                try {
+                    dump($wallet->wallet);
                     $wallet->wallet = $wallet->wallet + $submit->total_amount;
                     $wallet->save();
-                    //todo add transaction
-                    WalletDetails::create($submit->city_id, $user->id, $wallet->id, $type, $driver->id, $submit->total_amount * 10, $wallet->wallet * 10, 'واریز', 'تحویل پسماند');
-                    create_transaction(0,$submit->user->id,$submit->total_amount,TransactionService::BAZIST_TYPE,TransactionService::BAZIST_TYPE,TransactionService::WASTE_RREASON,$submit->id);
+                    dump($user->id,$wallet->wallet);
+                    WalletDetails::create(
+                        $submit->city_id,
+                        $user->id,
+                        $wallet->id,
+                        $type,
+                        $driver->id,
+                        $submit->total_amount * 10,
+                        $wallet->wallet * 10,
+                        'واریز',
+                        'تحویل پسماند'
+                    );
+
+                    create_transaction(
+                        0,
+                        $submit->user->id,
+                        $submit->total_amount,
+                        TransactionService::BAZIST_TYPE,
+                        TransactionService::BAZIST_TYPE,
+                        TransactionService::WASTE_RREASON,
+                        $submit->id
+                    );
+
+                    DB::commit();
+                }
+                catch (Exception $e){
+                    DB::rollBack();
+                    dump($e->getMessage());
+                    try {
+                        $data = [
+                            'class_name' => get_class($e),
+                            'message' => $e->getMessage(),
+                            'file' => $e->getFile(),
+                            'line' => $e->getLine(),
+                            'trace' => substr($e->getTraceAsString(), 0, 100)
+                        ];
+                        $bale = new BaleService();
+                        $bale->SubmitPayError($data);
+                    } catch (Exception $e){
+                        // Log this too
+                        \Log::error('Failed to send error to Bale: ' . $e->getMessage());
+                    }
+
+                    // Re-throw or handle appropriately
+                    throw $e;
+                }
+            }
+                dump($userRRN);
+                return $userRRN;
+            }
+    public function add_waste_score()
+            {
+                $submit=$this;
+                $user = $submit->user;
+                if ($submit->total_amount>0)
+                {
+                    $score=$submit->total_amount/1000;
+                    if ($score>1)
+                    {
+                        try {
+                            DB::beginTransaction();
+                            $score=floor($score);
+                            $user_score=User::query()->where('id', $user->id)->first();
+                            ScoreHistory::query()->create(['user_id' => $user->id,'score'=>$score,'type'=>'granted','detail'=>"اعطا امتیاز جهت درخواست با شناسه {$submit->id}"]);
+                            $user_score->score =$user_score->score+$score;
+                            $user_score->save();
+                            DB::commit();
+                        }catch (Exception $e){
+                            DB::rollBack();
+                        }
+                    }
+                }
+            }
+    public function firstSubmitUser()
+            {
+                $submit = $this;
+                DB::transaction(function () use ($submit) {
+                    $user_submits = Submit::where('user_id', $submit->user->id)->where('status', 3)->count();
+                    if ($user_submits == 1 && $submit->submit_phone == 0) {
+                        $wallet = Wallet::where('user_id', $submit->user->id)->first();
+                        $wallet->wallet = $wallet->wallet + userRewardToman();
+                        $wallet->save();
+                        WalletDetails::create($submit->city_id, $submit->user->id, $wallet->id, 'first_submit_user', $submit->driver->id, userRewardRial(), $wallet->wallet * 10, 'واریز', 'پاداش اولین درخواست موفق');
+                    }
                 });
             }
-            catch (Exception $e){
-                try {
-                    $data=[ 'class_name'=>get_class($e),'message'=>$e->getMessage(),'file'=>$e->getFile(),'line'=>$e->getLine(),'trace'=>substr($e->getTraceAsString(), 0, 100)];
-                    $bale=new BaleService();
-                    $bale->SubmitPayError($data);
-                }catch (Exception $e){
-
-                }
-
-            }
-        }
-        return $userRRN;
-    }
-    public function add_waste_score()
-    {
-        $submit=$this;
-        $user = $submit->user;
-        if ($submit->total_amount>0)
-        {
-            $score=$submit->total_amount/1000;
-            if ($score>1)
-            {
-                try {
-                    DB::beginTransaction();
-                    $score=floor($score);
-                    $user_score=User::query()->where('id', $user->id)->first();
-                    ScoreHistory::query()->create(['user_id' => $user->id,'score'=>$score,'type'=>'granted','detail'=>"اعطا امتیاز جهت درخواست با شناسه {$submit->id}"]);
-                    $user_score->score =$user_score->score+$score;
-                    $user_score->save();
-                    DB::commit();
-                }catch (Exception $e){
-                    DB::rollBack();
-                }
-            }
-        }
-    }
-    public function firstSubmitUser()
-    {
-        $submit = $this;
-        DB::transaction(function () use ($submit) {
-            $user_submits = Submit::where('user_id', $submit->user->id)->where('status', 3)->count();
-            if ($user_submits == 1 && $submit->submit_phone == 0) {
-                $wallet = Wallet::where('user_id', $submit->user->id)->first();
-                $wallet->wallet = $wallet->wallet + userRewardToman();
-                $wallet->save();
-                WalletDetails::create($submit->city_id, $submit->user->id, $wallet->id, 'first_submit_user', $submit->driver->id, userRewardRial(), $wallet->wallet * 10, 'واریز', 'پاداش اولین درخواست موفق');
-            }
-        });
-    }
 
     public function rewardForReferral()
-    {
-        $submit = $this;
-        try {
-            DB::transaction(function () use ($submit){
-                $referrer = Referrer::where('referrer_id', $submit->user->id)->first();
-                if ($referrer) {
-                    if ($referrer->rewarded_at == null) {
-                        $submits = Submit::where('user_id', $submit->user->id)->where('status', 3)->with('drivers.receives')->get();
-                        if ($submits->count() == 1) {
-                            $user_ref = User::find($referrer->user_id);
-                            $sum_weight = $submits[0]->drivers[0]->receives->pluck('weight')->sum();
-                            if ($sum_weight >= 10) {
-                                $walletRef = Wallet::where('user_id', $user_ref->id)->first();
-                                $walletRef->wallet = $walletRef->wallet + referrerRewardToman();
-                                $save = $walletRef->save();
-                                if($save) {
-                                    WalletDetails::create($submit->city_id, $user_ref->id, $walletRef->id, 'submit_user_ref', $submit->driver->id, referrerRewardRial(), $walletRef->wallet * 10, 'واریز', 'پاداش معرف');
-                                }
-                            }
-                            if ($sum_weight >= 50) {
-                                $car = Car::where('user_id', $user_ref->id)->where('is_active', 1)->first();
-                                if ($car) {
-                                    $walletRef = Wallet::where('user_id', $user_ref->id)->first();
-                                    $walletRef->wallet = $walletRef->wallet + referrerRewardAbove50KiloToman();
-                                    $save = $walletRef->save();
-                                    if($save) {
-                                        WalletDetails::create($submit->city_id, $user_ref->id, $walletRef->id, 'submit_user_ref', $submit->driver->id, referrerRewardAbove50KiloRial(), $walletRef->wallet * 10, 'واریز', 'پاداش معرف');
+            {
+                $submit = $this;
+                try {
+                    DB::transaction(function () use ($submit){
+                        $referrer = Referrer::where('referrer_id', $submit->user->id)->first();
+                        if ($referrer) {
+                            if ($referrer->rewarded_at == null) {
+                                $submits = Submit::where('user_id', $submit->user->id)->where('status', 3)->with('drivers.receives')->get();
+                                if ($submits->count() == 1) {
+                                    $user_ref = User::find($referrer->user_id);
+                                    $sum_weight = $submits[0]->drivers[0]->receives->pluck('weight')->sum();
+                                    if ($sum_weight >= 10) {
+                                        $walletRef = Wallet::where('user_id', $user_ref->id)->first();
+                                        $walletRef->wallet = $walletRef->wallet + referrerRewardToman();
+                                        $save = $walletRef->save();
+                                        if($save) {
+                                            WalletDetails::create($submit->city_id, $user_ref->id, $walletRef->id, 'submit_user_ref', $submit->driver->id, referrerRewardRial(), $walletRef->wallet * 10, 'واریز', 'پاداش معرف');
+                                        }
+                                    }
+                                    if ($sum_weight >= 50) {
+                                        $car = Car::where('user_id', $user_ref->id)->where('is_active', 1)->first();
+                                        if ($car) {
+                                            $walletRef = Wallet::where('user_id', $user_ref->id)->first();
+                                            $walletRef->wallet = $walletRef->wallet + referrerRewardAbove50KiloToman();
+                                            $save = $walletRef->save();
+                                            if($save) {
+                                                WalletDetails::create($submit->city_id, $user_ref->id, $walletRef->id, 'submit_user_ref', $submit->driver->id, referrerRewardAbove50KiloRial(), $walletRef->wallet * 10, 'واریز', 'پاداش معرف');
+                                            }
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
+                    });
+                }catch (Exception $exception)
+                {
+                    event(new ActivityEvent($exception->getMessage(), 'rewardForReferral', false));
                 }
-            });
-        }catch (Exception $exception)
-        {
-            event(new ActivityEvent($exception->getMessage(), 'rewardForReferral', false));
-        }
 
-    }
+            }
 
     public function sendCollectedSms()
-    {
-        $submit = $this;
-        $k = new KavenegarApi(env('KAVENEGAR_API_KEY'));
-        $total_weights = $submit->driver->receives->pluck('weight')->sum();
-        return $k->VerifyLookup($submit->user->mobile, $total_weights, number_format(floor($submit->total_amount)), '', 'SubmitInfo', 'sms');
-    }
+            {
+                $submit = $this;
+                $k = new KavenegarApi(env('KAVENEGAR_API_KEY'));
+                $total_weights = $submit->driver->receives->pluck('weight')->sum();
+                return $k->VerifyLookup($submit->user->mobile, $total_weights, number_format(floor($submit->total_amount)), '', 'SubmitInfo', 'sms');
+            }
 
     public function decreaseDriverWallet($driverWallet)
-    {
-        $submit = $this;
-        if ($driverWallet) {
-            $driverWallet->amount -= (int)$submit->total_amount * 10;
-            $driverWallet->save();
-        }
-    }
+            {
+                $submit = $this;
+                if ($driverWallet) {
+                    $driverWallet->amount -= (int)$submit->total_amount * 10;
+                    $driverWallet->save();
+                }
+            }
 
     public static function schedule($user,$address)
-    {
-        $district = xDistrict([$address->lat,$address->lon]);
+            {
+                $district = xDistrict([$address->lat,$address->lon]);
 
-        $polygonDayHours = PolygonDayHour::all();
-        $polygon = Polygon::where('region',$district)->first();
-        if(!$polygon){
-            return ['status' => 'error', 'message' => 'شما خارج از محدوده هستید'];
-        }
-        $day = Day::all();
-        $hour = Hour::all();
-        //$titleDays = ['امروز','فردا','پسفردا','',''];
+                $polygonDayHours = PolygonDayHour::all();
+                $polygon = Polygon::where('region',$district)->first();
+                if(!$polygon){
+                    return ['status' => 'error', 'message' => 'شما خارج از محدوده هستید'];
+                }
+                $day = Day::all();
+                $hour = Hour::all();
+                //$titleDays = ['امروز','فردا','پسفردا','',''];
 
-        for ($i=0;$i<5;$i++){
-            $h9  = true;
-            $h11 = true;
-            $h13 = true;
-            $h15 = true;
-            $h17 = true;
+                for ($i=0;$i<5;$i++){
+                    $h9  = true;
+                    $h11 = true;
+                    $h13 = true;
+                    $h15 = true;
+                    $h17 = true;
 
-            if(verta()->format('w')+$i+1 > 7){
-                $dayId  = (verta()->format('w')+$i+1)-7;
-            }
-            else{
-                $dayId = verta()->format('w')+$i+1;
-            }
+                    if(verta()->format('w')+$i+1 > 7){
+                        $dayId  = (verta()->format('w')+$i+1)-7;
+                    }
+                    else{
+                        $dayId = verta()->format('w')+$i+1;
+                    }
 
-            if($i == 0 && verta()->format('G') >= 9){
-                $h9 = false;
-            }
-            elseif(!$polygonDayHours
-                ->where('city_id',$user->city->id)
-                ->where('polygon_id',$polygon->id)
-                ->where('day_id',$day->where('id',$dayId)->first()->id)
-                ->where('hour_id',$hour->where('start_at',9)->first()->id)
-                ->first()->status){
-                $h9 = false;
-            }
-            if($i == 0 && verta()->format('G') >= 11){
-                $h11 = false;
-            }
-            elseif(!$polygonDayHours
-                ->where('city_id',1)
-                ->where('polygon_id',$polygon->id)
-                ->where('day_id',$day->where('id',$dayId)->first()->id)
-                ->where('hour_id',$hour->where('start_at',11)->first()->id)
-                ->first()->status){
-                $h11 = false;
-            }
-            if($i == 0 && verta()->format('G') >= 13){
-                $h13 = false;
-            }
-            elseif(!$polygonDayHours
-                ->where('city_id',1)
-                ->where('polygon_id',$polygon->id)
-                ->where('day_id',$day->where('id',$dayId)->first()->id)
-                ->where('hour_id',$hour->where('start_at',13)->first()->id)
-                ->first()->status){
-                $h13 = false;
-            }
-            if($i == 0 && verta()->format('G') >= 15){
-                $h15 = false;
-            }
-            elseif(!$polygonDayHours
-                ->where('city_id',1)
-                ->where('polygon_id',$polygon->id)
-                ->where('day_id',$day->where('id',$dayId)->first()->id)
-                ->where('hour_id',$hour->where('start_at',15)->first()->id)
-                ->first()->status){
-                $h15 = false;
-            }
-            if($i == 0 && verta()->format('G') >= 17){
-                $h17 = false;
-            }
-            elseif(!$polygonDayHours
-                ->where('city_id',1)
-                ->where('polygon_id',$polygon->id)
-                ->where('day_id',$day->where('id',$dayId)->first()->id)
-                ->where('hour_id',$hour->where('start_at',17)->first()->id)
-                ->first()->status){
-                $h17 = false;
-            }
-            if($i == 0){
-                $weekday = 'امروز';
-            }
-            elseif($i == 1){
-                $weekday = 'فردا';
-            }
-            elseif($i == 2){
-                $weekday = 'پسفردا';
-            }
-            else{
-                $weekday = verta()->addDays($i)->format('l');
-            }
+                    if($i == 0 && verta()->format('G') >= 9){
+                        $h9 = false;
+                    }
+                    elseif(!$polygonDayHours
+                        ->where('city_id',$user->city->id)
+                        ->where('polygon_id',$polygon->id)
+                        ->where('day_id',$day->where('id',$dayId)->first()->id)
+                        ->where('hour_id',$hour->where('start_at',9)->first()->id)
+                        ->first()->status){
+                        $h9 = false;
+                    }
+                    if($i == 0 && verta()->format('G') >= 11){
+                        $h11 = false;
+                    }
+                    elseif(!$polygonDayHours
+                        ->where('city_id',1)
+                        ->where('polygon_id',$polygon->id)
+                        ->where('day_id',$day->where('id',$dayId)->first()->id)
+                        ->where('hour_id',$hour->where('start_at',11)->first()->id)
+                        ->first()->status){
+                        $h11 = false;
+                    }
+                    if($i == 0 && verta()->format('G') >= 13){
+                        $h13 = false;
+                    }
+                    elseif(!$polygonDayHours
+                        ->where('city_id',1)
+                        ->where('polygon_id',$polygon->id)
+                        ->where('day_id',$day->where('id',$dayId)->first()->id)
+                        ->where('hour_id',$hour->where('start_at',13)->first()->id)
+                        ->first()->status){
+                        $h13 = false;
+                    }
+                    if($i == 0 && verta()->format('G') >= 15){
+                        $h15 = false;
+                    }
+                    elseif(!$polygonDayHours
+                        ->where('city_id',1)
+                        ->where('polygon_id',$polygon->id)
+                        ->where('day_id',$day->where('id',$dayId)->first()->id)
+                        ->where('hour_id',$hour->where('start_at',15)->first()->id)
+                        ->first()->status){
+                        $h15 = false;
+                    }
+                    if($i == 0 && verta()->format('G') >= 17){
+                        $h17 = false;
+                    }
+                    elseif(!$polygonDayHours
+                        ->where('city_id',1)
+                        ->where('polygon_id',$polygon->id)
+                        ->where('day_id',$day->where('id',$dayId)->first()->id)
+                        ->where('hour_id',$hour->where('start_at',17)->first()->id)
+                        ->first()->status){
+                        $h17 = false;
+                    }
+                    if($i == 0){
+                        $weekday = 'امروز';
+                    }
+                    elseif($i == 1){
+                        $weekday = 'فردا';
+                    }
+                    elseif($i == 2){
+                        $weekday = 'پسفردا';
+                    }
+                    else{
+                        $weekday = verta()->addDays($i)->format('l');
+                    }
 
-            $data['list'][] = [
-                'value' => verta()->addDays($i)->format('Y/m/d'),
-                'label' => verta()->addDays($i)->format('Y/m/d'),
-                'subLabel' => /*$titleDays[$i]*/'',
-                'weekday' => $weekday,
-                'enabled' => $h9 || $h11 || $h13 || $h15 || $h17,
-                'hours' => [
-                    [
-                        'value' => '9',
-                        'label' => '9 الی 12',
-                        'subLabel' => 'صبح',
-                        'enabled' => $h9
-                    ],
-                    [
-                        'value' => '11',
-                        'label' => '11 الی 14',
-                        'subLabel' => 'ظهر',
-                        'enabled' => $h11
-                    ],
-                    [
-                        'value' => '13',
-                        'label' => '13 الی 16',
-                        'subLabel' => 'عصر',
-                        'enabled' => $h13
-                    ],
-                    [
-                        'value' => '15',
-                        'label' => '15 الی 18',
-                        'subLabel' => 'شب',
-                        'enabled' => $h15
-                    ],
-                    [
-                        'value' => '17',
-                        'label' => '17 الی 20',
-                        'subLabel' => 'شب',
-                        'enabled' => $h17
-                    ]
-                ],
-            ];
-        }
-        if (isset($polygon->has_instant) and $polygon->has_instant == 1)
-        {
-            $user_type=auth()->user()->legal;
-            if ($user_type == 0){
-                $data['immediate']= (isset($polygon->has_legal_collect) and $polygon->has_legal_collect == 1);
-            }
-            else{
-                $data['immediate']= (isset($polygon->has_illegal_collect) and $polygon->has_illegal_collect == 1);
+                    $data['list'][] = [
+                        'value' => verta()->addDays($i)->format('Y/m/d'),
+                        'label' => verta()->addDays($i)->format('Y/m/d'),
+                        'subLabel' => /*$titleDays[$i]*/'',
+                        'weekday' => $weekday,
+                        'enabled' => $h9 || $h11 || $h13 || $h15 || $h17,
+                        'hours' => [
+                            [
+                                'value' => '9',
+                                'label' => '9 الی 12',
+                                'subLabel' => 'صبح',
+                                'enabled' => $h9
+                            ],
+                            [
+                                'value' => '11',
+                                'label' => '11 الی 14',
+                                'subLabel' => 'ظهر',
+                                'enabled' => $h11
+                            ],
+                            [
+                                'value' => '13',
+                                'label' => '13 الی 16',
+                                'subLabel' => 'عصر',
+                                'enabled' => $h13
+                            ],
+                            [
+                                'value' => '15',
+                                'label' => '15 الی 18',
+                                'subLabel' => 'شب',
+                                'enabled' => $h15
+                            ],
+                            [
+                                'value' => '17',
+                                'label' => '17 الی 20',
+                                'subLabel' => 'شب',
+                                'enabled' => $h17
+                            ]
+                        ],
+                    ];
+                }
+                if (isset($polygon->has_instant) and $polygon->has_instant == 1)
+                {
+                    $user_type=auth()->user()->legal;
+                    if ($user_type == 0){
+                        $data['immediate']= (isset($polygon->has_legal_collect) and $polygon->has_legal_collect == 1);
+                    }
+                    else{
+                        $data['immediate']= (isset($polygon->has_illegal_collect) and $polygon->has_illegal_collect == 1);
 
+                    }
+                }else{
+                    $data['immediate']=false;
+                }
+                return $data;
             }
-        }else{
-            $data['immediate']=false;
-        }
-        return $data;
-    }
 
     public static function add($registrantId,$user,$request)
-    {
-        if($request->scheduling == 'immediate'){
-            $start_deadline = now()->format('Y-m-d H:i:s');
-            $end_deadline = now()->addHour()->format('Y-m-d H:i:s');
-            $is_instant = 1;
-        }
-        else{
-            $start_deadline = verta()->parse($request->scheduling['day'])->addHours($request->scheduling['hour'])->toCarbon();
-            $end_deadline = verta()->parse($request->scheduling['day'])->addHours($request->scheduling['hour']+3)->toCarbon();
-            $is_instant = 0;
-        }
-        $address = Address::find($request->addressId);
-        $district = getAddressRegion([$address->lat,$address->lon]);
-        $submit = new Submit;
-        $submit->registrant_id = $registrantId;
-        $submit->user_id = $user->id;
-        $submit->start_deadline = $start_deadline;
-        $submit->end_deadline = $end_deadline;
-        $submit->recyclables = json_encode(['GoodRef' => 1, 'Quantity' => 1, 'Price' => Percentage::where('recyclable_id', 1)->where('is_legal', false)->where('weight', 1)->first()->price * 10]);
+            {
+                if($request->scheduling == 'immediate'){
+                    $start_deadline = now()->format('Y-m-d H:i:s');
+                    $end_deadline = now()->addHour()->format('Y-m-d H:i:s');
+                    $is_instant = 1;
+                }
+                else{
+                    $start_deadline = verta()->parse($request->scheduling['day'])->addHours($request->scheduling['hour'])->toCarbon();
+                    $end_deadline = verta()->parse($request->scheduling['day'])->addHours($request->scheduling['hour']+3)->toCarbon();
+                    $is_instant = 0;
+                }
+                $address = Address::find($request->addressId);
+                $district = getAddressRegion([$address->lat,$address->lon]);
+                $submit = new Submit;
+                $submit->registrant_id = $registrantId;
+                $submit->user_id = $user->id;
+                $submit->start_deadline = $start_deadline;
+                $submit->end_deadline = $end_deadline;
+                $submit->recyclables = json_encode(['GoodRef' => 1, 'Quantity' => 1, 'Price' => Percentage::where('recyclable_id', 1)->where('is_legal', false)->where('weight', 1)->first()->price * 10]);
 
-        $city_id = $address->city_id;
-        $submit->address_id = $address->id;
-        $submit->region_id= @$district;
-        $submit->city_id = $city_id;
-        $submit->cashout_type = !isset($request->payMethod)? 'aniroob':$request->payMethod;
-        $submit->is_instant = $request->scheduling == 'immediate' ? 1 : 0;
-        $submit->cashout_instant = 0;
-        $submit->submit_phone = 0;
-        $submit->save();
+                $city_id = $address->city_id;
+                $submit->address_id = $address->id;
+                $submit->region_id= @$district;
+                $submit->city_id = $city_id;
+                $submit->cashout_type = !isset($request->payMethod)? 'aniroob':$request->payMethod;
+                $submit->is_instant = $request->scheduling == 'immediate' ? 1 : 0;
+                $submit->cashout_instant = 0;
+                $submit->submit_phone = 0;
+                $submit->save();
 
-        $archive_id = ReceiveArchive::new($submit);
-        if ($user->legal) {
-            ArchiveLegal::new($submit, $archive_id);
-        } else {
-            ArchiveNotLegal::new($submit, $archive_id);
-        }
+                $archive_id = ReceiveArchive::new($submit);
+                if ($user->legal) {
+                    ArchiveLegal::new($submit, $archive_id);
+                } else {
+                    ArchiveNotLegal::new($submit, $archive_id);
+                }
 
-        if ($submit->submit_phone) {
-            ArchivePhone::new($submit, $archive_id);
-        } else {
-            ArchiveApp::new($submit, $archive_id);
-        }
-        return $submit;
-    }
+                if ($submit->submit_phone) {
+                    ArchivePhone::new($submit, $archive_id);
+                } else {
+                    ArchiveApp::new($submit, $archive_id);
+                }
+                return $submit;
+            }
 
     public static function mapSettings($key = null)
-    {
-        $data = [
-            'instant'  => [
-                'navColor' => '#e74c3c',
-                'color' => '#ee7367',
-                'outlineColor' => '#e74c3c',
-                'icon' => 'directions_run',
-            ],
-            '9'  => [
-                'navColor' => '#F97F51',
-                'color' => '#fe9871',
-                'outlineColor' => '#F97F51',
-                'icon' => 'emoji_people',
-            ],
-            '11' => [
-                'navColor' => '#f1c40f',
-                'color' => '#f1c40f',
-                'outlineColor' => '#ffdd54',
-                'icon' => 'emoji_people',
-            ],
-            '13' => [
-                'navColor' => '#27ae60',
-                'color' => '#4dde8a',
-                'outlineColor' => '#27ae60',
-                'icon' => 'emoji_people',
-            ],
-            '15' => [
-                'navColor' => '#76381e',
-                'color' => '#985437',
-                'outlineColor' => '#76381e',
-                'icon' => 'emoji_people',
-            ],
-            '17' => [
-                'navColor' => '#82589F',
-                'color' => '#8f72a3',
-                'outlineColor' => '#82589F',
-                'icon' => 'emoji_people',
-            ],
-            'active' => [
-                'navColor' => '#63cdda',
-                'color' => '#99d1d8',
-                'outlineColor' => '#63cdda',
-                'icon' => 'boy',
-            ],
-            'first' => [
-                'navColor' => '#FC427B',
-                'color' => '#FC427B',
-                'outlineColor' => '#f8769e',
-                'icon' => 'sentiment_very_satisfied',
-            ],
-            'done' => [
-                'navColor' => '#2C3A47',
-                'color' => '#4b5257',
-                'outlineColor' => '#2C3A47',
-                'icon' => 'airline_seat_recline_extra',
-            ],
-            'driver' => [
-                'navColor' => '#f1c40f',
-                'color' => '#f1c40f',
-                'outlineColor' => '#ffdd54',
-                'icon' => 'directions_car',
-            ],
-        ];
-        if(!empty($key)){
-            return collect($data[$key]);
-        }
-        return collect($data);
-    }
+            {
+                $data = [
+                    'instant'  => [
+                        'navColor' => '#e74c3c',
+                        'color' => '#ee7367',
+                        'outlineColor' => '#e74c3c',
+                        'icon' => 'directions_run',
+                    ],
+                    '9'  => [
+                        'navColor' => '#F97F51',
+                        'color' => '#fe9871',
+                        'outlineColor' => '#F97F51',
+                        'icon' => 'emoji_people',
+                    ],
+                    '11' => [
+                        'navColor' => '#f1c40f',
+                        'color' => '#f1c40f',
+                        'outlineColor' => '#ffdd54',
+                        'icon' => 'emoji_people',
+                    ],
+                    '13' => [
+                        'navColor' => '#27ae60',
+                        'color' => '#4dde8a',
+                        'outlineColor' => '#27ae60',
+                        'icon' => 'emoji_people',
+                    ],
+                    '15' => [
+                        'navColor' => '#76381e',
+                        'color' => '#985437',
+                        'outlineColor' => '#76381e',
+                        'icon' => 'emoji_people',
+                    ],
+                    '17' => [
+                        'navColor' => '#82589F',
+                        'color' => '#8f72a3',
+                        'outlineColor' => '#82589F',
+                        'icon' => 'emoji_people',
+                    ],
+                    'active' => [
+                        'navColor' => '#63cdda',
+                        'color' => '#99d1d8',
+                        'outlineColor' => '#63cdda',
+                        'icon' => 'boy',
+                    ],
+                    'first' => [
+                        'navColor' => '#FC427B',
+                        'color' => '#FC427B',
+                        'outlineColor' => '#f8769e',
+                        'icon' => 'sentiment_very_satisfied',
+                    ],
+                    'done' => [
+                        'navColor' => '#2C3A47',
+                        'color' => '#4b5257',
+                        'outlineColor' => '#2C3A47',
+                        'icon' => 'airline_seat_recline_extra',
+                    ],
+                    'driver' => [
+                        'navColor' => '#f1c40f',
+                        'color' => '#f1c40f',
+                        'outlineColor' => '#ffdd54',
+                        'icon' => 'directions_car',
+                    ],
+                ];
+                if(!empty($key)){
+                    return collect($data[$key]);
+                }
+                return collect($data);
+            }
     public function transaction()
-    {
-        return $this->morphOne(Transaction::class, 'transactionable');
-    }
+            {
+                return $this->morphOne(Transaction::class, 'transactionable');
+            }
 
 
 }

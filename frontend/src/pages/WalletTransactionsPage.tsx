@@ -6,17 +6,26 @@ import {
     Typography,
     List,
     ListItem,
-    Skeleton, Button
+    Skeleton,
+    Button,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    TextField,
+    InputAdornment,
+    MenuItem,
+    Alert
 } from "@mui/material";
 
 import {
     NorthEast,
-    SouthWest
+    SouthWest,
+    AccountBalanceWalletOutlined
 } from "@mui/icons-material";
 
 import {useWallet} from "../hooks/useWallet";
 import {useAuthStore} from "../store/useAuthStore";
-import top from "../assets/top.png";
 import empty from "../assets/empty-1.svg";
 
 interface Transaction {
@@ -31,13 +40,26 @@ interface Transaction {
     }
 }
 
+interface BankCard {
+    value: number
+    label: string
+    name: string
+    bank: string
+}
+
 const WalletTransactionsPage: React.FC = () => {
 
     const {getTransactions} = useWallet()
     const {accessToken, setting} = useAuthStore()
 
     const [transactions, setTransactions] = useState<Transaction[]>([])
+    const [bankCards, setBankCards] = useState<BankCard[]>([])
     const [loading, setLoading] = useState(true)
+    const [withdrawDialogOpen, setWithdrawDialogOpen] = useState(false)
+    const [withdrawAmount, setWithdrawAmount] = useState("")
+    const [selectedCardId, setSelectedCardId] = useState<number | "">("")
+    const [withdrawing, setWithdrawing] = useState(false)
+    const [error, setError] = useState("")
 
     const loadTransactions = async () => {
 
@@ -63,10 +85,96 @@ const WalletTransactionsPage: React.FC = () => {
 
     }
 
+    const loadBankCards = async () => {
+        if (!accessToken) return
+
+        try {
+            const response = await fetch(`http://185.255.88.111:8000/api/user/cardNumbers`, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Accept': 'application/json'
+                }
+            })
+
+            const data = await response.json()
+
+            if (data.status === "success") {
+                setBankCards(data.data || [])
+            }
+        } catch (e) {
+            console.error("خطا در دریافت کارت‌های بانکی:", e)
+        }
+    }
+
     useEffect(() => {
         loadTransactions()
+        loadBankCards()
     }, [accessToken])
 
+    const handleWithdrawClick = () => {
+        setWithdrawDialogOpen(true)
+        setError("")
+    }
+
+    const handleWithdrawClose = () => {
+        setWithdrawDialogOpen(false)
+        setWithdrawAmount("")
+        setSelectedCardId("")
+        setError("")
+    }
+
+    const handleWithdrawSubmit = async () => {
+        if (!accessToken) return
+
+        setError("")
+        setWithdrawing(true)
+
+        try {
+            const response = await fetch(`http://185.255.88.111:8000/api/user/wallet/withdrawal`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    amount: Number(withdrawAmount),
+                    cardId: selectedCardId
+                })
+            })
+
+            const data = await response.json()
+
+            if (data.status === "success") {
+                // به‌روزرسانی موجودی در store
+                if (setting) {
+                    useAuthStore.setState({
+                        setting: {
+                            ...setting,
+                            user: {
+                                ...setting.user,
+                                balance: data.data.balance
+                            }
+                        }
+                    })
+                }
+
+                // بارگذاری مجدد تراکنش‌ها
+                await loadTransactions()
+
+                handleWithdrawClose()
+            } else {
+                setError(data.message || "خطا در ثبت درخواست برداشت")
+            }
+        } catch (e) {
+            setError("خطا در برقراری ارتباط با سرور")
+        } finally {
+            setWithdrawing(false)
+        }
+    }
+
+    const balance = setting?.user.balance ?? 0
+    const minWithdraw = 10000
 
     return (
         <Box>
@@ -75,6 +183,7 @@ const WalletTransactionsPage: React.FC = () => {
                     borderRadius: 3,
                     boxShadow: 3,
                     position: "relative",
+                    py: 3,
                     "&::before": {
                         content: '""',
                         width: "250px",
@@ -92,54 +201,50 @@ const WalletTransactionsPage: React.FC = () => {
                     },
                 }}>
                     <CardContent>
-                        <Box display="flex" alignItems="center" justifyContent="space-between">
-                            <Typography variant="h6">
-                                موجودی کیف پول
-                            </Typography>
-                            {loading ? (
-                                <Skeleton width={150}/>
-                            ) : (
-                                <Typography variant="h6">
-                                    {setting?.user.balance.toLocaleString("fa-IR") ?? 0}
-                                    <Typography variant="caption" sx={{px: 0.5}}>تومان</Typography>
-                                </Typography>
-                            )}
-                        </Box>
-                        <Box sx={{maxWidth: '100px', margin: '0 auto 1.5px'}}><img src={top} alt="تاپ"/></Box>
-                        <Typography variant="h6">موجودی آپ</Typography>
-                        <Typography sx={{mb: 1.5}}>برای مشاهده کیف پول آپ می بایست به آنی روب دسترسی بدهید.</Typography>
-                        <Button
-                            variant="outlined"
+                        <AccountBalanceWalletOutlined
                             sx={{
-                                padding: '7.5px 35px',
-                                backgroundColor: 'rgb(240, 75, 35)',
-                                color: 'rgb(255, 255, 255)',
-                                border: 0,
-                                borderRadius: '300px',
-                                boxShadow: '0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0px rgba(0, 0, 0, 0.15), 0 1px 5px 0px rgba(0, 0, 0, 0.10)',
-                                '&:hover': {opacity: '0.90'},
+                                fontSize: 64,
+                                color: "primary.main",
+                                mb: 2
                             }}
-                        >
-                            دریافت مجوز از آپ
-                        </Button>
+                        />
+                        <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                            موجودی کیف پول
+                        </Typography>
+                        {loading ? (
+                            <Skeleton width={200} height={60} sx={{ margin: "0 auto" }} />
+                        ) : (
+                            <Typography variant="h3" fontWeight={800} sx={{ mb: 0.5 }}>
+                                {balance.toLocaleString("fa-IR")}
+                                <Typography variant="h6" component="span" sx={{ px: 1, fontWeight: 600 }}>
+                                    تومان
+                                </Typography>
+                            </Typography>
+                        )}
                     </CardContent>
                 </Card>
+
                 <Box
                     maxWidth="450px"
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="space-between"
-                    gap="15px"
                     margin="15px auto"
                 >
-                    <Button type="submit" variant="contained" size="large" fullWidth>
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        size="large"
+                        fullWidth
+                        onClick={handleWithdrawClick}
+                        sx={{
+                            py: 1.5,
+                            fontWeight: 700,
+                            fontSize: "1rem"
+                        }}
+                    >
                         برداشت از کیف پول
-                    </Button>
-                    <Button type="submit" variant="contained" size="large" fullWidth>
-                        انتقال به آپ
                     </Button>
                 </Box>
             </Box>
+
             {!loading && transactions.length === 0 && (
                 <Box sx={{textAlign: "center"}}>
                     <Box sx={{maxWidth: '450px', margin: 'auto'}}>
@@ -150,6 +255,7 @@ const WalletTransactionsPage: React.FC = () => {
                     </Typography>
                 </Box>
             )}
+
             <List>
                 {loading
                     ? Array.from({length: 4}).map((_, i) => (
@@ -207,7 +313,6 @@ const WalletTransactionsPage: React.FC = () => {
                                                 fontWeight="bold"
                                                 color={trx.type === "increase" ? "success.main" : "error.main"}
                                             >
-
                                                 {trx.amount.toLocaleString("fa-IR")}
                                                 <Typography variant="caption" sx={{px: 0.5}}>تومان</Typography>
                                                 {trx.type === "increase" ? " +" : " -"}
@@ -219,6 +324,108 @@ const WalletTransactionsPage: React.FC = () => {
                         </ListItem>
                     ))}
             </List>
+
+            <Dialog
+                open={withdrawDialogOpen}
+                onClose={handleWithdrawClose}
+                maxWidth="xs"
+                fullWidth
+                PaperProps={{
+                    sx: { borderRadius: 3 }
+                }}
+            >
+                <DialogTitle sx={{ fontWeight: 700 }}>
+                    برداشت از کیف پول
+                </DialogTitle>
+                <DialogContent>
+                    <Box sx={{ pt: 2 }}>
+                        {error && (
+                            <Alert severity="error" sx={{ mb: 2, borderRadius: 2 }}>
+                                {error}
+                            </Alert>
+                        )}
+
+                        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                            موجودی قابل برداشت: {balance.toLocaleString("fa-IR")} تومان
+                        </Typography>
+
+                        <TextField
+                            fullWidth
+                            select
+                            label="انتخاب کارت بانکی"
+                            value={selectedCardId}
+                            onChange={(e) => setSelectedCardId(Number(e.target.value))}
+                            sx={{ mb: 2 }}
+                        >
+                            {bankCards.length === 0 ? (
+                                <MenuItem disabled>
+                                    کارت بانکی ثبت نشده است
+                                </MenuItem>
+                            ) : (
+                                bankCards.map((card) => (
+                                    <MenuItem key={card.value} value={card.value}>
+                                        {card.name} - {card.label} ({card.bank})
+                                    </MenuItem>
+                                ))
+                            )}
+                        </TextField>
+
+                        <TextField
+                            fullWidth
+                            label="مبلغ برداشت"
+                            type="number"
+                            value={withdrawAmount}
+                            onChange={(e) => setWithdrawAmount(e.target.value)}
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        تومان
+                                    </InputAdornment>
+                                )
+                            }}
+                            inputProps={{
+                                max: balance,
+                                min: minWithdraw
+                            }}
+                            helperText={
+                                withdrawAmount && Number(withdrawAmount) > balance
+                                    ? "مبلغ وارد شده بیشتر از موجودی است"
+                                    : withdrawAmount && Number(withdrawAmount) < minWithdraw
+                                        ? `حداقل مبلغ برداشت ${minWithdraw.toLocaleString("fa-IR")} تومان است`
+                                        : ""
+                            }
+                            error={
+                                withdrawAmount !== "" &&
+                                (Number(withdrawAmount) > balance || Number(withdrawAmount) < minWithdraw)
+                            }
+                        />
+                    </Box>
+                </DialogContent>
+                <DialogActions sx={{ px: 3, pb: 2.5 }}>
+                    <Button
+                        onClick={handleWithdrawClose}
+                        variant="outlined"
+                        sx={{ borderRadius: 2 }}
+                        disabled={withdrawing}
+                    >
+                        انصراف
+                    </Button>
+                    <Button
+                        onClick={handleWithdrawSubmit}
+                        variant="contained"
+                        disabled={
+                            !withdrawAmount ||
+                            !selectedCardId ||
+                            Number(withdrawAmount) < minWithdraw ||
+                            Number(withdrawAmount) > balance ||
+                            withdrawing
+                        }
+                        sx={{ borderRadius: 2 }}
+                    >
+                        {withdrawing ? "در حال ثبت..." : "تایید برداشت"}
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     )
 }

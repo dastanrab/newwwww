@@ -10,14 +10,12 @@ import DriverCurrentRequestsPage from "./pages/DriverCurrentRequestsPage";
 import DriverWastePrices from "./pages/DriverWastePrices";
 import DriverNotificationsPage from "./pages/DriverNotificationsPage";
 import DriverCompletedRequestsPage from "./pages/DriverCompletedRequestsPage";
-import DiagnosisTest from "./pages/DiagnosisTest";
 
 export default function DriverRoutes() {
     return (
         <ThemeProvider theme={driverTheme}>
             <DriverSessionProvider>
                 <Routes>
-                    <Route path="/illness" element={<DiagnosisTest />} />
                     <Route path="/login" element={<DriverLogin />} />
                     <Route path="/verify" element={<DriverVerify />} />
                     <Route element={<DriverLayout />}>

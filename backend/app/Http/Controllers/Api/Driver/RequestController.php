@@ -364,6 +364,7 @@ class RequestController extends Controller
 
     public function done(Submit $submit)
     {
+        //  dd($submit);
         $user = auth()->user();
         $driver = $submit->driver;
         if ($driver->user_id != $user->id) {
@@ -382,9 +383,9 @@ class RequestController extends Controller
         }
 
         $requester = User::find($submit->user_id);
-        $submit->update(['status' => 3]);
+        // $submit->update(['status' => 3]);
         $total_weights = $driver->receives->pluck('weight')->sum();
-        $driver->update(['status' => 3, 'collected_at' => now(), 'weights' => $total_weights, 'city_id' => $submit->city_id]);
+        // $driver->update(['status' => 3, 'collected_at' => now(), 'weights' => $total_weights, 'city_id' => $submit->city_id]);
 
         $submit->total_amount = round($submit->total_amount, 1);
         $total_price = 0;
@@ -394,7 +395,7 @@ class RequestController extends Controller
         $submit->final_amount = $total_price;
         $submit->save();
 
-
+        dump($submit->final_amount);
         ReceiveArchive::add($driver);
         if ($submit->user->legal) {
             ArchiveLegal::add($driver);
@@ -406,13 +407,13 @@ class RequestController extends Controller
         } else {
             ArchiveApp::add($driver);
         }
-        $userRRN = $submit->payForUser();
+//        $userRRN = $submit->payForUser();
         $submit->decreaseDriverWallet($driverWallet);
-       // $submit->sendCollectedSms();
-        $submit->firstSubmitUser();
-        $submit->rewardForReferral();
+        // $submit->sendCollectedSms();
+        //    $submit->firstSubmitUser();
+        //  $submit->rewardForReferral();
         $submit->add_waste_score();
-        ProcessPayment::dispatch($requester, $submit,$userRRN);
+        //      ProcessPayment::dispatch($requester, $submit,$userRRN);
         return sendJson('success','با موفقیت انجام شد',[]);
     }
     public function attendance()
