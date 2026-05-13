@@ -20,7 +20,6 @@ export default function DriverLayout() {
     const { accessToken, setting, refreshSettings } = useAuthStore();
     const user = setting?.user;
 
-    console.log('hahahahhahahah')
     useEffect(() => {
         if (!accessToken) {
             console.log('no location')
@@ -67,7 +66,6 @@ export default function DriverLayout() {
             <Box
                 sx={{
                     flex: 1,
-                    minHeight: 0,
                     display: "flex",
                     flexDirection: "column",
                 }}

@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import Dock from "@mui/icons-material/Dock";
 import logo from "../assets/logo.svg";
+import logo_text from "../assets/logo-text.svg";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { LoadingButton } from "@mui/lab";
 import { useDriverSession } from "../context/DriverSessionContext";
@@ -94,6 +95,7 @@ const DriverLogin: React.FC = () => {
         >
             <Box sx={{ width: "125px", m: "0 auto 15px" }}>
                 <img src={logo} alt="logo" />
+                <img src={logo_text} alt="logo" />
             </Box>
 
             <TextField

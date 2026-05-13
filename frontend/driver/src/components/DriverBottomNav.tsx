@@ -107,6 +107,7 @@ export default function DriverBottomNav() {
                 component="nav"
                 aria-label="ناوبری اصلی راننده"
                 sx={{
+                    width: "100%",
                     position: "fixed",
                     bottom: 0,
                     left: 0,
@@ -116,11 +117,7 @@ export default function DriverBottomNav() {
                     alignItems: "stretch",
                     justifyContent: "space-around",
                     flexShrink: 0,
-                    bgcolor: "transparent",
-                    background: driverAppBarGradient,
-                    backgroundImage: driverAppBarGradient,
-                    borderTop: "1px solid rgba(255,255,255,0.2)",
-                    width: "100%",
+                    backgroundImage: 'linear-gradient(90deg,rgb(0, 160, 180) 0%, rgb(0, 125, 140) 100%)',
                 }}
             >
                 {/* خانه */}
@@ -159,7 +156,7 @@ export default function DriverBottomNav() {
                             width: 70,
                             height: 70,
                             borderRadius: "50%",
-                            bgcolor: setting?.user?.rollCall?.status !== "absent" ? "#2ecc71" : "#e74c3c",
+                            bgcolor: setting?.user?.rollCall?.status !== "absent" ? "#00454D" : "#e74c3c",
                             boxShadow: "0 0 10px rgba(0,0,0,0.3)",
                             transition: "background-color 0.4s, transform 0.2s",
                             "&:hover": {

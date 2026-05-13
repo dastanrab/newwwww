@@ -2,7 +2,6 @@ import { AppBar, IconButton, Toolbar, Typography, Box } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import { useState, type MouseEvent } from "react";
-import { driverAppBarGradient } from "../driverTheme";
 import DriverDrawerMenu from "./DriverDrawerMenu";
 
 type DriverAppBarProps = {
@@ -30,15 +29,10 @@ export default function DriverAppBar({
                 position="static"
                 elevation={0}
                 sx={{
-                    /* پس‌زمینهٔ پیش‌فرض MuiAppBar گرادیان را می‌پوشاند مگر transparent */
-                    bgcolor: "transparent",
-                    background: driverAppBarGradient,
-                    backgroundImage: driverAppBarGradient,
-                    color: "common.white",
-                    boxShadow: "none",
+                    backgroundImage: 'linear-gradient(90deg,rgb(0, 160, 180) 0%, rgb(0, 125, 140) 100%)',
                 }}
             >
-                <Toolbar sx={{ direction: "rtl", gap: 1, minHeight: 56 }}>
+                <Toolbar sx={{ direction: "rtl", gap: 1, minHeight: 55, backgroundImage: 'linear-gradient(90deg,rgb(0, 160, 180) 0%, rgb(0, 125, 140) 100%)', }}>
                     <Box
                         sx={{
                             width: 40,
