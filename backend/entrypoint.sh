@@ -5,6 +5,9 @@ echo "===== Laravel Entrypoint Started ====="
 
 cd /var/www
 
+# حذف کش قدیمی پکیج‌ها و کانفیگ‌ها
+rm -f bootstrap/cache/packages.php bootstrap/cache/services.php bootstrap/cache/config.php
+
 # Wait for database
 if [ -n "$DB_HOST" ]; then
   echo "Waiting for database..."

@@ -22,14 +22,15 @@ WORKDIR /var/www
 RUN echo "===== Copying project files ====="
 COPY . ./
 
-# Composer install with output
+# Remove cached bootstrap files if copied from host
+RUN rm -f bootstrap/cache/*.php
+
+# Composer install with dev dependencies
 RUN echo "===== Running composer install =====" \
     && composer install \
         --optimize-autoloader \
         --no-interaction \
-        --prefer-dist \
-        --no-dev \
-    && rm -rf /root/.composer/cache
+        --prefer-dist
 
 # Permissions
 RUN echo "===== Setting permissions =====" \
