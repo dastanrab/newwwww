@@ -28,14 +28,8 @@ RUN echo "===== Running composer install =====" \
         --optimize-autoloader \
         --no-interaction \
         --prefer-dist \
-        --verbose
-
-# Publish / artisan commands with output
-#RUN echo "===== Running Artisan commands =====" \
-#    && php artisan storage:link || echo "storage:link failed" \
-#    && php artisan optimize || echo "optimize failed" \
-#    && php artisan vendor:publish --all || echo "vendor:publish failed" \
-#    && php artisan scribe:generate || echo "scribe generate failed"
+        --no-dev \
+    && rm -rf /root/.composer/cache
 
 # Permissions
 RUN echo "===== Setting permissions =====" \
