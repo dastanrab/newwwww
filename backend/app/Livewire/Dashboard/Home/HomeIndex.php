@@ -67,12 +67,12 @@ class HomeIndex extends Component
             $this->kavehnegarBalance=\Illuminate\Support\Facades\Cache::get('kave_remain_balance');
         }else{
             try {
-                $response = Http::withOptions(['timeout' => 5])->get('https://api.kavenegar.com/v1/' .env('KAVENEGAR_API_KEY') . '/account/info.json');
-                if ($response->ok()) {
-                    $this->kavehnegarBalance= $response->json()['entries']['remaincredit'] / 10;
-                } else {
+//                $response = Http::withOptions(['timeout' => 5])->get('https://api.kavenegar.com/v1/' .env('KAVENEGAR_API_KEY') . '/account/info.json');
+//                if ($response->ok()) {
+//                    $this->kavehnegarBalance= $response->json()['entries']['remaincredit'] / 10;
+//                } else {
                     $this->kavehnegarBalance= 0;
-                }
+//                }
                 \Illuminate\Support\Facades\Cache::set('kave_remain_balance',$this->kavehnegarBalance,100);
             }catch (\Exception $exception)
             {

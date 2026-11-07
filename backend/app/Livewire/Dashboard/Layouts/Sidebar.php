@@ -245,29 +245,29 @@ class Sidebar extends Component
                     ]
                 ]
             ],
-            [
-                'title' => 'ردیابی',
-                'icon'  => 'bx bxs-map-pin',
-                'route' => route('d.track'),
-                'name' => 'track',
-                'permission' => 'track-menu',
-                'submenu' => [
-                    [
-                        'title' => 'گزارش ارتباط با سرور',
-                        'icon' => 'bx bx-signal-5',
-                        'route' => route('d.track.report'),
-                        'name' => 'report',
-                        'permission' => 'track-report-menu',
-                    ],
-                    [
-                        'title' => 'ردیابی آنلاین',
-                        'icon' => 'bx bx-current-location',
-                        'route' => route('d.track'),
-                        'name' => 'online',
-                        'permission' => 'track-online-menu',
-                    ]
-                ],
-            ],
+//            [
+//                'title' => 'ردیابی',
+//                'icon'  => 'bx bxs-map-pin',
+//                'route' => route('d.track'),
+//                'name' => 'track',
+//                'permission' => 'track-menu',
+//                'submenu' => [
+//                    [
+//                        'title' => 'گزارش ارتباط با سرور',
+//                        'icon' => 'bx bx-signal-5',
+//                        'route' => route('d.track.report'),
+//                        'name' => 'report',
+//                        'permission' => 'track-report-menu',
+//                    ],
+//                    [
+//                        'title' => 'ردیابی آنلاین',
+//                        'icon' => 'bx bx-current-location',
+//                        'route' => route('d.track'),
+//                        'name' => 'online',
+//                        'permission' => 'track-online-menu',
+//                    ]
+//                ],
+//            ],
             [
                 'title' => 'کاربران',
                 'icon'  => 'bx bxs-group',
@@ -291,54 +291,54 @@ class Sidebar extends Component
                     ]
                 ],
             ],
-            [
-                'title' => 'باشگاه مشتریان',
-                'count' => null,
-                'icon'  => 'bx bxs-store',
-                'route' => route('d.club.items'),
-                'name' => 'club',
-                'permission' => 'club-menu',
-                'submenu' => [
-                    [
-                        'title' => 'آیتم ها',
-                        'icon' => 'bx bxs-food-menu',
-                        'route' => route('d.club.items'),
-                        'name' => 'items',
-                        'permission' => 'club-item-menu',
-                    ],
-                    [
-                        'title' => 'دسته بندی',
-                        'icon' => 'bx bx-align-right',
-                        'route' => route('d.club.categories'),
-                        'name' => 'categories',
-                        'permission' => 'club-item-menu',
-                    ],
-                    [
-                        'title' => 'کدهای تخفیف باز',
-                        'count' => null,
-                        'icon' => 'bx bxs-check-circle',
-                        'route' => route('d.club.offers-open'),
-                        'name' => 'open_offers',
-                        'permission' => 'club-offers-menu',
-                    ],
-                    [
-                        'title' => 'کدهای تخفیف بسته',
-                        'count' => null,
-                        'icon' => 'bx bxs-x-circle',
-                        'route' => route('d.club.offers-close'),
-                        'name' => 'close_offers',
-                        'permission' => 'club-offers-menu',
-                    ],
-                    [
-                        'title' => 'سابقه امتیاز ها',
-                        'count' => null,
-                        'icon' => 'bx bx-history',
-                        'route' => route('d.club.score-histories'),
-                        'name' => 'score-histories',
-                        'permission' => 'club-offers-menu',
-                    ]
-                ],
-            ],
+//            [
+//                'title' => 'باشگاه مشتریان',
+//                'count' => null,
+//                'icon'  => 'bx bxs-store',
+//                'route' => route('d.club.items'),
+//                'name' => 'club',
+//                'permission' => 'club-menu',
+//                'submenu' => [
+//                    [
+//                        'title' => 'آیتم ها',
+//                        'icon' => 'bx bxs-food-menu',
+//                        'route' => route('d.club.items'),
+//                        'name' => 'items',
+//                        'permission' => 'club-item-menu',
+//                    ],
+//                    [
+//                        'title' => 'دسته بندی',
+//                        'icon' => 'bx bx-align-right',
+//                        'route' => route('d.club.categories'),
+//                        'name' => 'categories',
+//                        'permission' => 'club-item-menu',
+//                    ],
+//                    [
+//                        'title' => 'کدهای تخفیف باز',
+//                        'count' => null,
+//                        'icon' => 'bx bxs-check-circle',
+//                        'route' => route('d.club.offers-open'),
+//                        'name' => 'open_offers',
+//                        'permission' => 'club-offers-menu',
+//                    ],
+//                    [
+//                        'title' => 'کدهای تخفیف بسته',
+//                        'count' => null,
+//                        'icon' => 'bx bxs-x-circle',
+//                        'route' => route('d.club.offers-close'),
+//                        'name' => 'close_offers',
+//                        'permission' => 'club-offers-menu',
+//                    ],
+//                    [
+//                        'title' => 'سابقه امتیاز ها',
+//                        'count' => null,
+//                        'icon' => 'bx bx-history',
+//                        'route' => route('d.club.score-histories'),
+//                        'name' => 'score-histories',
+//                        'permission' => 'club-offers-menu',
+//                    ]
+//                ],
+//            ],
             [
                 'title' => 'پیام ها',
                 'count' => $contactCount,
@@ -422,13 +422,13 @@ class Sidebar extends Component
                     ]
                 ],
             ],
-            [
-                'title' => 'فعالیت ها',
-                'icon'  => 'bx bxs-megaphone',
-                'route' => route('d.logs'),
-                'name' => 'logs',
-                'permission' => 'logs-menu',
-            ],
+//            [
+//                'title' => 'فعالیت ها',
+//                'icon'  => 'bx bxs-megaphone',
+//                'route' => route('d.logs'),
+//                'name' => 'logs',
+//                'permission' => 'logs-menu',
+//            ],
             [
                 'title' => 'رانندگان',
                 'icon'  => 'bx bxs-car',

@@ -1,42 +1,52 @@
 :root {
-    --Secondary-Color: linear-gradient(90deg, rgb(245, 245, 245) 0%, rgb(235, 235, 235) 100%);
-    --Third-Color: linear-gradient(90deg, rgb(145, 160, 175) 0%, rgb(105, 125, 140) 100%);
-    --Primary-Shadow: 0 0.155px 0.315rem 0 rgba(65, 90, 115, 0.10);
-    --Primary-Shadow: 0 0.155px 0.315rem 0 rgba(65, 90, 115, 0.10);
-    --Green-Bg-Color: linear-gradient(90deg, rgb(115, 220, 55) 0%, rgb(100, 195, 45) 100%);
-    --Red-Bg-Color: linear-gradient(90deg, rgb(210, 60, 105) 0%, rgb(180, 45, 85) 100%);
-    --Primary-Color: linear-gradient(100deg, rgb(90, 220, 115) 5%, rgb(45, 180, 75) 50%);
-    --Yellow-Color: linear-gradient(100deg, rgb(210, 195, 15) 5%, rgb(245, 205, 40) 50%);
-    --Primary-Border-Color: rgb(90, 220, 115);
-    --FontFamily-Light: 'YekanBakh-Light';
-    --FontFamily-Medium: 'YekanBakh-Medium';
-    --FontFamily-Bold: 'YekanBakh-Bold';
-    --FontFamily-Black: 'YekanBakh-Black';
-    --Primary-Text-Color: rgb(105, 125, 140);
+    /* پالت رنگی مدرن (Indigo & Slate) */
+    --Primary-Color: linear-gradient(135deg, rgb(99, 102, 241) 0%, rgb(79, 70, 229) 100%);
+    --Secondary-Color: linear-gradient(90deg, rgb(248, 250, 252) 0%, rgb(241, 245, 249) 100%);
+    --Third-Color: linear-gradient(135deg, rgb(71, 85, 105) 0%, rgb(30, 41, 59) 100%);
+    --Green-Bg-Color: linear-gradient(135deg, rgb(16, 185, 129) 0%, rgb(5, 150, 105) 100%);
+    --Red-Bg-Color: linear-gradient(135deg, rgb(244, 63, 94) 0%, rgb(225, 29, 72) 100%);
+    --Yellow-Color: linear-gradient(135deg, rgb(245, 158, 11) 5%, rgb(217, 119, 6) 95%);
+
+    /* رنگ‌های پایه، متون و خطوط دور */
+    --Primary-Border-Color: rgb(99, 102, 241);
+    --Primary-Text-Color: rgb(51, 65, 85);
+    --Secondary-Text-Color: rgb(100, 116, 139);
+    --Border-Light: rgb(226, 232, 240);
+    --Bg-Body: rgb(241, 245, 249);
+
+    /* سایه‌ها */
+    --Primary-Shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.06), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+    --Focus-Ring: 0 0 0 3px rgba(99, 102, 241, 0.18);
+
+    /* فونت‌ها */
+    --FontFamily-Light: 'Vazirmatn-Light';
+    --FontFamily-Medium: 'Vazirmatn-Medium';
+    --FontFamily-Bold: 'Vazirmatn-Bold';
+    --FontFamily-Black: 'Vazirmatn-Black';
+    --Primary-FontFamily: 'Vazirmatn-Bold';
 }
 
 @font-face {
-    font-family: 'YekanBakh-Light';
-    src: url('fonts/YekanBakh-Light.woff');
+    font-family: 'Vazirmatn-Light';
+    src: url('fonts/Vazirmatn-Light.woff2');
 }
 
 @font-face {
-    font-family: 'YekanBakh-Medium';
-    src: url('fonts/YekanBakh-Medium.woff');
+    font-family: 'Vazirmatn-Medium';
+    src: url('fonts/Vazirmatn-Medium.woff2');
 }
 
 @font-face {
-    font-family: 'YekanBakh-Bold';
-    src: url('fonts/YekanBakh-Bold.woff');
+    font-family: 'Vazirmatn-Bold';
+    src: url('fonts/Vazirmatn-Bold.woff2');
 }
 
 @font-face {
-    font-family: 'YekanBakh-Black';
-    src: url('fonts/YekanBakh-Black.woff');
+    font-family: 'Vazirmatn-Black';
+    src: url('fonts/Vazirmatn-Black.woff2');
 }
 
 @media (prefers-reduced-motion: no-preference) {
-
     :root {
         scroll-behavior: smooth;
     }
@@ -45,9 +55,11 @@
 body {
     font-family: var(--FontFamily-Medium);
     font-size: 1rem;
-    background: rgb(245, 245, 250);
-    color: rgb(105, 125, 140);
+    background: var(--Bg-Body);
+    color: var(--Primary-Text-Color);
     text-align: right;
+    padding: 0 !important;
+    overflow-y: scroll !important;
 }
 
 ul,
@@ -77,7 +89,7 @@ h1,
     font-family: var(--FontFamily-Bold);
     font-weight: 700;
     line-height: 1.5;
-    color: rgb(90, 105, 125);
+    color: rgb(15, 23, 42);
 }
 
 strong {
@@ -96,20 +108,28 @@ button {
 
 .cr-select label {
     display: block;
-    margin: 0 0 1.5px;
+    margin: 0 0 4px;
     font-family: var(--FontFamily-Bold);
     line-height: 1.5;
-    background: rgb(255, 255, 255);
-    color: rgb(105, 115, 125);
+    background: transparent;
+    color: var(--Primary-Text-Color);
 }
 
 .cr-select select {
     width: 100%;
     height: 40px;
-    padding: 0 25px 0 0;
-    color: rgb(105, 115, 125);
-    border: 1px solid rgb(215, 225, 225);
-    border-radius: 300px;
+    padding: 0 25px 0 10px;
+    color: var(--Primary-Text-Color);
+    background-color: rgb(255, 255, 255);
+    border: 1px solid var(--Border-Light);
+    border-radius: 10px;
+    transition: all .2s ease-in-out;
+}
+
+.cr-select select:focus {
+    outline: 0;
+    border-color: var(--Primary-Border-Color);
+    box-shadow: var(--Focus-Ring);
 }
 
 .cr-select.cr-icon {
@@ -126,7 +146,7 @@ button {
     top: 35px;
     right: 10px;
     line-height: 1.25;
-    color: rgb(105, 115, 125);
+    color: var(--Secondary-Text-Color);
     z-index: 1;
 }
 
@@ -138,26 +158,28 @@ button {
 
 .cr-text label {
     display: block;
-    margin: 0 0 0.15rem;
+    margin: 0 0 0.25rem;
     font-family: var(--FontFamily-Bold);
     font-weight: normal;
     line-height: 1.5;
-    background: rgb(255, 255, 255);
-    color: rgb(105, 125, 140);
+    background: transparent;
+    color: var(--Primary-Text-Color);
 }
 
 .cr-text input[type='text'] {
     width: 100%;
     height: 40px;
-    padding: 0 0.5rem;
+    padding: 0 0.75rem;
     position: relative;
-    color: rgb(105, 120, 140);
-    border: 0.065rem solid rgb(215, 225, 225);
-    border-radius: 300px;
+    color: var(--Primary-Text-Color);
+    background-color: rgb(255, 255, 255);
+    border: 1px solid var(--Border-Light);
+    border-radius: 10px;
+    transition: all .2s ease-in-out;
 }
 
 .cr-text input[type='text']::placeholder {
-    color: rgba(105, 115, 125, .75);
+    color: rgba(100, 116, 139, .65);
 }
 
 .cr-text.cr-md input[type='text'] {
@@ -167,24 +189,24 @@ button {
 .cr-text input[type='text']:focus {
     outline: 0;
     border-color: var(--Primary-Border-Color);
-    box-shadow: 0 0 0.25rem 0.05rem rgba(105, 110, 255, .15);
+    box-shadow: var(--Focus-Ring);
 }
 
 .cr-text.cr-icon input[type='text'] {
-    padding: 0 30px 0 10px;
+    padding: 0 32px 0 12px;
 }
 
 .cr-text.cr-icon i {
     position: absolute;
-    top: 30px;
+    top: 32px;
     right: 10px;
     line-height: 1.35;
-    color: rgb(105, 115, 125);
+    color: var(--Secondary-Text-Color);
     z-index: 1;
 }
 
 .cr-text.cr-icon.cr-md i {
-    top: 35px;
+    top: 36px;
 }
 
 .cr-textarea {
@@ -199,27 +221,30 @@ button {
     font-family: var(--Primary-FontFamily);
     font-weight: 700;
     line-height: 1.5;
-    background: rgb(255, 255, 255);
-    color: rgb(105, 115, 125);
+    background: transparent;
+    color: var(--Primary-Text-Color);
 }
 
 .cr-textarea textarea {
     width: 100%;
     height: 150px;
     padding: 15px;
-    border: 1px solid rgb(215, 225, 225);
+    color: var(--Primary-Text-Color);
+    background-color: rgb(255, 255, 255);
+    border: 1px solid var(--Border-Light);
     border-radius: 10px;
     resize: none;
+    transition: all .2s ease-in-out;
 }
 
 .cr-textarea textarea:focus {
     outline: 0;
     border-color: var(--Primary-Border-Color);
-    box-shadow: 0 0 5px 0 rgba(105, 110, 255, .15);
+    box-shadow: var(--Focus-Ring);
 }
 
 .cr-textarea.cr-icon textarea {
-    padding: 10px 5px 10px 30px;
+    padding: 10px 10px 10px 30px;
 }
 
 .cr-textarea.cr-icon i {
@@ -227,7 +252,7 @@ button {
     top: 30px;
     left: 10px;
     line-height: 1.35;
-    color: rgb(105, 115, 125);
+    color: var(--Secondary-Text-Color);
     z-index: 1;
 }
 
@@ -238,9 +263,9 @@ button {
 
 .cr-radio label,
 .cr-checkbox label {
-    padding: 0 25px 0 0;
+    padding: 0 28px 0 0;
     position: relative;
-    color: rgb(105, 115, 125);
+    color: var(--Primary-Text-Color);
     cursor: pointer;
 }
 
@@ -253,10 +278,12 @@ button {
     position: absolute;
     top: 0;
     right: 0;
-    border: 1px solid rgb(215, 225, 225);
-    border-radius: .25rem;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgb(203, 213, 225);
+    border-radius: .35rem;
     appearance: none;
     cursor: pointer;
+    transition: all .2s ease;
 }
 
 .cr-radio label:before {
@@ -273,7 +300,7 @@ button {
     line-height: 1;
     position: absolute;
     top: 0;
-    left: 0;
+    right: 0;
     background: var(--Primary-Color);
     color: rgb(255, 255, 255);
     border-color: var(--Primary-Border-Color);
@@ -288,16 +315,19 @@ button {
     background: var(--Primary-Color);
     color: rgb(255, 255, 255);
     border: 0;
-    border-radius: 300px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(79, 70, 229, 0.25);
     transition: all .25s ease-in-out;
 }
 
 .cr-button button:hover {
-    opacity: .90;
+    opacity: .92;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 15px rgba(79, 70, 229, 0.35);
 }
 
 .cr-button button:active {
-    transform: scale(.95);
+    transform: scale(.97);
 }
 
 .cr-button.cr-md button {
@@ -311,14 +341,19 @@ button {
     border-width: 2px;
 }
 
+.cr-button span {
+    position: relative;
+    top: 1px;
+}
+
 .cr-overlay {
     position: fixed;
     top: 0;
     right: 0;
     width: 100%;
     height: 100%;
-    background: rgba(105, 125, 140, .5);
-    backdrop-filter: blur(10px);
+    background: rgba(15, 23, 42, .55);
+    backdrop-filter: blur(8px);
     opacity: 0;
     visibility: hidden;
     transition: all .25s ease-in-out;
@@ -344,7 +379,7 @@ button {
 .cr-login-section {
     width: 100%;
     display: inline-block;
-    background: rgb(255, 255, 255)
+    background: rgb(255, 255, 255);
 }
 
 .cr-login-section .cr-cover {
@@ -363,9 +398,9 @@ button {
     position: absolute;
     top: 0;
     right: 0;
-    background: var(--Primary-Color);
+    background: linear-gradient(135deg, rgba(30, 27, 75, 0.92) 0%, rgba(79, 70, 229, 0.88) 100%);
     color: rgb(255, 255, 255);
-    opacity: .90;
+    opacity: .95;
 }
 
 .cr-login-section .cr-cover .cr-content {
@@ -373,11 +408,11 @@ button {
     display: inline-block;
     padding: 90px;
     position: relative;
-    color: rgba(255, 255, 255, .90);
+    color: rgba(255, 255, 255, .92);
 }
 
 .cr-login-section .cr-cover .cr-content figure {
-    margin: 0 0 60px
+    margin: 0 0 60px;
 }
 
 .cr-login-section .cr-cover .cr-content figure img {
@@ -387,7 +422,7 @@ button {
 .cr-login-section .cr-cover .cr-content .cr-carousel h1 {
     font-family: var(--FontFamily-Black);
     font-size: 2.5rem;
-    color: rgba(255, 255, 255, .95);
+    color: rgb(255, 255, 255);
     text-transform: uppercase;
 }
 
@@ -401,7 +436,7 @@ button {
     margin: 0;
     right: auto;
     bottom: -30px;
-    left: 15px
+    left: 15px;
 }
 
 .cr-login-section .cr-cover .cr-content .cr-carousel .cr-pagination button {
@@ -453,6 +488,7 @@ button {
 .cr-login-section .cr-form .cr-content .cr-title p {
     font-size: 1.05rem;
     text-align: justify;
+    color: var(--Secondary-Text-Color);
 }
 
 .cr-login-section .cr-form .cr-content form {
@@ -460,25 +496,22 @@ button {
 }
 
 .cr-login-section .cr-form .cr-content form a {
-    color: rgb(105, 125, 140)
+    color: var(--Primary-Border-Color);
 }
 
 @media (max-width: 1920px) {
-
     .cr-login-section .cr-form {
         padding: 0 250px;
     }
 }
 
 @media (max-width: 1600px) {
-
     .cr-login-section .cr-form {
         padding: 0 150px;
     }
 }
 
 @media (max-width: 1260px) {
-
     .cr-login-section .cr-form {
         padding: 0 30px;
     }
@@ -509,7 +542,7 @@ button {
 
 .cr-form-section .cr-title {
     display: block;
-    margin: 5px 0;
+    margin: 10px 0;
     position: relative;
     font-size: 1rem;
     text-transform: uppercase;
@@ -522,6 +555,7 @@ button {
     padding: 0 0 0 15px;
     position: relative;
     background: rgb(255, 255, 255);
+    color: rgb(30, 41, 59);
 }
 
 .cr-form-section .cr-title:before {
@@ -531,7 +565,7 @@ button {
     position: absolute;
     top: 10px;
     right: 0;
-    border-bottom: 1px dashed rgba(225, 225, 230, .5);
+    border-bottom: 1px dashed var(--Border-Light);
 }
 
 .cr-form-section .cr-title strong span {
@@ -564,10 +598,11 @@ button {
     border: 0;
     text-transform: uppercase;
     z-index: 15;
+    transition: all .2s ease;
 }
 
 .cr-form-section .cr-actions button:hover {
-    opacity: .90;
+    opacity: .92;
 }
 
 .cr-form-section .cr-actions .cr-spinner {
@@ -597,8 +632,8 @@ button {
     top: 0;
     right: 0;
     left: 0;
-    background: var(--Primary-Color);
-    box-shadow: 0 2.5px 5px 0 rgba(65, 90, 115, 0.10);
+    background: linear-gradient(135deg, rgb(15, 23, 42) 0%, rgb(30, 27, 75) 55%, rgb(49, 46, 129) 100%);
+    box-shadow: 0 4px 12px 0 rgba(15, 23, 42, 0.15);
 }
 
 .cr-layout-section .cr-layout {
@@ -607,7 +642,6 @@ button {
 }
 
 @media screen and (max-width: 1275px) {
-
     .cr-layout-section .cr-layout {
         height: auto;
     }
@@ -623,8 +657,9 @@ button {
     top: 0;
     right: 0;
     background: rgb(255, 255, 255);
-    color: rgb(160, 170, 185);
+    color: var(--Secondary-Text-Color);
     overflow: auto;
+    border-left: 1px solid var(--Border-Light);
     box-shadow: var(--Primary-Shadow);
     transition: all .5s ease-in-out;
     z-index: 15;
@@ -645,7 +680,8 @@ button {
     position: absolute;
     top: 15px;
     left: 15px;
-    background: rgba(225, 225, 225, .5);
+    background: rgb(241, 245, 249);
+    color: var(--Primary-Text-Color);
     cursor: pointer;
     border-radius: 50%;
     box-shadow: var(--Primary-Shadow);
@@ -658,11 +694,10 @@ button {
     position: absolute;
     top: 50px;
     right: -15px;
-    background: rgb(75, 60, 125);
+    background: rgb(79, 70, 229);
     border-radius: 50%;
     cursor: pointer;
     z-index: 15;
-
     display: none;
 }
 
@@ -674,7 +709,7 @@ button {
     justify-content: center;
     margin: 5px auto;
     background: rgb(255, 255, 255);
-    color: rgb(75, 60, 125);
+    color: rgb(79, 70, 229);
     border-radius: 50%;
 }
 
@@ -714,8 +749,9 @@ button {
     margin: 5px 0;
     padding: 10px 30px;
     position: relative;
-    font-size: .85rem;
-    color: rgb(160, 170, 185);
+    font-size: .80rem;
+    font-family: var(--FontFamily-Bold);
+    color: rgb(148, 163, 184);
     text-transform: uppercase;
 }
 
@@ -728,11 +764,11 @@ button {
 .cr-sidebar-section aside .cr-title:before {
     content: '';
     width: 1rem;
-    height: 1px;
+    height: 2px;
     position: absolute;
     top: 50%;
     right: 0;
-    background: rgb(160, 170, 185);
+    background: rgb(203, 213, 225);
     transition: all 0.25s ease-in-out;
 }
 
@@ -770,20 +806,21 @@ button {
 
 .cr-sidebar-section aside .cr-menu nav ul li i {
     position: relative;
-    top: -2.5px;
+    top: -1.5px;
     background: var(--Third-Color);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    transition: all .2s ease;
 }
 
 .cr-sidebar-section aside .cr-menu nav ul li a {
     display: flex;
     align-items: center;
-    margin: 0 1rem;
-    padding: 7.5px 10px;
+    margin: 0 0.85rem;
+    padding: 9px 12px;
     position: relative;
-    color: rgb(105, 125, 140);
-    border-radius: 0.375rem;
+    color: var(--Primary-Text-Color);
+    border-radius: 0.5rem;
     overflow: hidden;
     white-space: nowrap;
 }
@@ -793,7 +830,15 @@ button {
 }
 
 .cr-sidebar-section aside .cr-menu nav ul li a.cr-active {
-    background: rgba(75, 55, 115, .075);
+    background: rgba(99, 102, 241, .10);
+    color: rgb(79, 70, 229);
+    font-family: var(--FontFamily-Bold);
+}
+
+.cr-sidebar-section aside .cr-menu nav ul li a.cr-active i {
+    background: var(--Primary-Color);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .cr-sidebar-section aside .cr-menu nav ul li a i {
@@ -802,20 +847,20 @@ button {
 }
 
 .cr-sidebar-section aside .cr-menu nav ul li a:hover {
-    background: rgba(65, 90, 115, 0.05);
+    background: rgb(248, 250, 252);
+    color: rgb(79, 70, 229);
 }
 
 .cr-sidebar-section aside .cr-menu nav ul li.cr-dropdown>a:before {
     content: '\ea4a';
     font-family: 'boxicons';
     position: absolute;
-    top: 10px;
+    top: 12px;
     left: 10px;
     line-height: 1;
 }
 
 @media screen and (max-width: 1275px) {
-
     .cr-sidebar-section {
         right: -300px;
     }
@@ -849,7 +894,7 @@ button {
 .cr-container-section .cr-time ul {
     display: flex;
     flex-wrap: wrap;
-    gap: 5px;
+    gap: 6px;
 }
 
 .cr-container-section .cr-nav ul li,
@@ -863,9 +908,9 @@ button {
     align-items: center;
     justify-content: center;
     gap: 5px;
-    padding: 10px 15px;
-    color: rgba(255, 255, 255, .75);
-    border-radius: 300px;
+    padding: 10px 15px 8px;
+    color: rgba(255, 255, 255, .80);
+    border-radius: 10px;
 }
 
 .cr-container-section .cr-nav ul li a small {
@@ -875,8 +920,8 @@ button {
 .cr-container-section .cr-time ul li a small {
     display: inline-block;
     margin: 0 5px 0 0;
-    padding: 0 15px;
-    background: rgb(40, 150, 65);
+    padding: 2px 12px;
+    background: rgb(99, 102, 241);
     color: rgb(255, 255, 255);
     border-radius: 300px;
 }
@@ -890,13 +935,13 @@ button {
 .cr-container-section .cr-nav ul li a.active,
 .cr-container-section .cr-time ul li a:hover,
 .cr-container-section .cr-time ul li a.active {
-    background: rgba(255, 255, 255, .095);
-    color: rgba(255, 255, 255, .75);
+    background: rgba(255, 255, 255, .14);
+    color: rgb(255, 255, 255);
+    backdrop-filter: blur(4px);
     box-shadow: var(--Primary-Shadow);
 }
 
 @media (max-width: 1275px) {
-
     .cr-container-section {
         width: 100%;
         padding: 30px 15px;
@@ -904,7 +949,6 @@ button {
 }
 
 @media (max-width: 767px) {
-
     .cr-container-section .cr-nav ul {
         gap: 0;
     }
@@ -923,9 +967,10 @@ button {
     position: relative;
     top: 0;
     right: 0;
-    background: rgba(255, 255, 255, .05);
+    background: rgba(15, 23, 42, .25);
+    backdrop-filter: blur(8px);
     color: rgb(255, 255, 255);
-    border-bottom: 1px solid rgba(255, 255, 255, .05);
+    border-bottom: 1px solid rgba(255, 255, 255, .08);
     z-index: 1;
 }
 
@@ -949,15 +994,15 @@ button {
 .cr-nav-section .cr-actions .cr-user {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 8px;
     position: relative;
-    font-size: .75rem;
+    font-size: .80rem;
     cursor: pointer;
 }
 
 .cr-nav-section .cr-actions .cr-user img {
-    width: 45px;
-    border: 2px solid rgba(255, 255, 255, .25);
+    width: 42px;
+    border: 2px solid rgba(255, 255, 255, .35);
     border-radius: 50%;
     object-fit: cover;
     box-shadow: var(--Primary-Shadow);
@@ -965,7 +1010,7 @@ button {
 
 .cr-nav-section .cr-actions .cr-user strong {
     display: block;
-    opacity: .90;
+    opacity: .95;
 }
 
 .cr-nav-section .cr-actions .cr-user span,
@@ -980,15 +1025,17 @@ button {
     top: 100%;
     right: 0;
     background: rgb(255, 255, 255);
-    border-radius: 5px;
+    border: 1px solid var(--Border-Light);
+    border-radius: 10px;
     box-shadow: var(--Primary-Shadow);
     opacity: 0;
     visibility: hidden;
+    overflow: hidden;
     transition: all .25s ease-in-out;
 }
 
 .cr-nav-section .cr-actions .cr-dropmenu.cr-active {
-    margin: 5px 0;
+    margin: 8px 0;
     opacity: 1;
     visibility: visible;
 }
@@ -997,7 +1044,6 @@ button {
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: var(--Primary-Shadow);
 }
 
 .cr-nav-section .cr-actions .cr-dropmenu .cr-icons li {
@@ -1011,8 +1057,8 @@ button {
     align-items: center;
     justify-content: center;
     padding: 15px;
-    color: rgb(105, 125, 140);
-    border-left: 1px solid rgba(225, 225, 225, .5);
+    color: var(--Primary-Text-Color);
+    border-left: 1px solid var(--Border-Light);
 }
 
 .cr-nav-section .cr-actions .cr-dropmenu .cr-icons li:last-child a {
@@ -1020,7 +1066,8 @@ button {
 }
 
 .cr-nav-section .cr-actions .cr-dropmenu .cr-icons li a:hover {
-    background: rgba(225, 225, 225, .15);
+    background: rgb(248, 250, 252);
+    color: rgb(79, 70, 229);
 }
 
 .cr-nav-section .cr-actions .cr-responsive {
@@ -1036,7 +1083,7 @@ button {
     justify-content: center;
     position: relative;
     color: rgb(255, 255, 255);
-    opacity: .75;
+    opacity: .85;
 }
 
 .cr-nav-section .cr-actions .cr-responsive span i {
@@ -1059,7 +1106,7 @@ button {
     padding: 0 0 0 10px;
     position: relative;
     font-size: .90rem;
-    color: rgba(255, 255, 255, .25);
+    color: rgba(255, 255, 255, .80);
     letter-spacing: 0.025rem;
 }
 
@@ -1077,16 +1124,15 @@ button {
     display: none;
 }
 
-.cr-nav-section .rc-breadcrumb nav ul li {
-    color: rgba(255, 255, 255, .75);
-}
-
 .cr-nav-section .rc-breadcrumb nav ul li a {
     color: rgba(255, 255, 255, .65);
 }
 
-@media (max-width: 1260px) {
+.cr-nav-section .rc-breadcrumb nav ul li a:hover {
+    color: rgb(255, 255, 255);
+}
 
+@media (max-width: 1260px) {
     .cr-nav-section .cr-actions .cr-action {
         justify-content: space-between;
     }
@@ -1107,14 +1153,16 @@ button {
     display: inline-block;
     margin: 0 0 1.875rem;
     background: rgb(255, 255, 255);
-    border-radius: 10px;
-    box-shadow: 0 0.155px 0.315rem 0 rgba(65, 90, 115, 0.10);
+    border: 1px solid var(--Border-Light);
+    border-radius: 14px;
+    box-shadow: var(--Primary-Shadow);
 }
 
 .cr-card .cr-card-header {
     width: 100%;
     display: inline-block;
-    padding: 15px;
+    padding: 18px 20px;
+    border-bottom: 1px solid rgb(241, 245, 249);
 }
 
 .cr-card .cr-card-header .cr-title {
@@ -1134,57 +1182,65 @@ button {
 .cr-card .cr-card-header .cr-title strong {
     font-size: 1.15rem;
     font-weight: 700;
-    color: rgb(75, 90, 100);
+    color: rgb(15, 23, 42);
 }
 
 .cr-card .cr-card-header .cr-title .cr-stats {
     font-size: 1rem;
+    color: var(--Secondary-Text-Color);
 }
 
 .cr-card .cr-card-header .cr-title .cr-actions {
     display: flex;
     flex-wrap: wrap;
     justify-content: end;
-    gap: 5px;
+    gap: 8px;
 }
 
 .cr-card .cr-card-header .cr-title .cr-actions .cr-action {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 5px;
-    padding: 10px 30px;
+    gap: 6px;
+    padding: 10px 24px;
     border: 0;
-    border-radius: 300px;
+    border-radius: 10px;
     transition: all .25s ease-in-out;
 }
 
 .cr-card .cr-card-header .cr-title .cr-actions .cr-action:active {
-    transform: scale(0.95);
+    transform: scale(0.96);
 }
 
 .cr-card .cr-card-header .cr-title .cr-actions .cr-action.cr-primary {
-    padding: 10px 30px 10px 20px;
+    padding: 10px 24px 10px 18px;
     font-weight: 500;
     background: var(--Primary-Color);
     color: rgb(255, 255, 255);
-    box-shadow: 0 0 5px 0 rgba(75, 55, 115, .5);
+    box-shadow: 0 4px 10px 0 rgba(79, 70, 229, .28);
+}
+
+.cr-card .cr-card-header .cr-title .cr-actions .cr-action.cr-primary i {
+    position: relative;
+    top: -1px;
 }
 
 .cr-card .cr-card-header .cr-title .cr-actions .cr-action.cr-primary:hover {
-    opacity: .90;
+    opacity: .92;
+    transform: translateY(-1px);
 }
 
 .cr-card .cr-card-header .cr-title .cr-actions .cr-action.cr-secondary {
-    padding: 10px 30px 10px 20px;
+    padding: 10px 24px 10px 18px;
     font-weight: 500;
     background: var(--Third-Color);
     color: rgb(255, 255, 255);
-    box-shadow: 0 0 5px 0 rgba(75, 55, 115, .5);
+    box-shadow: 0 4px 10px 0 rgba(30, 41, 59, .2);
 }
 
 .cr-card .cr-card-header .cr-title .cr-actions .cr-action.cr-secondary:hover {
-    opacity: .90;
+    opacity: .92;
+    transform: translateY(-1px);
 }
 
 .cr-card .cr-card-header .cr-filter-section {
@@ -1200,7 +1256,7 @@ button {
     width: 100px;
     display: flex;
     align-items: center;
-    gap: 5px
+    gap: 5px;
 }
 
 .cr-card .cr-card-header .cr-filter-section .cr-filters .cr-select.md {
@@ -1211,7 +1267,7 @@ button {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-end;
-    gap: 5px;
+    gap: 8px;
     margin: 15px 0 0;
 }
 
@@ -1222,8 +1278,8 @@ button {
 .cr-card .cr-card-header .cr-filter-section .cr-filters .cr-select select {
     display: inline-block;
     padding: .35rem 0.625rem;
-    border: 0.065rem solid rgb(215, 225, 225);
-    border-radius: 300px;
+    border: 1px solid var(--Border-Light);
+    border-radius: 10px;
 }
 
 .cr-card .cr-card-header .cr-filter-section .cr-filters .cr-search,
@@ -1239,9 +1295,9 @@ button {
 .cr-card .cr-card-header .cr-filter-section .cr-filters .cr-date i {
     position: absolute;
     top: 7.5px;
-    left: 3.5px;
+    left: 6px;
     background: transparent;
-    color: rgb(105, 115, 125);
+    color: var(--Secondary-Text-Color);
     border: 0;
 }
 
@@ -1253,22 +1309,23 @@ button {
 .cr-card .cr-card-header .cr-filter-section .cr-filters .cr-search input,
 .cr-card .cr-card-header .cr-filter-section .cr-filters .cr-date input {
     height: 40px;
-    padding: 0 10px;
-    background: rgb(255, 255, 255);
-    color: rgb(105, 125, 140);
-    border: 0.065rem solid rgb(215, 225, 225);
-    border-radius: 300px;
+    padding: 0 12px;
+    background: rgb(248, 250, 252);
+    color: var(--Primary-Text-Color);
+    border: 1px solid var(--Border-Light);
+    border-radius: 10px;
+    transition: all .2s ease;
 }
 
 .cr-card .cr-card-header .cr-filter-section .cr-filters .cr-search input:focus,
 .cr-card .cr-card-header .cr-filter-section .cr-filters .cr-date input:focus {
     outline: 0;
-    border-color: var(--Primary-Color);
-    box-shadow: 0 0 0.25rem 0.05rem rgba(105, 110, 255, .15);
+    background: rgb(255, 255, 255);
+    border-color: var(--Primary-Border-Color);
+    box-shadow: var(--Focus-Ring);
 }
 
 @media (max-width: 767px) {
-
     .cr-card .cr-card-header .cr-filter-section .cr-filters .cr-select,
     .cr-card .cr-card-header .cr-filter-section .cr-filters .cr-select.md {
         width: 100%;
@@ -1308,7 +1365,6 @@ button {
 }
 
 @media (max-width: 576px) {
-
     .cr-card .cr-card-header .cr-filter-section .cr-filters .cr-search,
     .cr-card .cr-card-header .cr-filter-section .cr-filters .cr-select {
         width: 100%;
@@ -1321,46 +1377,46 @@ button {
 
 .cr-card .cr-table {
     margin: 0;
-    color: rgb(105, 125, 140);
+    color: var(--Primary-Text-Color);
 }
 
 .cr-card .cr-table thead tr {
-    font-size: .95rem;
-    background: rgb(250, 250, 250);
-    border-top: 1px solid rgb(225, 225, 230);
+    font-size: .92rem;
+    background: rgb(248, 250, 252);
+    border-top: 1px solid var(--Border-Light);
 }
 
 .cr-card .cr-table thead tr th,
 .cr-card .cr-table tbody tr td {
     color: var(--Primary-Text-Color);
     vertical-align: middle;
-    border-color: rgb(225, 225, 225);
+    border-color: rgb(241, 245, 249);
 }
 
 .cr-card .cr-table thead tr th {
-    padding: 10px 5px;
+    padding: 12px 8px 10px;
     font-family: var(--FontFamily-Bold);
-    background: rgb(250, 250, 250);
+    background: rgb(248, 250, 252);
+    color: var(--Secondary-Text-Color);
     font-weight: normal;
     border-bottom-width: 1px;
 }
 
 .cr-card .cr-table>:not(:last-child)>:last-child>* {
-    border-color: rgb(225, 225, 230);
+    border-color: var(--Border-Light);
 }
 
 .cr-card .cr-table tbody tr:hover {
-    background: rgb(250, 250, 250);
+    background: rgb(248, 250, 252);
 }
 
 .cr-card .cr-table tbody tr:hover td {
-    background: rgba(245, 245, 245, .5);
+    background: rgba(241, 245, 249, .6);
 }
 
 .cr-card .cr-table tbody tr td {
-    padding: 10px 20px;
+    padding: 12px 20px;
 }
-
 
 .cr-card .cr-table .cr-address {
     text-align: right;
@@ -1373,7 +1429,7 @@ button {
 .cr-card .cr-table .cr-avatar img {
     max-width: 60px;
     border-radius: 50%;
-    box-shadow: 0 0 5px rgba(0, 0, 0, .25);
+    box-shadow: 0 2px 6px rgba(15, 23, 42, .15);
 }
 
 .cr-card .cr-table .cr-avatar strong {
@@ -1420,7 +1476,7 @@ button {
 
 .cr-card .cr-table .cr-edit,
 .cr-card .cr-table .cr-reply {
-    color: rgb(105, 125, 140);
+    color: var(--Secondary-Text-Color);
 }
 
 .cr-card .cr-table .cr-online {
@@ -1432,7 +1488,7 @@ button {
     margin: auto;
     position: relative;
     text-align: center;
-    border: 2px solid var(--Primary-Border-Color);
+    border: 2px solid rgb(16, 185, 129);
     border-radius: 50%;
     animation: anim-glow 2s ease infinite;
 }
@@ -1443,8 +1499,8 @@ button {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--Primary-Border-Color);
-    border: 2px solid var(--Primary-Border-Color);
+    background: rgb(16, 185, 129);
+    border: 2px solid rgb(16, 185, 129);
     border-radius: 50%;
 }
 
@@ -1457,7 +1513,7 @@ button {
     margin: auto;
     position: relative;
     text-align: center;
-    border: 2px solid rgb(245, 155, 20);
+    border: 2px solid rgb(245, 158, 11);
     border-radius: 50%;
 }
 
@@ -1467,8 +1523,8 @@ button {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgb(245, 155, 20);
-    border: 2px solid rgb(245, 155, 20);
+    background: rgb(245, 158, 11);
+    border: 2px solid rgb(245, 158, 11);
     border-radius: 50%;
 }
 
@@ -1481,7 +1537,7 @@ button {
     margin: auto;
     position: relative;
     text-align: center;
-    border: 2px solid rgb(125, 140, 140);
+    border: 2px solid rgb(148, 163, 184);
     border-radius: 50%;
 }
 
@@ -1491,45 +1547,45 @@ button {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgb(125, 140, 140);
-    border: 2px solid rgb(125, 140, 140);
+    background: rgb(148, 163, 184);
+    border: 2px solid rgb(148, 163, 184);
     border-radius: 50%;
 }
 
 .cr-card .cr-table .cr-circle {
     width: 15px;
     height: 15px;
-    background: var(--Primary-Border-Color);
+    background: rgb(16, 185, 129);
     border-radius: 50%;
     box-shadow: var(--Primary-Shadow);
 }
 
 .cr-card .cr-table .cr-circle.cr-yellow {
-    background: rgb(245, 155, 20);
+    background: rgb(245, 158, 11);
 }
 
 .cr-card .cr-table .cr-circle.cr-grey {
-    background: rgb(125, 140, 140);
+    background: rgb(148, 163, 184);
 }
 
 @-webkit-keyframes anim-glow {
     0% {
-        box-shadow: 0 0 var(--Primary-Border-Color);
+        box-shadow: 0 0 rgb(16, 185, 129);
     }
 
     100% {
-        box-shadow: 0 0 10px 10px transparent;
+        box-shadow: 0 0 10px 8px transparent;
         border-width: 2px;
     }
 }
 
 @keyframes anim-glow {
     0% {
-        box-shadow: 0 0 var(--Primary-Border-Color);
+        box-shadow: 0 0 rgb(16, 185, 129);
     }
 
     100% {
-        box-shadow: 0 0 10px 10px transparent;
+        box-shadow: 0 0 10px 8px transparent;
         border-width: 2px;
     }
 }
@@ -1538,8 +1594,9 @@ button {
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    border: 1px solid rgb(105, 125, 140);
-    border-radius: .25rem;
+    background: rgb(255, 255, 255);
+    border: 1.5px solid rgb(71, 85, 105);
+    border-radius: .35rem;
     zoom: .90;
 }
 
@@ -1549,7 +1606,7 @@ button {
 
 .cr-card .cr-table .cr-plate .cr-id {
     width: 35px;
-    border-left: 1px solid rgb(105, 125, 140);
+    border-left: 1.5px solid rgb(71, 85, 105);
 }
 
 .cr-card .cr-table .cr-plate .cr-id span {
@@ -1566,7 +1623,7 @@ button {
 .cr-card .cr-table .cr-plate .cr-flag {
     width: 25px;
     padding: 0 0 0 1.5px;
-    background: rgb(0, 50, 145);
+    background: rgb(30, 58, 138);
     color: rgb(255, 255, 255);
 }
 
@@ -1584,11 +1641,11 @@ button {
 }
 
 .cr-card .cr-table .cr-active {
-    color: var(--Primary-Color);
+    color: rgb(16, 185, 129);
 }
 
 .cr-card .cr-table .cr-inactive {
-    background: rgb(245, 155, 20);
+    background: rgb(245, 158, 11);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -1598,7 +1655,7 @@ button {
 }
 
 .cr-card .cr-table .cr-unread td {
-    background: rgb(245, 245, 245);
+    background: rgb(241, 245, 249);
 }
 
 .cr-card .cr-table .cr-message {
@@ -1624,7 +1681,7 @@ button {
     display: flex;
     align-items: center;
     gap: 5px;
-    color: rgb(130, 130, 130);
+    color: var(--Secondary-Text-Color);
 }
 
 .cr-card .cr-table .cr-action {
@@ -1640,7 +1697,7 @@ button {
     align-items: center;
     justify-content: center;
     position: relative;
-    color: rgb(130, 130, 130);
+    color: var(--Secondary-Text-Color);
     transition: all .25s ease-in-out;
     border-radius: 50%;
 }
@@ -1687,7 +1744,8 @@ button {
 
 .cr-card .cr-table .cr-action .cr-menu {
     padding: 0;
-    border: 0;
+    border: 1px solid var(--Border-Light);
+    border-radius: 8px;
     overflow: hidden;
     box-shadow: var(--Primary-Shadow);
 }
@@ -1699,22 +1757,23 @@ button {
 
 .cr-card .cr-table .cr-action .cr-menu li a {
     display: block;
-    padding: 5px 10px;
-    color: var(--Third-Color);
+    padding: 6px 12px;
+    color: var(--Primary-Text-Color);
 }
 
 .cr-card .cr-table .cr-action .cr-menu li a:hover {
-    background: rgba(75, 55, 115, .075);
+    background: rgba(99, 102, 241, .08);
+    color: rgb(79, 70, 229);
 }
 
 .cr-card .cr-table .cr-name {
     display: block;
     font-family: var(--FontFamily-Bold);
-    color: rgb(75, 90, 100);
+    color: rgb(15, 23, 42);
 }
 
 .cr-card .cr-table .cr-phone {
-    color: rgb(75, 90, 100);
+    color: var(--Primary-Text-Color);
 }
 
 .cr-card .cr-table .cr-info ul {
@@ -1735,7 +1794,7 @@ button {
 .cr-card .cr-table .cr-area {
     display: flex;
     flex-wrap: wrap;
-    gap: 2.5px;
+    gap: 4px;
 }
 
 .cr-card .cr-table .cr-area span {
@@ -1744,10 +1803,11 @@ button {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: .90rem;
-    border: 1px solid rgb(225, 225, 225);
-    border-radius: 300px;
+    font-size: .85rem;
+    border: 1px solid var(--Border-Light);
+    border-radius: 6px;
     cursor: pointer;
+    transition: all .2s ease;
 }
 
 .cr-card .cr-table .cr-area span.cr-active {
@@ -1772,10 +1832,14 @@ button {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgb(105, 125, 140);
+    background: rgb(71, 85, 105);
     color: rgb(255, 255, 255);
-    border-radius: 50%;
+    border-radius: 8px;
     box-shadow: var(--Primary-Shadow);
+}
+
+.cr-card .cr-table .cr-actions ul li a:hover {
+    background: rgb(79, 70, 229);
 }
 
 .cr-card .cr-table .cr-actions ul li a i {
@@ -1786,11 +1850,11 @@ button {
     width: 100%;
     float: right;
     display: inline-block;
-    padding: 15px;
+    padding: 15px 20px;
+    border-top: 1px solid rgb(241, 245, 249);
 }
 
 @media (max-width: 767px) {
-
     .cr-card .cr-card-header .cr-title .cr-actions .cr-action.cr-primary,
     .cr-card .cr-card-header .cr-title .cr-actions .cr-action.cr-secondary {
         padding: 7.5px 20px;
@@ -1798,7 +1862,6 @@ button {
 }
 
 @media (max-width: 576px) {
-
     .cr-card .cr-card-header .cr-title {
         justify-content: space-between;
     }
@@ -1819,7 +1882,7 @@ button {
 
 .cr-footer-section p {
     margin: 0;
-    opacity: .75;
+    color: var(--Secondary-Text-Color);
 }
 
 .cr-footer-section ul {
@@ -1838,11 +1901,12 @@ button {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: rgb(105, 120, 140);
+    color: var(--Secondary-Text-Color);
     opacity: .75;
 }
 
 .cr-footer-section ul li a:hover {
+    color: rgb(79, 70, 229);
     opacity: 1;
 }
 
@@ -1851,7 +1915,6 @@ button {
 }
 
 @media (max-width: 1260px) {
-
     .cr-footer-section {
         text-align: center;
     }
@@ -1876,7 +1939,7 @@ button {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 0.315rem;
+    gap: 0.35rem;
 }
 
 .cr-pagination-section ul li {
@@ -1884,15 +1947,15 @@ button {
 }
 
 .cr-pagination-section ul li a {
-    width: 2rem;
-    height: 2rem;
+    width: 2.15rem;
+    height: 2.15rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgb(240, 240, 245);
-    color: rgb(105, 125, 140);
-    font-size: .75rem;
-    border-radius: .25rem;
+    background: rgb(241, 245, 249);
+    color: var(--Primary-Text-Color);
+    font-size: .80rem;
+    border-radius: .5rem;
 }
 
 .cr-pagination-section ul li.cr-prev a {
@@ -1904,38 +1967,38 @@ button {
 }
 
 .cr-pagination-section ul li a:hover {
-    background: rgb(225, 230, 230);
-    color: rgb(105, 125, 140);
+    background: rgb(226, 232, 240);
+    color: rgb(15, 23, 42);
 }
 
 .cr-pagination-section ul li a.cr-active {
-    background: var(--Third-Color);
+    background: var(--Primary-Color);
     color: rgb(255, 255, 255);
     border-color: var(--Primary-Color);
-    box-shadow: 0 2.5px 5px 0 rgba(75, 55, 115, .5);
+    box-shadow: 0 3px 8px 0 rgba(79, 70, 229, .35);
 }
 
 .cr-pagination-section ul li.cr-disabled a {
-    background-color: rgba(125, 125, 180, .075);
-    color: rgb(160, 170, 185);
+    background-color: rgb(248, 250, 252);
+    color: rgb(203, 213, 225);
     pointer-events: none;
 }
 
 @media (max-width: 1260px) {
-
     .cr-pagination-section {
         justify-content: center;
         margin: 15px 0;
     }
 }
 
+/*------------------------------------------ Dashboard Section ------------------------------------------*/
 
 .cr-dashboard-section .cr-layout-section:before {
     height: 200px;
 }
 
 .cr-dashboard-section .cr-card {
-    border-radius: 5px;
+    border-radius: 12px;
 }
 
 .cr-dashboard-section .cr-card .cr-button {
@@ -1956,14 +2019,15 @@ button {
     margin: 0 0 25px;
     padding: 30px 30px 25px;
     background: rgb(255, 255, 255);
-    border-radius: 5px;
+    border: 1px solid var(--Border-Light);
+    border-radius: 12px;
     box-shadow: var(--Primary-Shadow);
 }
 
 .cr-dashboard-section .cr-balance .cr-content {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
 }
 
 .cr-dashboard-section .cr-balance .cr-content .cr-icon {
@@ -1972,7 +2036,8 @@ button {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 300px;
+    background: rgba(99, 102, 241, 0.08);
+    border-radius: 14px;
 }
 
 .cr-dashboard-section .cr-balance .cr-content .cr-icon i {
@@ -1985,20 +2050,17 @@ button {
 .cr-dashboard-section .cr-balance .cr-content .cr-text strong {
     display: block;
     font-size: 1.15rem;
+    color: rgb(15, 23, 42);
 }
 
 .cr-dashboard-section .cr-balance .cr-content .cr-text span {
     font-size: .95rem;
-    color: rgb(160, 170, 185);
+    color: var(--Secondary-Text-Color);
 }
 
 .cr-dashboard-section .cr-balance .cr-amount {
-    color: rgb(105, 125, 140);
+    color: rgb(15, 23, 42);
     text-align: left;
-}
-
-.cr-dashboard-section .cr-balance .cr-amount {
-    color: rgb(105, 125, 140);
 }
 
 .cr-dashboard-section .cr-balance .cr-amount strong {
@@ -2009,6 +2071,7 @@ button {
 .cr-dashboard-section .cr-balance .cr-amount span {
     display: inline-block;
     padding: 0 2.5px;
+    color: var(--Secondary-Text-Color);
 }
 
 .cr-dashboard-section .cr-progress-section {
@@ -2028,7 +2091,7 @@ button {
 }
 
 .cr-dashboard-section .cr-progress-section .cr-bar .cr-progress {
-    background: rgb(235, 235, 235);
+    background: rgb(226, 232, 240);
     border-radius: 300px;
 }
 
@@ -2040,10 +2103,10 @@ button {
 .cr-dashboard-section .cr-stock-section {
     width: 100%;
     display: inline-block;
-    padding: 7.5px 15px;
-    background: linear-gradient(100deg, rgb(50, 75, 95) 5%, rgb(45, 60, 80) 50%);
+    padding: 10px 15px;
+    background: linear-gradient(135deg, rgb(30, 41, 59) 0%, rgb(15, 23, 42) 100%);
     color: rgb(255, 255, 255);
-    border-radius: 5px;
+    border-radius: 10px;
 }
 
 .cr-dashboard-section .cr-info-section {
@@ -2056,8 +2119,8 @@ button {
     display: flex;
     justify-content: space-between;
     gap: 15px;
-    padding: 7.5px 0;
-    border-bottom: 1px solid rgba(0, 0, 0, .05);
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, .08);
 }
 
 .cr-dashboard-section .cr-stock-section ul li:last-child {
@@ -2074,9 +2137,9 @@ button {
     display: flex;
     justify-content: space-between;
     gap: 15px;
-    padding: 7.5px 0;
+    padding: 8px 0;
     line-height: 1.60;
-    border-bottom: 1px solid rgba(0, 0, 0, .05);
+    border-bottom: 1px solid var(--Border-Light);
 }
 
 .cr-dashboard-section .cr-info-section ul li:last-child {
@@ -2086,7 +2149,7 @@ button {
 .cr-dashboard-section .cr-info-section ul li strong a {
     font-family: var(--FontFamily-Medium);
     font-weight: 500;
-    color: rgb(105, 125, 140);
+    color: var(--Primary-Text-Color);
 }
 
 .cr-dashboard-section .cr-info-section ul li strong small {
@@ -2094,6 +2157,8 @@ button {
     font-size: .80rem;
     font-weight: 500;
 }
+
+/*------------------------------------------ Offcanvas & Utilities ------------------------------------------*/
 
 .offcanvas {
     z-index: 1095;
@@ -2106,7 +2171,7 @@ button {
 }
 
 .offcanvas-backdrop {
-    background: rgba(105, 125, 140, .5);
+    background: rgba(15, 23, 42, .55);
     backdrop-filter: blur(5px);
 }
 
@@ -2118,12 +2183,13 @@ button {
     width: 500px;
     max-width: 100%;
     border: 0;
+    box-shadow: -10px 0 25px rgba(15, 23, 42, 0.1);
 }
 
 .offcanvas.offcanvas-end .offcanvas-header {
     position: relative;
-    background: rgb(250, 250, 250);
-    border-bottom: 1px solid rgba(225, 225, 225, .5);
+    background: rgb(248, 250, 252);
+    border-bottom: 1px solid var(--Border-Light);
     z-index: 15;
 }
 
@@ -2131,54 +2197,32 @@ button {
     position: relative;
 }
 
-
-
-
 .cr-map-section {
     width: 100%;
     height: 650px;
+    border-radius: 12px;
+    overflow: hidden;
 }
 
-
-.cr-card .cr-card-header .cr-title .cr-actions .cr-action.cr-primary i {
-    position: relative;
-    top: -1px;
-}
-
-.cr-card .cr-table thead tr th {
-    padding: 10px 5px 7.5px;
-}
-
-
-body {
-    padding: 0 !important;
-    overflow-y: scroll !important;
-}
-
-.cr-button span {
-    position: relative;
-    top: 1px;
-}
-
-.cr-container-section .cr-nav ul li a {
-    padding: 10px 15px 8px;
-}
-.fix-table-head{
+.fix-table-head {
     position: sticky;
     top: 0;
     z-index: 2;
 }
-.fix-col-right{
+
+.fix-col-right {
     position: sticky;
     right: 0;
     z-index: 2;
 }
+
 #header-fixed {
     position: fixed;
     top: 0px;
     display: none;
     background-color: white;
 }
+
 .tableFixHead {
     overflow: auto;
     height: 600px;
@@ -2187,4 +2231,634 @@ body {
 .tableFixHead thead th {
     position: sticky;
     top: 0;
+}
+/*------------------------------------------ Modern Balance Cards ------------------------------------------*/
+
+.cr-dashboard-section .cr-balance {
+    width: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 0 0 25px;
+    padding: 22px 20px 18px;
+    background: #ffffff;
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    border-radius: 18px;
+    box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.05);
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1;
+}
+
+.cr-dashboard-section .cr-balance:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 30px -10px rgba(15, 23, 42, 0.12);
+}
+
+/* نوار رنگی بالای کارت */
+.cr-dashboard-section .cr-balance::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 4px;
+    background: var(--Primary-Color);
+    z-index: 2;
+}
+
+/* آیکون واترمارک پس‌زمینه */
+.cr-dashboard-section .cr-balance .cr-bg-watermark {
+    position: absolute;
+    bottom: -18px;
+    left: -12px;
+    font-size: 6.5rem;
+    color: rgba(15, 23, 42, 0.03);
+    transform: rotate(-15deg);
+    pointer-events: none;
+    transition: all 0.35s ease;
+    z-index: 0;
+}
+
+.cr-dashboard-section .cr-balance:hover .cr-bg-watermark {
+    transform: rotate(-5deg) scale(1.1);
+    color: rgba(15, 23, 42, 0.055);
+}
+
+/* بخش هدر و عنوان کارت */
+.cr-dashboard-section .cr-balance .cr-content {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: relative;
+    z-index: 1;
+    margin-bottom: 18px;
+}
+
+.cr-dashboard-section .cr-balance .cr-content .cr-icon {
+    width: 52px;
+    height: 52px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    color: #ffffff;
+    box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.15);
+}
+
+.cr-dashboard-section .cr-balance .cr-content .cr-icon i {
+    font-size: 1.65rem;
+    background: none;
+    -webkit-text-fill-color: #ffffff;
+    color: #ffffff;
+}
+
+.cr-dashboard-section .cr-balance .cr-content .cr-text {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.cr-dashboard-section .cr-balance .cr-content .cr-text strong {
+    display: block;
+    font-size: 0.98rem;
+    color: #1e293b;
+}
+
+.cr-dashboard-section .cr-balance .cr-content .cr-text strong a {
+    color: #1e293b;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.cr-dashboard-section .cr-balance .cr-content .cr-text strong a i {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.cr-dashboard-section .cr-balance .cr-content .cr-text strong a:hover {
+    color: #4f46e5;
+}
+
+.cr-dashboard-section .cr-balance .cr-content .cr-text strong a:hover i {
+    color: #4f46e5;
+    transform: translate(-2px, -2px);
+}
+
+.cr-dashboard-section .cr-balance .cr-content .cr-text span {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    width: fit-content;
+    font-size: 0.75rem;
+    color: #64748b;
+    background: #f1f5f9;
+    padding: 2px 8px;
+    border-radius: 6px;
+}
+
+/* باکس نمایش مبلغ */
+.cr-dashboard-section .cr-balance .cr-amount {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: baseline;
+    justify-content: flex-end;
+    gap: 6px;
+    background: #f8fafc;
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: 1px solid #f1f5f9;
+    text-align: left;
+}
+
+.cr-dashboard-section .cr-balance .cr-amount strong {
+    font-family: var(--FontFamily-Black);
+    font-size: 1.55rem;
+    color: #0f172a;
+    letter-spacing: -0.5px;
+    line-height: 1;
+}
+
+.cr-dashboard-section .cr-balance .cr-amount span {
+    font-size: 0.80rem;
+    font-family: var(--FontFamily-Bold);
+    color: #64748b;
+}
+
+/* استایل خطا در استعلام */
+.cr-dashboard-section .cr-balance .cr-amount.cr-error {
+    background: #fff1f2;
+    border-color: #ffe4e6;
+    justify-content: center;
+}
+
+.cr-dashboard-section .cr-balance .cr-amount.cr-error strong {
+    font-size: 1.05rem;
+    font-family: var(--FontFamily-Bold);
+    color: #e11d48;
+}
+
+/* تم‌های رنگی اختصاصی برای هر کارت */
+.cr-balance.cr-theme-indigo::before,
+.cr-balance.cr-theme-indigo .cr-content .cr-icon {
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    box-shadow: 0 8px 16px -4px rgba(79, 70, 229, 0.35);
+}
+
+.cr-balance.cr-theme-emerald::before,
+.cr-balance.cr-theme-emerald .cr-content .cr-icon {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    box-shadow: 0 8px 16px -4px rgba(16, 185, 129, 0.35);
+}
+
+.cr-balance.cr-theme-cyan::before,
+.cr-balance.cr-theme-cyan .cr-content .cr-icon {
+    background: linear-gradient(135deg, #06b6d4 0%, #0284c7 100%);
+    box-shadow: 0 8px 16px -4px rgba(6, 182, 212, 0.35);
+}
+
+.cr-balance.cr-theme-amber::before,
+.cr-balance.cr-theme-amber .cr-content .cr-icon {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    box-shadow: 0 8px 16px -4px rgba(245, 158, 11, 0.35);
+}
+/*------------------------------------------ Modern Analytics & Chart Cards ------------------------------------------*/
+
+.cr-analytics-card,
+.cr-chart-card {
+    border: 1px solid rgba(226, 232, 240, 0.9) !important;
+    border-radius: 18px !important;
+    box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.04) !important;
+    overflow: hidden;
+}
+
+/* هدر مدرن کارت‌ها */
+.cr-header-badge {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.cr-header-badge .cr-title-icon {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(79, 70, 229, 0.06) 100%);
+    color: #4f46e5;
+    border-radius: 12px;
+    font-size: 1.35rem;
+}
+
+.cr-header-badge div {
+    display: flex !important;
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 2px !important;
+}
+
+.cr-header-badge strong {
+    font-size: 1.05rem !important;
+    color: #0f172a !important;
+}
+
+.cr-header-badge .cr-subtitle {
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+/* نشانگر زنده (Live Indicator) */
+.cr-live-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    color: #15803d;
+    font-size: 0.75rem;
+    font-family: var(--FontFamily-Bold);
+    border-radius: 300px;
+}
+
+.cr-live-indicator .cr-pulse {
+    width: 7px;
+    height: 7px;
+    background: #22c55e;
+    border-radius: 50%;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.25);
+}
+
+/* شبکه ۲ ستونه آمار کلی */
+.cr-dashboard-section .cr-info-section {
+    padding: 18px !important;
+}
+
+.cr-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.cr-stat-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    background: #f8fafc;
+    border: 1px solid #f1f5f9;
+    border-radius: 14px;
+    transition: all 0.25s ease;
+}
+
+.cr-stat-box:hover {
+    background: #ffffff;
+    border-color: #e2e8f0;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px -4px rgba(15, 23, 42, 0.06);
+}
+
+.cr-stat-icon {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    font-size: 1.35rem;
+}
+
+.cr-stat-icon.cr-indigo { background: rgba(99, 102, 241, 0.12); color: #4f46e5; }
+.cr-stat-icon.cr-emerald { background: rgba(16, 185, 129, 0.12); color: #059669; }
+.cr-stat-icon.cr-cyan { background: rgba(6, 182, 212, 0.12); color: #0284c7; }
+.cr-stat-icon.cr-violet { background: rgba(139, 92, 246, 0.12); color: #7c3aed; }
+.cr-stat-icon.cr-rose { background: rgba(244, 63, 94, 0.12); color: #e11d48; }
+.cr-stat-icon.cr-amber { background: rgba(245, 158, 11, 0.12); color: #d97706; }
+
+.cr-stat-details {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.cr-stat-details span {
+    font-size: 0.78rem;
+    color: #64748b;
+    white-space: nowrap;
+}
+
+.cr-stat-details span small {
+    font-size: 0.70rem;
+    color: #94a3b8;
+}
+
+.cr-stat-details strong {
+    font-family: var(--FontFamily-Black);
+    font-size: 1.15rem;
+    color: #0f172a;
+    line-height: 1.2;
+}
+
+.cr-stat-inline {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.cr-ticket-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    padding: 2px 8px;
+    background: #ffe4e6;
+    color: #e11d48 !important;
+    font-size: 0.72rem;
+    font-family: var(--FontFamily-Bold);
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.cr-ticket-badge:hover {
+    background: #e11d48;
+    color: #ffffff !important;
+}
+
+/* بنر تیره تناژ امروز */
+.cr-tonnage-banner {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border-radius: 14px;
+    padding: 14px 16px;
+    color: #ffffff;
+    box-shadow: 0 8px 20px -6px rgba(15, 23, 42, 0.25);
+}
+
+.cr-tonnage-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 10px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 0.80rem;
+    color: #cbd5e1;
+}
+
+.cr-tonnage-header span {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.cr-tonnage-unit {
+    font-size: 0.70rem;
+    background: rgba(255, 255, 255, 0.08);
+    padding: 2px 8px;
+    border-radius: 6px;
+    color: #94a3b8;
+}
+
+.cr-tonnage-metrics {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    text-align: center;
+}
+
+.cr-tonnage-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.cr-tonnage-item span {
+    font-size: 0.75rem;
+    color: #94a3b8;
+}
+
+.cr-tonnage-item strong {
+    font-family: var(--FontFamily-Black);
+    font-size: 1.25rem;
+    color: #ffffff;
+    line-height: 1;
+}
+
+.cr-tonnage-item strong.cr-text-emerald { color: #34d399; }
+.cr-tonnage-item strong.cr-text-indigo { color: #818cf8; }
+
+.cr-tonnage-divider {
+    width: 1px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* استایل کارت نمودار */
+.cr-chart-pills {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cr-chart-pills .cr-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.78rem;
+    color: #334155;
+    font-family: var(--FontFamily-Bold);
+}
+
+.cr-chart-pills .cr-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.cr-indigo-dot { background: #6366f1; }
+.cr-emerald-dot { background: #10b981; }
+
+.cr-canvas-box {
+    background: #fcfdff;
+    border: 1px dashed #e2e8f0;
+    border-radius: 14px;
+    padding: 16px;
+}
+
+@media (max-width: 576px) {
+    .cr-stats-grid {
+        grid-template-columns: 1fr;
+    }
+    .cr-chart-pills,
+    .cr-live-indicator {
+        display: none;
+    }
+}
+/*------------------------------------------ Modern Wave Chart Card ------------------------------------------*/
+
+.cr-chart-showcase {
+    background: #ffffff !important;
+    border: 1px solid rgba(226, 232, 240, 0.9) !important;
+    border-radius: 20px !important;
+    padding: 22px;
+    box-shadow: 0 12px 30px -8px rgba(15, 23, 42, 0.05) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+/* هدر بالای کارت نمودار */
+.cr-chart-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.cr-chart-heading {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.cr-glow-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    color: #ffffff;
+    border-radius: 14px;
+    font-size: 1.5rem;
+    box-shadow: 0 8px 18px -4px rgba(79, 70, 229, 0.4);
+}
+
+.cr-chart-heading strong {
+    display: block;
+    font-size: 1.1rem;
+    color: #0f172a;
+    margin-bottom: 2px;
+}
+
+.cr-chart-heading span {
+    font-size: 0.78rem;
+    color: #64748b;
+}
+
+.cr-period-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 0.78rem;
+    color: #475569;
+    font-family: var(--FontFamily-Bold);
+}
+
+/* نوار ۳ ستونه خلاصه آمار بالای نمودار */
+.cr-chart-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.cr-summary-item {
+    padding: 12px 16px;
+    border-radius: 14px;
+    background: #f8fafc;
+    border: 1px solid #f1f5f9;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: all 0.2s ease;
+}
+
+.cr-summary-item:hover {
+    background: #ffffff;
+    border-color: #e2e8f0;
+    box-shadow: 0 6px 15px -3px rgba(15, 23, 42, 0.04);
+}
+
+.cr-summary-label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 0.78rem;
+    color: #64748b;
+}
+
+.cr-ring-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.cr-summary-item.cr-citizen .cr-ring-dot {
+    background: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+.cr-summary-item.cr-guild .cr-ring-dot {
+    background: #10b981;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+}
+
+.cr-summary-item.cr-combined {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.06) 0%, rgba(16, 185, 129, 0.06) 100%);
+    border-color: rgba(99, 102, 241, 0.15);
+}
+
+.cr-summary-item.cr-combined .cr-summary-label i {
+    color: #4f46e5;
+    font-size: 1rem;
+}
+
+.cr-summary-item strong {
+    font-family: var(--FontFamily-Black);
+    font-size: 1.25rem;
+    color: #0f172a;
+    line-height: 1;
+}
+
+.cr-summary-item strong small {
+    font-family: var(--FontFamily-Medium);
+    font-size: 0.72rem;
+    color: #94a3b8;
+    font-weight: normal;
+}
+
+/* باکس بوم نقاشی نمودار */
+.cr-chart-stage {
+    position: relative;
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    border: 1px solid #f1f5f9;
+    border-radius: 16px;
+    padding: 16px 12px 8px;
+}
+
+@media (max-width: 767px) {
+    .cr-chart-summary {
+        grid-template-columns: 1fr;
+    }
+    .cr-period-badge {
+        display: none;
+    }
 }
