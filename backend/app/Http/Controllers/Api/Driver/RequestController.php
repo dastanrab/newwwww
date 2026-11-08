@@ -395,7 +395,6 @@ class RequestController extends Controller
         $submit->final_amount = $total_price;
         $submit->save();
 
-        dump($submit->final_amount);
         ReceiveArchive::add($driver);
         if ($submit->user->legal) {
             ArchiveLegal::add($driver);
@@ -407,12 +406,12 @@ class RequestController extends Controller
         } else {
             ArchiveApp::add($driver);
         }
-//        $userRRN = $submit->payForUser();
-        $submit->decreaseDriverWallet($driverWallet);
+        $userRRN = $submit->payForUser();
+       // $submit->decreaseDriverWallet($driverWallet);
         // $submit->sendCollectedSms();
         //    $submit->firstSubmitUser();
         //  $submit->rewardForReferral();
-        $submit->add_waste_score();
+      //  $submit->add_waste_score();
         //      ProcessPayment::dispatch($requester, $submit,$userRRN);
         return sendJson('success','با موفقیت انجام شد',[]);
     }

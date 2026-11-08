@@ -346,7 +346,6 @@ class Submit extends Model
         $wallet = Wallet::where('user_id', $user->id)->first();
         $type = $submit->submit_phone ? 'submit_phone' : 'submit';
         $userRRN = null;
-        dump($user,$wallet);
         if($submit->cashout_type == 'card'){
             try {
                 DB::transaction(function () use($user,$wallet,$submit,$type,$driver){
@@ -375,7 +374,7 @@ class Submit extends Model
             }
             catch (Exception $e){
 
-                dd($e->getMessage());
+
                 try {
                     $log = fopen("/home/laravel/la.bazistco.com/storage/logs/UserPayError.txt", "a+") or die("Unable to open file!");
                     $t = 'error|'.$e->getMessage()."\n";
@@ -409,14 +408,11 @@ class Submit extends Model
 
             }*/
         }
-
-            elseif($submit->cashout_type == 'aniroob'){
+        elseif($submit->cashout_type == 'aniroob'){
                 DB::beginTransaction();
                 try {
-                    dump($wallet->wallet);
                     $wallet->wallet = $wallet->wallet + $submit->total_amount;
                     $wallet->save();
-                    dump($user->id,$wallet->wallet);
                     WalletDetails::create(
                         $submit->city_id,
                         $user->id,
@@ -443,7 +439,6 @@ class Submit extends Model
                 }
                 catch (Exception $e){
                     DB::rollBack();
-                    dump($e->getMessage());
                     try {
                         $data = [
                             'class_name' => get_class($e),
@@ -463,9 +458,60 @@ class Submit extends Model
                     throw $e;
                 }
             }
-                dump($userRRN);
+        elseif($submit->cashout_type == 'bazist'){
+            DB::beginTransaction();
+            try {
+                $wallet->wallet = $wallet->wallet + $submit->total_amount;
+                $wallet->save();
+                WalletDetails::create(
+                    $submit->city_id,
+                    $user->id,
+                    $wallet->id,
+                    $type,
+                    $driver->id,
+                    $submit->total_amount * 10,
+                    $wallet->wallet * 10,
+                    'واریز',
+                    'تحویل پسماند'
+                );
+
+                create_transaction(
+                    0,
+                    $submit->user->id,
+                    $submit->total_amount,
+                    TransactionService::BAZIST_TYPE,
+                    TransactionService::BAZIST_TYPE,
+                    TransactionService::WASTE_RREASON,
+                    $submit->id
+                );
+
+                DB::commit();
+            }
+            catch (Exception $e){
+                DB::rollBack();
+                try {
+                    $data = [
+                        'class_name' => get_class($e),
+                        'message' => $e->getMessage(),
+                        'file' => $e->getFile(),
+                        'line' => $e->getLine(),
+                        'trace' => substr($e->getTraceAsString(), 0, 100)
+                    ];
+                    $bale = new BaleService();
+                    $bale->SubmitPayError($data);
+                } catch (Exception $e){
+                    // Log this too
+                    \Log::error('Failed to send error to Bale: ' . $e->getMessage());
+                }
+
+                // Re-throw or handle appropriately
+                throw $e;
+            }
+        }
+
                 return $userRRN;
             }
+
     public function add_waste_score()
             {
                 $submit=$this;
