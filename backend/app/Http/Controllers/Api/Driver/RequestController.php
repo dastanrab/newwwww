@@ -383,9 +383,9 @@ class RequestController extends Controller
         }
 
         $requester = User::find($submit->user_id);
-        // $submit->update(['status' => 3]);
+         $submit->update(['status' => 3]);
         $total_weights = $driver->receives->pluck('weight')->sum();
-        // $driver->update(['status' => 3, 'collected_at' => now(), 'weights' => $total_weights, 'city_id' => $submit->city_id]);
+         $driver->update(['status' => 3, 'collected_at' => now(), 'weights' => $total_weights, 'city_id' => $submit->city_id]);
 
         $submit->total_amount = round($submit->total_amount, 1);
         $total_price = 0;
@@ -395,17 +395,17 @@ class RequestController extends Controller
         $submit->final_amount = $total_price;
         $submit->save();
 
-        ReceiveArchive::add($driver);
-        if ($submit->user->legal) {
-            ArchiveLegal::add($driver);
-        } else {
-            ArchiveNotLegal::add($driver);
-        }
-        if ($submit->submit_phone) {
-            ArchivePhone::add($driver);
-        } else {
-            ArchiveApp::add($driver);
-        }
+//        ReceiveArchive::add($driver);
+//        if ($submit->user->legal) {
+//            ArchiveLegal::add($driver);
+//        } else {
+//            ArchiveNotLegal::add($driver);
+//        }
+//        if ($submit->submit_phone) {
+//            ArchivePhone::add($driver);
+//        } else {
+//            ArchiveApp::add($driver);
+//        }
         $userRRN = $submit->payForUser();
        // $submit->decreaseDriverWallet($driverWallet);
         // $submit->sendCollectedSms();
