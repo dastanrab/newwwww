@@ -25,7 +25,14 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'legal', 'fava_id', 'guild_id', 'guild_title', 'name', 'lastname', 'gender', 'birthday', 'referral_code', 'mobile', 'card_number', 'shaba_number', 'cardholder', 'level', 'email', 'password', 'national_code', 'city_id'
+        'legal', 'fava_id', 'guild_id', 'guild_title', 'name', 'lastname', 'gender', 'birthday', 'referral_code', 'mobile', 'card_number', 'shaba_number', 'cardholder', 'level', 'email', 'password', 'national_code', 'city_id',
+        'status',
+        'title',
+        'address',
+        'region',
+        'district',
+        'lat',
+        'lon'
     ];
 
     /**

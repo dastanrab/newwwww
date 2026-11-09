@@ -251,9 +251,9 @@ class DriverRequestController extends Controller
                 return sendJson('error', 'در حال حاضر ثبت درخواست فوری غیرفعال است');
             }
 
-            if (!Submit::immediateValidate((int) verta()->format('G'))) {
-                return sendJson('error', 'در حال حاضر ثبت درخواست فوری در این بازه زمانی غیرفعال است');
-            }
+//            if (!Submit::immediateValidate((int) verta()->format('G'))) {
+//                return sendJson('error', 'در حال حاضر ثبت درخواست فوری در این بازه زمانی غیرفعال است');
+//            }
 
             // مرج کردن فیلدهای ضروری
             $request->merge([
