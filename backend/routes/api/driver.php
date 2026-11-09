@@ -16,22 +16,22 @@ Route::post('fcm', [AuthController::class,'fcm'])->middleware('auth:sanctum,driv
 Route::post('/customers/resolve', [
     DriverRequestController::class,
     'resolveCustomer',
-]);
+])->middleware('auth:sanctum,driver');
 
 Route::get('/customers/{customer}/addresses', [
     DriverRequestController::class,
     'addresses',
-]);
+])->middleware('auth:sanctum,driver');
 
 Route::post('/customers/{customer}/addresses', [
     DriverRequestController::class,
     'storeAddress',
-]);
+])->middleware('auth:sanctum,driver');
 
 Route::post('/customers/{customer}/requests/immediate', [
     DriverRequestController::class,
     'storeImmediateRequest',
-]);
+])->middleware('auth:sanctum,driver');
 Route::post('rollCall', [RollcallController::class,'rollCall'])->middleware('auth:sanctum,driver');
 
 Route::get('prices', [RecyclableController::class,'prices'])->middleware('auth:sanctum,driver');
