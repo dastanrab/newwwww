@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Driver\AuthController;
+use App\Http\Controllers\Api\Driver\DriverRequestController;
 use App\Http\Controllers\Api\Driver\RecyclableController;
 use App\Http\Controllers\Api\Driver\RequestController;
 use App\Http\Controllers\Api\Driver\RollcallController;
@@ -12,7 +13,25 @@ use Illuminate\Support\Facades\Route;
 Route::post('login', [AuthController::class,'login']);
 Route::post('login/verify', [AuthController::class,'verify']);
 Route::post('fcm', [AuthController::class,'fcm'])->middleware('auth:sanctum,driver');
+Route::post('/customers/resolve', [
+    DriverRequestController::class,
+    'resolveCustomer',
+]);
 
+Route::get('/customers/{customer}/addresses', [
+    DriverRequestController::class,
+    'addresses',
+]);
+
+Route::post('/customers/{customer}/addresses', [
+    DriverRequestController::class,
+    'storeAddress',
+]);
+
+Route::post('/customers/{customer}/requests/immediate', [
+    DriverRequestController::class,
+    'storeImmediateRequest',
+]);
 Route::post('rollCall', [RollcallController::class,'rollCall'])->middleware('auth:sanctum,driver');
 
 Route::get('prices', [RecyclableController::class,'prices'])->middleware('auth:sanctum,driver');
