@@ -184,130 +184,148 @@ class DriverRequestController extends Controller
      */
     public function storeImmediateRequest(Request $request, User $customer)
     {
-        /** @var \App\Models\User $driverUser */
-        $driverUser = auth()->user();
+        try {
+            /** @var \App\Models\User $driverUser */
+            $driverUser = auth()->user();
 
-        // ۱. اعتبارسنجی ورودی
-        $validator = Validator::make($request->all(), [
-            'addressId' => ['required', 'integer'],
-        ], [
-            'addressId.required' => 'لطفاً آدرس را انتخاب نمایید',
-            'addressId.integer'  => 'شناسه آدرس معتبر نیست',
-        ]);
-
-        if ($validator->fails()) {
-            return sendJson('error', $validator->errors()->first());
-        }
-
-        // ۲. بررسی خودرو فعال راننده (جلوگیری از خواندن id روی null)
-        $activeCar = Car::where('user_id', $driverUser->id)
-            ->where('is_active', true)
-            ->first();
-
-        if (!$activeCar) {
-            // اگر خودروی فعال با is_active پیدا نشد، اولین خودروی ثبت‌شده راننده را برداریم
-            $activeCar = Car::where('user_id', $driverUser->id)->first();
-        }
-
-        if (!$activeCar) {
-            return sendJson('error', 'هیچ خودرویی برای حساب رانندگی شما یافت نشد.');
-        }
-
-        // ۳. بررسی سقف ۴ بار فعال
-        if ($driverUser->drivers()->where('status', 2)->count() >= 4 && $driverUser->id !== 2) {
-            return sendJson('error', 'نمی‌توانید بیشتر از ۴ درخواست فعال داشته باشید');
-        }
-
-        // ۴. آدرس مشتری
-        $address = $customer->addresses()
-            ->where('id', $request->input('addressId'))
-            ->where('status', 1)
-            ->first();
-
-        if (!$address) {
-            return sendJson('error', 'این آدرس برای کاربر انتخاب‌شده ثبت نشده است');
-        }
-
-        // ۵. بررسی محدوده پلیگان
-        $targetLat = $address->lat;
-        $targetLon = $address->lon ?? $address->lng;
-
-        if (!isLocationInsidePolygon($driverUser->id, [$targetLat, $targetLon])) {
-            return sendJson('error', 'این درخواست خارج از منطقه کاری شما می‌باشد');
-        }
-
-        // ۶. بررسی درخواست فعال برای کاربر
-        if (Submit::where('user_id', $customer->id)->where('status', 1)->exists()) {
-            return sendJson('error', 'این کاربر یک درخواست فعال دارد');
-        }
-
-        // ۷. بررسی بازه زمانی فوری
-        $submitTime = SubmitTime::find(1);
-        if (!$submitTime || (int) $submitTime->instant === 0) {
-            return sendJson('error', 'در حال حاضر ثبت درخواست فوری غیرفعال است');
-        }
-
-        if (!Submit::immediateValidate((int) verta()->format('G'))) {
-            return sendJson('error', 'در حال حاضر ثبت درخواست فوری در این بازه زمانی غیرفعال است');
-        }
-
-        // مرج کردن فیلدهای ضروری
-        $request->merge([
-            'addressId'  => $address->id,
-            'cardId'     => null,
-            'payMethod'  => 'aniroob',
-            'scheduling' => 'immediate',
-        ]);
-
-        $submit = null;
-
-        DB::transaction(function () use ($customer, $request, $driverUser, $activeCar, &$submit) {
-            // ایجاد سابمیت
-            $res = Submit::add($customer->id, $customer, $request);
-
-            // اگر متد add آبجکت Submit را برنگرداند، آن را از دیتابیس می‌خوانیم:
-            if ($res instanceof Submit) {
-                $submit = $res;
-            } else {
-                $submit = Submit::where('user_id', $customer->id)
-                    ->latest('id')
-                    ->first();
+            if (!$driverUser) {
+                return sendJson('error', 'کاربر راننده احراز هویت نشده است');
             }
 
-            if (!$submit) {
-                throw new \Exception('خطا در ایجاد درخواست در سیستم');
+            // ۱. اعتبارسنجی ورودی
+            $validator = Validator::make($request->all(), [
+                'addressId' => ['required', 'integer'],
+            ], [
+                'addressId.required' => 'لطفاً آدرس را انتخاب نمایید',
+                'addressId.integer'  => 'شناسه آدرس معتبر نیست',
+            ]);
+
+            if ($validator->fails()) {
+                return sendJson('error', $validator->errors()->first());
             }
 
-            // بررسی رکورد انتساب به راننده در جدول drivers
-            $driverRecord = Driver::where('submit_id', $submit->id)->first();
+            // ۲. بررسی خودرو فعال راننده
+            $activeCar = Car::where('user_id', $driverUser->id)
+                ->where('is_active', true)
+                ->first();
 
-            if ($driverRecord) {
-                $driverRecord->update([
-                    'user_id' => $driverUser->id,
-                    'car_id'  => $activeCar->id,
-                    'status'  => 2,
-                    'city_id' => $submit->city_id ?? $address->city ?? null,
-                ]);
-            } else {
-                Driver::create([
-                    'user_id'   => $driverUser->id,
-                    'car_id'    => $activeCar->id,
-                    'submit_id' => $submit->id,
-                    'status'    => 2,
-                    'city_id'   => $submit->city_id ?? $address->city ?? null,
-                ]);
+            if (!$activeCar) {
+                $activeCar = Car::where('user_id', $driverUser->id)->first();
             }
 
-            @Storage::put('driver-submitAll.txt', date('Y-m-d H:i:s') . ' - Driver: ' . $driverUser->id . ' - Submit: ' . $submit->id);
-        });
+            if (!$activeCar) {
+                return sendJson('error', 'هیچ خودرویی برای حساب رانندگی شما یافت نشد.');
+            }
 
-        $customer->refresh();
+            // ۳. بررسی سقف ۴ بار فعال
+            if ($driverUser->drivers()->where('status', 2)->count() >= 4 && $driverUser->id !== 2) {
+                return sendJson('error', 'نمی‌توانید بیشتر از ۴ درخواست فعال داشته باشید');
+            }
 
-        return sendJson(
-            'success',
-            'درخواست فوری با موفقیت ثبت شد',
-            $customer->currentSubmit() ?? $submit
-        );
+            // ۴. آدرس مشتری
+            $address = $customer->addresses()
+                ->where('id', $request->input('addressId'))
+                ->where('status', 1)
+                ->first();
+
+            if (!$address) {
+                return sendJson('error', 'این آدرس برای کاربر انتخاب‌شده ثبت نشده است');
+            }
+
+            // ۵. بررسی محدوده پلیگان
+            $targetLat = $address->lat;
+            $targetLon = $address->lon ?? $address->lng;
+
+            if (!isLocationInsidePolygon($driverUser->id, [$targetLat, $targetLon])) {
+                return sendJson('error', 'این درخواست خارج از منطقه کاری شما می‌باشد');
+            }
+
+            // ۶. بررسی درخواست فعال برای کاربر
+            if (Submit::where('user_id', $customer->id)->where('status', 1)->exists()) {
+                return sendJson('error', 'این کاربر یک درخواست فعال دارد');
+            }
+
+            // ۷. بررسی بازه زمانی فوری
+            $submitTime = SubmitTime::find(1);
+            if (!$submitTime || (int) $submitTime->instant === 0) {
+                return sendJson('error', 'در حال حاضر ثبت درخواست فوری غیرفعال است');
+            }
+
+            if (!Submit::immediateValidate((int) verta()->format('G'))) {
+                return sendJson('error', 'در حال حاضر ثبت درخواست فوری در این بازه زمانی غیرفعال است');
+            }
+
+            // مرج کردن فیلدهای ضروری
+            $request->merge([
+                'addressId'  => $address->id,
+                'cardId'     => null,
+                'payMethod'  => 'aniroob',
+                'scheduling' => 'immediate',
+            ]);
+
+            $submit = null;
+
+            DB::transaction(function () use ($customer, $request, $driverUser, $activeCar, $address, &$submit) {
+                // ایجاد سابمیت
+                $res = Submit::add($customer->id, $customer, $request);
+
+                if ($res instanceof Submit) {
+                    $submit = $res;
+                } else {
+                    $submit = Submit::where('user_id', $customer->id)
+                        ->latest('id')
+                        ->first();
+                }
+
+                if (!$submit) {
+                    throw new \Exception('خطا: رکورد درخواست Submit در دیتابیس ایجاد نشد.');
+                }
+
+                // بررسی رکورد انتساب به راننده در جدول drivers
+                $driverRecord = Driver::where('submit_id', $submit->id)->first();
+
+                $cityId = $submit->city_id ?? $address->city ?? null;
+
+                if ($driverRecord) {
+                    $driverRecord->update([
+                        'user_id' => $driverUser->id,
+                        'car_id'  => $activeCar->id,
+                        'status'  => 2,
+                        'city_id' => $cityId,
+                    ]);
+                } else {
+                    Driver::create([
+                        'user_id'   => $driverUser->id,
+                        'car_id'    => $activeCar->id,
+                        'submit_id' => $submit->id,
+                        'status'    => 2,
+                        'city_id'   => $cityId,
+                    ]);
+                }
+
+                @Storage::put('driver-submitAll.txt', date('Y-m-d H:i:s') . ' - Driver: ' . $driverUser->id . ' - Submit: ' . $submit->id);
+            });
+
+            $customer->refresh();
+
+            return sendJson(
+                'success',
+                'درخواست فوری با موفقیت ثبت شد',
+                $customer->currentSubmit() ?? $submit
+            );
+
+        } catch (\Throwable $e) {
+            // بازگرداندن دقیق محل و خطای پرتاب شده
+            return response()->json([
+                'status'  => 'error',
+                'message' => $e->getMessage(),
+                'debug'   => [
+                    'file'  => $e->getFile(),
+                    'line'  => $e->getLine(),
+                    'class' => get_class($e),
+                ]
+            ], 500);
+        }
     }
 
     /**
